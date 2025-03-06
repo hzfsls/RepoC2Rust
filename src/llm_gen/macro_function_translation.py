@@ -1,0 +1,329 @@
+from openai import OpenAI
+from pebble import ProcessPool
+from httpx import Client
+import json
+
+proxies = {
+    'http': 'http://z00835967:99310Wen.@proxy.huawei.com:8080',
+    'https': 'https://z00835967:99310Wen.@proxy.huawei.com:8080',
+}
+
+client = OpenAI(api_key="sk-ea5eeb6b740a435e9a068ec46c594c3f", base_url="https://api.deepseek.com/beta",
+    http_client=Client(
+    proxy=proxies['http'],
+    verify=False  # 注意：禁用 SSL 验证可能有安全风险，请根据实际情况决定是否需要这样做
+))
+
+macro_function_text = """
+Translate the C Code to Rust. 
+You need to translate the macro only.
+Notice that: 
+Remember when translating macros, add `pub(crate)` to the macro definition to make it visible.
+When using another macros in C, you should use macros in Rust with the same name. For example, `#define MY_MACRO ANOTHER_MACRO(ANOTHER_MACRO2)` should be translated to `macro_rules! MY_MACRO { () => { ANOTHER_MACRO!(ANOTHER_MACRO2!()) } }\n pub(crate) use MY_MACRO;`. Notice that C original macros, like __FILE__ and __LINE__, should also be translated to __FILE__!() and __LINE__!() in Rust.
+If macros are used as comparision like 'if (MY_MACRO < a)', you should ensure the macro is placed at right side. For example, `if (MY_MACRO < a)` should be translated to `if a > MY_MACRO!()`.
+When using the C string literals, use cstr! macro to translate it to Rust. For example, `#define MY_STR "Hello, World!"` should be translated to `macro_rules! MY_STR { () => { cstr!("Hello, World!") } }\n pub(crate) use MY_STR;`.
+When using global variables that start with `g_`, use the lock() method to get reference of the variable. For example, `int a = g_a;` should be translated to `let mut a = (*g_a.lock());`, and `g_a = 10;` should be translated to `(*g_a.lock()) = 10;`.
+When find a C reference operator `&`, use c_ref! macro to translate it to Rust. For example, `int a = &b;` should be translated to `let mut a = c_ref!(b);`. For sizeof operator, if it is used with a type, translate it with c_sizeof! macro, for example, `sizeof(int)` should be translated to `c_sizeof!(int)`. If it is used with a variable, translate it with c_sizeofval! macro, for example, `sizeof(a)` should be translated to `c_sizeofval!(a)`.
+Pointers in C should be translated to Ptr<T> in Rust, and void* should be translated to VoidPtr. char and unsigned char should all be translated to u8.
+When there are type casting of pointers, use `.cast<Ptr<T>>()` method in Rust, do not use raw pointers like *const T. For example, `int *a = (int *)b;` should be translated to `let mut a = b.cast::<Ptr<i32>>();`, and `b = *(int16_t*)((uint32_t*)a + 8)` should be translated to `let mut b = *(a.cast::<Ptr<u32>>() + 8).cast::<Ptr<i16>>();`. 
+Notice that always use `+` and `-` operator like original C, DO NOT use any Rust pointer method like `add()` or `offset()`. The `++` and `--` operators are not available in Rust, use .plus_plus(), .minus_minus() for suffix increment and decrement, and plus_plus!() and minus_minus!() for prefix increment and decrement. For example, `a++` -> `a.plus_plus()`, `++a` -> `plus_plus!(a)`.
+However, if the type casting is not pointers but numbers, use `as` keyword in Rust. For example, `(uint32_t)a` should be translated to `a as u32`.
+When passing a variable to a function, if it is not explicitly casted, add a .cast() method to the variable WITHOUT ANY TYPES. For example, `MyFunction(a, b, c)` in C should be translated to `MyFunction(a.cast(), b.cast(), c.cast())` in Rust.
+Notice that when indexing a struct member with another struct member, like `s.cmp[s.curr]`, it may violate Rust borrow checker. You should use a temporary variable to store the value of the first struct member, and translate it to Rust with the temporary variable. For example, `s.cmp[s.curr++] = b` should be translated to `let idx = s.curr.plus_plus(); s.cmp[idx] = b;`.
+
+Source:
+```c
+#define INIT_MY_STRUCT(s, a_c)            \
+    do                                    \
+    {                                     \
+        (s).a = a_c;                      \
+        (s).b = (MyMemeber *)MY_NULL;     \
+        (s).c = &a_c                      \
+    } while (0)                           \
+```
+
+Translation:
+```rust
+macro_rules! INIT_MY_STRUCT { ($s:expr, $a_c:expr) => 
+    {
+        $s.a = $a_c;
+        $s.b = MY_NULL!();
+        $s.c = c_ref!($a_c);
+    }
+}
+pub(crate) use INIT_MY_STRUCT;
+```
+
+Source:
+```c
+#define MY_SIZE_OF_MUL_8(t) (sizeof(t) * 8)
+```
+
+Translation:
+```rust
+macro_rules! MY_SIZE_OF_MUL_8 { ($t:ty) => { c_sizeof!($t) * 8 } }
+pub(crate) use MY_SIZE_OF_MUL_8;
+```
+
+
+Source:
+```c
+#define MY_CONDITION(a, b) (MY_NULL != myCompareFunc(a, b))
+```
+Remenber to change the MY_NULL to the right side.
+
+Translation:
+```rust
+macro_rules! MY_CONDITION { ($a:expr, $b:expr) => { myCompareFunc($a, $b) != MY_NULL!() } }
+pub(crate) use MY_CONDITION;
+```
+
+Source:
+```c
+#define MY_COMPLEX_MACRO(a, b, c, d)           \
+    do                                         \
+    {                                          \
+        MY_USED_MACRO_1(a, *b--);              \
+        MY_USED_MACRO_2(c, &(++d));                \
+        MY_USE_MACRO_WITH_PARAM(a, 0x7832683d, MY_LINENUM); \
+        int i;
+        for (i = 0; i < sizeof(c) / sizeof(c[0]); i++) \
+        { \
+            MY_Usedfunction1((uint8_t*)&c[i]); \
+            myUsedFunction2((uint8)c[i]); \
+            
+        } \
+    } while (0)
+```
+
+Translation:
+```rust
+macro_rules! MY_COMPLEX_MACRO { ($a:expr, $b:expr, $c:expr, $d:expr) => 
+    {
+        MY_USED_MACRO_1!($a, *$b.minus_minus());
+        MY_USED_MACRO_2!($c, c_ref!(plus_plus!($d)));
+        MY_USE_MACRO_WITH_PARAM!($a, 0x7832683d, MY_LINENUM!());
+        let mut i: i32;
+        c_for!(i = 0; i < (c_sizeofval!($c) / c_sizeofval!($c[0])).cast(); i.plus_plus(); {
+            MY_Usedfunction1(c_ref!($c[i]).cast::<Ptr<u8>>());
+            myUsedFunction2($c[i] as u8);
+        });
+    }
+}
+pub(crate) use MY_COMPLEX_MACRO;
+```
+
+Source:
+```c
+#define MY_STRUCT_MACRO(s)                     \
+    do                                         \
+    {                                          \
+        int i;                                 \
+        for (i = 0; i < sizeof(s.arr) / sizeof(s.arr[0]); i++) \
+        { \
+            s.cmp[s.curr] = (uint8_t)(s.arr[i]); \
+            s.curr += 1;
+            s.cmp[s.curr] = (uint8_t)(s.arr1[s.curr] >> 8); \
+            s.curr += 1;
+            s.cmp[s.curr] = (uint8_t)(s.arr1[s.curr] >> 16); \
+            s.curr += 1;
+            s.cmp[s.curr] = (uint8_t)(s.arr1[s.curr] >> 24); \
+            s.curr += 1;
+        } \
+    } while (0)
+```
+
+Translation:
+```rust
+macro_rules! MY_STRUCT_MACRO { ($s:expr) =>
+    {
+        let mut i: i32;
+        c_for!(i = 0; i < (c_sizeofval!($s.arr) / c_sizeofval!($s.arr[0])).cast(); i.plus_plus(); {
+            let idx = $s.curr; // bypass the borrow checker
+            $s.cmp[idx] = $s.arr[i] as u8;
+            $s.curr += 1;
+            let idx = $s.curr; // bypass the borrow checker
+            $s.cmp[idx] = ($s.arr1[$s.curr] >> 8) as u8;
+            $s.curr += 1;
+            let idx = $s.curr; // bypass the borrow checker
+            $s.cmp[idx] = ($s.arr1[$s.curr] >> 16) as u8;
+            $s.curr += 1;
+            let idx = $s.curr; // bypass the borrow checker
+            $s.cmp[idx] = ($s.arr1[$s.curr] >> 24) as u8;
+            $s.curr += 1;
+        });
+    }
+}
+pub(crate) use MY_STRUCT_MACRO;
+```
+
+Source:
+```c
+#define MY_WHILE_PTR_LAST_NOT_EQUAL(ptr1, ptr2) \
+    do                                         \
+    {                                          \
+        while ((ptr1[-1]) != (ptr2[-1]))       \
+        {                                      \
+            ptr1--;                            \
+            ptr2--;                            \
+        }                                      \
+    } while (0)
+```
+
+Translation:
+```rust
+macro_rules! MY_WHILE_PTR_LAST_NOT_EQUAL { ($ptr1:expr, $ptr2:expr) =>
+    {
+        while $ptr1[-1] != $ptr2[-1]
+        {
+            $ptr1.minus_minus();
+            $ptr2.minus_minus();
+        }
+    }
+}
+pub(crate) use MY_WHILE_PTR_LAST_NOT_EQUAL;
+```
+
+Do not care about __builtin_expect() in C code, they are not necessary in Rust.  
+
+Source:
+```c
+#define MY_BUILTIN_PREDICT(X) __builtin_expect(!!(X), 1)
+```
+
+Translation:
+```rust
+macro_rules! MY_BUILTIN_PREDICT { ($X:expr) => { X } }
+pub(crate) use MY_BUILTIN_PREDICT;
+```
+
+When translate macro with va-args, you should use the following pattern:
+
+Source:
+```c
+#define MY_VARGS_M(fmt, args...)                                                                           \
+    do                                                                                                                 \
+    {                                                                                                                  \
+        MyVargsFunction(MYFILENAME, __LINE__, fmt, ##args);                                 \
+    } while (0)
+```
+
+Translation:
+```rust
+macro_rules! MY_VARGS_M {
+    ($fmt:expr) => {
+        MyVargsFunction(MYFILENAME!().cast(), __LINE__!().cast(), $fmt.cast(), &[]);
+    }
+    ($fmt:expr, $($args:expr),*) => {
+        MyVargsFunction(MYFILENAME!().cast(), __LINE__!().cast(), $fmt.cast(), &[$(&$args), *]);
+    }
+}
+pub(crate) use MY_VARGS_M;
+"""
+# Source:
+# ```c
+# #define PTR_PLUSPLUS(dst) (dst)++
+# ```
+
+# Translation:
+# ```rust
+# macro_rules! PTR_PLUSPLUS { ($dst:expr) => { $dst.plus_plus() } }
+# pub(crate) use PTR_PLUSPLUS;
+# ```
+
+# Source:
+# ```c
+# #define PTR_SUB(dst, src) ((dst) - (src))
+# ```
+
+# Translation:
+# ```rust
+# macro_rules! PTR_SUB { ($dst:expr, $src:expr) => { $dst - $src } }
+# pub(crate) use PTR_SUB;
+# ```
+
+# Source:
+# ```c
+# #define PTR_COMPLEX(ptr1, var, ptr2, var2)      \
+#     do                                          \
+#     {                                           \
+#         *(ptr1)++ = (int32_t)(var);             \
+#         (ptr2) = (uint16_t *)((ptr1) + 8);      \
+#         (var2) = (ptr2) - (ptr1)                \
+#         (ptr1) = &(ptr)[(var2) * 2];            \
+#     } while (0)
+# ```
+
+# Translation:
+# ```rust
+# macro_rules! PTR_COMPLEX { ($ptr1:expr, $var:expr, $ptr2:expr, $var2:expr) => {
+#     *$ptr1.plus_plus() = $var.cast::<i32>();
+#     $ptr2 = ($ptr1 + 8).cast::<Ptr<u16>>();
+#     $var2 = $ptr2 - $ptr1;
+#     $ptr1 = c_ref!(($ptr)[($var2 * 2)]);
+# }}
+# ```
+
+
+
+# Source:
+# ```c
+# #define MY_VARGS_M(error_code, fmt, args...)                                                                           \
+#     do                                                                                                                 \
+#     {                                                                                                                  \
+#         MyVargsFunc(error_code, fmt, ##args);                                                                           \
+#     } while (0)
+# ```
+
+# Translation:
+# ```rust
+# // when translate a variadic macro, you need to use the following pattern
+# macro_rules! MY_VARGS_M {
+#     ($error_code:expr, $fmt:expr) => {
+#         MyVargsFunc($error_code, $fmt, &[]);
+#     }
+#     ($error_code:expr, $fmt:expr, $($args:expr),*) => {
+#         MyVargsFunc($error_code, $fmt, &[$(&$args), *]);
+#     }
+# }
+# ```
+# """
+
+def macro_function_prompt(c_code):
+    return macro_function_text + f"Now translate the following Macro:\n```c\n{c_code.strip()}\n```"
+
+
+results = {}
+
+def get_our_result_macro_function(value):
+    text = macro_function_prompt(value)
+    response = client.chat.completions.create(
+        model="deepseek-coder",
+        messages=[
+            {"role": "user", "content": text},
+            {"role": "assistant", "content": "Sure, here is the rust translation:\n```rust\n", "prefix": True},
+        ],
+        stop=["```"],
+        temperature=0,
+        top_p=0.01,
+        max_tokens=4096,
+        stream=False
+    )
+    result = response.choices[0].message.content
+    return result
+
+def get_our_results_macro_function(data):
+    our_result = []
+    results = {}
+    with ProcessPool(10) as pool:
+        process = {}
+        for idx, value in enumerate(data):
+            process[idx] = pool.schedule(get_our_result_macro_function, 
+                args=(value,))
+        results = {}
+        for idx, value in enumerate(data):
+            results[idx] = process[idx].result()
+        results = list(sorted(results.items(), key=lambda item: item[0]))
+        for key, value in results:
+            our_result.append(value)    
+    return our_result
