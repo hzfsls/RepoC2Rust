@@ -12,7 +12,7 @@ client = OpenAI(api_key="sk-ea5eeb6b740a435e9a068ec46c594c3f", base_url="https:/
 example_1 = """
 Source:
 ```c
-void VOS_MD5CalcEx(uint8_t *output, uint32_t outputLen, const uint8_t *input, uint32_t inputLen)
+void VOS_MD5CalcEx(char *output, uint32_t outputLen, const uint8_t *input, uint32_t inputLen)
 {
     MD5_CTX context;
     if (outputLen < MD5_DIGEST_LEN)
@@ -385,7 +385,7 @@ results = {}
 def get_our_result_dummy_function(value, cache):
     if value in cache:
         return cache[value]
-    text = function_prompt(value)
+    text = dummy_function_prompt(value)
     response = client.chat.completions.create(
         model="deepseek-coder",
         messages=[

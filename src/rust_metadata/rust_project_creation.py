@@ -47,8 +47,10 @@ def create_under_current_dir_full(dir_path: str, rpath: RustPath):
             for k in rpath.macro_functions:
                 f.write(k.rust_code + "\n\n")
             for k in rpath.functions:
-                f.write(k.rust_code + "\n\n")
-
+                if len(k.rust_code) > 0:
+                    f.write(k.rust_code + "\n\n")
+                else:
+                    f.write(k.dummy_code + "\n\n")
 
 
 class RustProject:

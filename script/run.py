@@ -168,3 +168,15 @@ if __name__ == "__main__":
         else:
             print(f"{project_name} build fail!")
             print(error_msg)
+        
+        update_dummy_functions(proj.metadata.get_all("function"))
+        proj = RustProject(project_name, metadata)
+        print(f"Create rust project `{project_name}` with updated dummy function at {proj.dir_path}")
+
+        success, error_msg = proj.build_project()
+        if success:
+            print(f"{project_name} build succeed!")
+        else:
+            print(f"{project_name} build fail!")
+            print(error_msg)
+
