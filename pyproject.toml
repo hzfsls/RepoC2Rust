@@ -1,0 +1,18 @@
+[project]
+name = "c2saferust"
+version = "0.0.1"
+description = ""
+authors = [
+]
+dependencies = [
+    "tree-sitter==0.22.3",
+    "tree-sitter-c==0.21.4",
+]
+requires-python = ">=3.9"
+license = {text = "MIT"}
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+[tool.pdm]

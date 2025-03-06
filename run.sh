@@ -1,2 +1,2 @@
-python src/c_metadata/preprocess.py
-python src/rust_metadata/rust_project_creation.py
+pdm run src/c_metadata/preprocess.py
+pdm run src/rust_metadata/rust_project_creation.py

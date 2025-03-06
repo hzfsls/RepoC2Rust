@@ -1,0 +1,9 @@
+.tmp/
+.direnv/
+__pypackages__/
+.pdm-build/
+c_metadata/
+created_project/
+rust_metadata/
+.pdm-python
+pdm.lock
