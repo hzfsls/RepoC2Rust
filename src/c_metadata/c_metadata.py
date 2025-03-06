@@ -5,7 +5,7 @@ from tree_sitter import Language, Parser, Tree, Node
 import os
 import json
 
-from remove_comment import preprocess
+from c_metadata.remove_comment import preprocess
 
 c_language = Language(ts_c.language())
 c_parser = Parser(c_language)

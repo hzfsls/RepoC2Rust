@@ -4,14 +4,8 @@ from httpx import Client
 
 import json
 
-proxies = {
-    'http': 'http://z00835967:99310Wen.@proxy.huawei.com:8080',
-    'https': 'https://z00835967:99310Wen.@proxy.huawei.com:8080',
-}
-
 client = OpenAI(api_key="sk-ea5eeb6b740a435e9a068ec46c594c3f", base_url="https://api.deepseek.com/beta",
     http_client=Client(
-    proxy=proxies['http'],
     verify=False  # 注意：禁用 SSL 验证可能有安全风险，请根据实际情况决定是否需要这样做
 ))
 

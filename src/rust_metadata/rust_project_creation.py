@@ -5,8 +5,8 @@ import shutil
 import time
 import subprocess
 
-from classes import *
-from rust_metadata import resolve_metadata
+from rust_metadata.classes import *
+from rust_metadata.rust_metadata import resolve_metadata
 
 c_metadata_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "c_metadata")
 rust_metadata_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "rust_metadata")
@@ -33,12 +33,22 @@ def create_under_current_dir(dir_path: str, rpath: RustPath):
                 f.write(k.dummy_code + "\n\n")
 
 class RustProject:
-    def __init__(self, name: str, metadata: RustProjectMetadata):
-        self.dir_path = os.path.join(created_project_dir, f"{proj_name}_{int(time.time())}")
+    def __init__(self, name: str, metadata: RustProjectMetadata, create_type: str = "blank"):
+        self.dir_path = os.path.join(created_project_dir, f"{name}_{int(time.time())}")
         self.metadata = metadata
-        self.create_project()
+        self.create_project(create_type)    
     
-    def create_project(self):       
+    def create_project(self, create_type: str):
+        if create_type == "blank":
+            self.create_blank_project()
+        elif create_type == "blank_function":
+            self.create_blank_function_project()
+        elif create_type == "signature_function":
+            self.create_signature_function_project()
+        elif create_type == "full_function":
+            self.create_full_function_project()
+
+    def create_blank_project(self):      
         os.makedirs(self.dir_path, exist_ok=True)
         shutil.copytree(template_project_dir, self.dir_path, dirs_exist_ok=True)
         paths = self.metadata.paths

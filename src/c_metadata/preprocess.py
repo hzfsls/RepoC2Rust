@@ -9,7 +9,7 @@ from tree_sitter import Language, Parser, Tree, Node
 c_language = Language(ts_c.language())
 c_parser = Parser(c_language)
 
-from c_metadata import get_metadata
+
 
 def get_files(src_folder: str, dirs: list[str]) -> dict[str, str]:
     files = {}
@@ -127,4 +127,6 @@ if __name__ == "__main__":
         with open(os.path.join(c_metadata_dir, project_name, "files.json"), "w") as f:
             f.write(json.dumps(metadata, default=lambda o: o.__dict__(), indent=4, ensure_ascii=False))
         with open(os.path.join(c_metadata_dir, project_name, "functions.json"), "w") as f:
-            f.write(json.dumps(functions, indent=4, ensure_ascii=False))
+            f.write(json.dumps(functions, indent=4, ensure_ascii=False))\
+
+            

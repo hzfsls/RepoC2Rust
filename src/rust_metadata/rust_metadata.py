@@ -2,7 +2,7 @@ from __future__ import annotations
 import os
 import json
 
-from classes import *
+from rust_metadata.classes import *
 
 def c_filename_to_rust_filename(name: str) -> str:
     return name.replace("-", "_").replace(".", "_") + ".rs"
