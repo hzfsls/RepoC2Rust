@@ -14,6 +14,13 @@ class RustProjectMetadata:
         proj = RustProjectMetadata()
         proj.paths = { k: RustPath.from_dict(v) for k, v in data.items() }
         return proj
+    
+    def get_all(self, typ: str) -> list[RustFile]:
+        all_files = []
+        for k, v in self.paths.items():
+            all_files.extend(v.recursive_get_all(typ))
+        return all_files
+    
 
 class RustPath:
     def __init__(self, typ: str):
@@ -35,7 +42,43 @@ class RustPath:
             return file
         else:
             raise Exception("Invalid type")
-    
+
+    def recursive_get_all(self, typ: str) -> list[RustFile]:
+        if typ == "definition":
+            if self.type == "file":
+                return self.definitions
+            else:
+                definitions = []
+                for k, v in self.children.items():
+                    definitions.extend(v.recursive_get_all(typ))
+                return definitions
+        elif typ == "macro":
+            if self.type == "file":
+                return self.macros
+            else:
+                macros = []
+                for k, v in self.children.items():
+                    macros.extend(v.recursive_get_all(typ))
+                return macros
+        elif typ == "macro_function":
+            if self.type == "file":
+                return self.macro_functions
+            else:
+                macro_functions = []
+                for k, v in self.children.items():
+                    macro_functions.extend(v.recursive_get_all(typ))
+                return macro_functions
+        elif typ == "function":
+            if self.type == "file":
+                return self.functions
+            else:
+                functions = []
+                for k, v in self.children.items():
+                    functions.extend(v.recursive_get_all(typ))
+                return functions
+        else:
+            raise Exception("Invalid type")
+
 class RustFolder(RustPath):
     def __init__(self, name: str):
         super().__init__("folder")

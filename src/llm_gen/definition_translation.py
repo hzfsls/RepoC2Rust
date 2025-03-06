@@ -1,6 +1,7 @@
 from openai import OpenAI
 from pebble import ProcessPool
 from httpx import Client
+from tqdm import tqdm
 import json
 
 client = OpenAI(api_key="sk-ea5eeb6b740a435e9a068ec46c594c3f", base_url="https://api.deepseek.com/beta",
@@ -263,7 +264,9 @@ def definition_prompt(c_code):
 
 results = {}
 
-def get_our_result_definition(value):
+def get_our_result_definition(value, cache):
+    if value in cache:
+        return cache[value]
     text = definition_prompt(value)
     response = client.chat.completions.create(
         model="deepseek-coder",
@@ -278,18 +281,19 @@ def get_our_result_definition(value):
         stream=False
     )
     result = response.choices[0].message.content
+    cache[value] = result
     return result
 
-def get_our_results_definition(data):
+def get_our_results_definition(data, cache):
     our_result = []
     results = {}
     with ProcessPool(10) as pool:
         process = {}
         for idx, value in enumerate(data):
             process[idx] = pool.schedule(get_our_result_definition, 
-                args=(value,))
+                args=(value, cache))
         results = {}
-        for idx, value in enumerate(data):
+        for idx, value in enumerate(tqdm(data)):
             results[idx] = process[idx].result()
         results = list(sorted(results.items(), key=lambda item: item[0]))
         for key, value in results:

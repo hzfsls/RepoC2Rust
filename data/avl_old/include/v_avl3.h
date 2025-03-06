@@ -32,12 +32,12 @@ extern "C" {
  * 本函数定义了树中节点的排序策略，任何需要访问树中元素的接口（包括添加、查找及删除树中节点）
  * 都要通过此函数来访问树中节点元素。
  */
-// #if defined(AVL_INT32_TO_LONG)
+#if defined(AVL_INT32_TO_LONG)
 /* 兼容SSP VXWORKS */
 typedef long (*AVL3_COMPARE)(const void *, const void *);
-// #else
-// typedef int (*AVL3_COMPARE)(const void *, const void *);
-// #endif
+#else
+typedef int (*AVL3_COMPARE)(const void *, const void *);
+#endif
 
 /* Structure  : AVL3_NODE */
 /* Description: Node in an AVL3 tree. */
