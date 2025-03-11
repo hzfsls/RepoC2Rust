@@ -82,9 +82,9 @@ extern "C" {
 // huffman huffman编码可能出现的字符种类比原始字符串多几个
 #define BZP_EXTRA_CHARS_NUM 2
 // 压缩时，单个压缩块中的数据已经写满
-#define BZP_BLOCK_FULL (bwt->nBlock >= bwt->nBlockMax)
+#define BZP_BLOCK_FULL(bwt) (bwt->nBlock >= bwt->nBlockMax)
 // 压缩时，从缓冲区读数据，缓冲区被读空
-#define BZP_BUFF_READ_EMPTY (bzpf->input->pos >= bzpf->input->nBuf)
+#define BZP_BUFF_READ_EMPTY(bzpf) (bzpf->input->pos >= bzpf->input->nBuf)
 // 处理过程中出错
 
 typedef struct {

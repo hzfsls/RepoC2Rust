@@ -384,7 +384,7 @@ void BzpAddCharToBlock(uint8_t lasch, int32_t num, BzpBwtInfo *bwt)
 void BzpBuffToBlockRLC(BzpFile *bzpf, BzpBwtInfo *bwt, bool IsLastdata)
 {
     // 这里block上限要小一些类似于-19，因为这里RLC一次性可能写入多个字符，用满有可能导致数组越界。
-    while (!BZP_BLOCK_FULL && !BZP_BUFF_READ_EMPTY) {
+    while (!BZP_BLOCK_FULL(bwt) && !BZP_BUFF_READ_EMPTY(bzpf)) {
         int32_t pos = bzpf->input->pos;
         uint8_t ch = (uint8_t)bzpf->input->buf[pos];
         uint8_t lasch = (uint8_t)bzpf->lasChar;
@@ -399,7 +399,7 @@ void BzpBuffToBlockRLC(BzpFile *bzpf, BzpBwtInfo *bwt, bool IsLastdata)
         bzpf->input->pos++;
     }
 
-    if (IsLastdata && BZP_BUFF_READ_EMPTY) {
+    if (IsLastdata && BZP_BUFF_READ_EMPTY(bzpf)) {
         // 将维护的最后的字符lastchar写入块中
         BzpAddCharToBlock(bzpf->lasChar, bzpf->num, bwt);
         bzpf->lasChar = BZP_ASCII_SIZE;
@@ -435,7 +435,7 @@ int32_t BzpProcessData(BzpAlgorithmInfo *bzpInfo, bool IsLastdata)
             // 初始化块信息
             BzpResetCompress(bwt, outData);
             bzpf->state = BZP_INPUT_COMPRESS;
-            if (IsLastdata && BZP_BUFF_READ_EMPTY) {
+            if (IsLastdata && BZP_BUFF_READ_EMPTY(bzpf)) {
                 bzpf->state = BZP_RETUEN_COMPRESS;
             }
         }
@@ -443,14 +443,14 @@ int32_t BzpProcessData(BzpAlgorithmInfo *bzpInfo, bool IsLastdata)
             // 从buf将数据写入block
             BzpBuffToBlockRLC(bzpf, bwt, IsLastdata);
             // 判断block和buff的状态， 最后一个块，Block满
-            if (IsLastdata && BZP_BUFF_READ_EMPTY) { // buf读空说明 要处理最后一个块。
+            if (IsLastdata && BZP_BUFF_READ_EMPTY(bzpf)) { // buf读空说明 要处理最后一个块。
                 ret = BzpCompressOneBlock(bzpInfo, outData);
                 // 判断最后一个块，然后输出尾部信息。
                 BzpWriteFileEnd(outData, bwt->combinedCRC);
                 BzpFlushbuf(outData);
                 // 写入最后一个块的内容,状态调整，准备写入输出流
                 bzpf->state = BZP_OUTPUT_COMPRESS;
-            } else if (BZP_BLOCK_FULL) {
+            } else if (BZP_BLOCK_FULL(bwt)) {
                 ret = BzpCompressOneBlock(bzpInfo, outData);
                 bzpf->state = BZP_OUTPUT_COMPRESS;
             } else {

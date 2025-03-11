@@ -24,74 +24,70 @@ created_project_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "
 
 global_cache_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "cache")
 
-definition_cache_path = os.path.join(global_cache_dir, "definition_cache.json")
-macro_cache_path = os.path.join(global_cache_dir, "macro_cache.json")
-macro_function_cache_path = os.path.join(global_cache_dir, "macro_function_cache.json")
-dummy_function_cache_path = os.path.join(global_cache_dir, "dummy_function_cache.json")
-function_cache_path = os.path.join(global_cache_dir, "function_cache.json")
 
-if not os.path.exists(global_cache_dir):
-    os.makedirs(global_cache_dir)
-if not os.path.exists(definition_cache_path):
-    with open(definition_cache_path, "w") as f:
-        json.dump({}, f)
-if not os.path.exists(macro_cache_path):
-    with open(macro_cache_path, "w") as f:
-        json.dump({}, f)
-if not os.path.exists(macro_function_cache_path):
-    with open(macro_function_cache_path, "w") as f:
-        json.dump({}, f)
-if not os.path.exists(dummy_function_cache_path):
-    with open(dummy_function_cache_path, "w") as f:
-        json.dump({}, f)
-if not os.path.exists(function_cache_path):
-    with open(function_cache_path, "w") as f:
-        json.dump({}, f)
+class Cache:
+    def __init__(self, name):
+        self.path = os.path.join(global_cache_dir, name)
+        self.cache_index = {}
+        self.cache = {}
+        if not os.path.exists(self.path):
+            os.makedirs(self.path)
+            with open(os.path.join(self.path, f"index.json"), "w") as f:
+                json.dump({}, f)        
+        else:
+            with open(os.path.join(self.path, f"index.json"), "r") as f:
+                self.cache_index = json.load(f)
+            for k, path in self.cache_index.items():
+                with open(os.path.join(self.path, path, "result.rs"), "r") as f:
+                    self.cache[k] = f.read()
+    
+    def update(self, key, value):
+        if key in self.cache_index:
+            new_idx = self.cache_index[key]
+        else:
+            new_idx = str(len(self.cache))
+            os.makedirs(os.path.join(self.path, str(new_idx)))
+        self.cache_index[key] = new_idx
+        self.cache[key] = value        
+        with open(os.path.join(self.path, str(new_idx), "result.rs"), "w") as f:
+            f.write(value)
+        with open(os.path.join(self.path, f"index.json"), "w") as f:
+            json.dump(self.cache_index, f)
 
-with open(definition_cache_path, "r") as f:
-    definition_cache = json.load(f)
-with open(macro_cache_path, "r") as f:
-    macro_cache = json.load(f)
-with open(macro_function_cache_path, "r") as f:
-    macro_function_cache = json.load(f)
-with open(dummy_function_cache_path, "r") as f:
-    dummy_function_cache = json.load(f)
-with open(function_cache_path, "r") as f:
-    function_cache = json.load(f)
+definition_cache = Cache("definition")
+macro_cache = Cache("macro")
+macro_function_cache = Cache("macro_function")
+dummy_function_cache = Cache("dummy_function")
+function_cache = Cache("function")
 
 
 def update_definitions(files: list[RustFile]):
     for f in tqdm(files):
-        f.rust_code = get_our_result_definition(f.c_code, definition_cache)
-    with open(definition_cache_path, "w") as f:
-        json.dump(definition_cache, f, indent=4)
+        f.rust_code = get_our_result_definition(f.c_code, definition_cache.cache)
+        definition_cache.update(f.c_code, f.rust_code)
 
 def update_macros(files: list[RustFile]):
     for f in tqdm(files):
-        f.rust_code = get_our_result_macro(f.c_code, macro_cache)
-    with open(macro_cache_path, "w") as f:
-        json.dump(macro_cache, f, indent=4)
+        f.rust_code = get_our_result_macro(f.c_code, macro_cache.cache)
+        macro_cache.update(f.c_code, f.rust_code)
 
 def update_macro_functions(files: list[RustFile]):
     for f in tqdm(files):
-        f.rust_code = get_our_result_macro_function(f.c_code, macro_function_cache)
-    with open(macro_function_cache_path, "w") as f:
-        json.dump(macro_function_cache, f, indent=4)
+        f.rust_code = get_our_result_macro_function(f.c_code, macro_function_cache.cache)
+        macro_function_cache.update(f.c_code, f.rust_code)
 
 def update_functions(files: list[RustFile]):
     for f in tqdm(files):
-        f.rust_code = get_our_result_function(f.c_code, function_cache)
-    with open(function_cache_path, "w") as f:
-        json.dump(function_cache, f, indent=4)
+        f.rust_code = get_our_result_function(f.c_code, function_cache.cache)
+        function_cache.update(f.c_code, f.rust_code)
 
 def update_dummy_functions(files: list[RustFile]):
     for f in tqdm(files):
-        f.dummy_code = get_our_result_dummy_function(f.c_code, dummy_function_cache)
-    with open(dummy_function_cache_path, "w") as f:
-        json.dump(dummy_function_cache, f, indent=4)
+        f.dummy_code = get_our_result_dummy_function(f.c_code, dummy_function_cache.cache)
+        dummy_function_cache.update(f.c_code, f.dummy_code)
 
 if __name__ == "__main__":
-    for project_name in ["avl"]:
+    for project_name in ["bzp"]:
         files = preprocess(os.path.join(project_dir, project_name), ["include", "src"],
             macros = {"ALWAYS_INLINE": "inline", "ALWAYS_NO_INLINE": "", "STATIC": "static", "HIDDEN": "", "CMPTLZ_HIDDEN":"", "TARGET_ATTRIBUTE_AUTO":"",
                 "RAPIDLZ_ALWAYS_INLINE": "inline", "CSTL_STATIC": "static", "DT_EXPORT": ""},
@@ -135,17 +131,7 @@ if __name__ == "__main__":
         else:
             print(f"{project_name} build fail!")
             print(error_msg)
-
-        update_definitions(proj.metadata.get_all("definition"))
-        proj = RustProject(project_name, metadata)
-        print(f"Create rust project `{project_name}` with updated definition at {proj.dir_path}")
-
-        success, error_msg = proj.build_project()
-        if success:
-            print(f"{project_name} build succeed!")
-        else:
-            print(f"{project_name} build fail!")
-            print(error_msg)
+            exit(0)
 
         update_macros(proj.metadata.get_all("macro"))
         proj = RustProject(project_name, metadata)
@@ -157,6 +143,7 @@ if __name__ == "__main__":
         else:
             print(f"{project_name} build fail!")
             print(error_msg)
+            exit(0)
 
         update_macro_functions(proj.metadata.get_all("macro_function"))
         proj = RustProject(project_name, metadata)
@@ -168,6 +155,20 @@ if __name__ == "__main__":
         else:
             print(f"{project_name} build fail!")
             print(error_msg)
+            exit(0)
+    
+        update_definitions(proj.metadata.get_all("definition"))
+        proj = RustProject(project_name, metadata)
+        print(f"Create rust project `{project_name}` with updated definition at {proj.dir_path}")
+
+        success, error_msg = proj.build_project()
+        if success:
+            print(f"{project_name} build succeed!")
+        else:
+            print(f"{project_name} build fail!")
+            print(error_msg)
+            exit(0)
+
         
         update_dummy_functions(proj.metadata.get_all("function"))
         proj = RustProject(project_name, metadata)
@@ -179,4 +180,21 @@ if __name__ == "__main__":
         else:
             print(f"{project_name} build fail!")
             print(error_msg)
+            exit(0)
+
+        functions = proj.metadata.get_all("function")
+        for function in functions:
+            update_functions([function])
+            proj = RustProject(project_name, metadata, "full")
+            print(f"Create rust project `{project_name}` with updated function at {proj.dir_path}")
+
+            success, error_msg = proj.build_project()
+            if success:
+                print(f"{project_name} build succeed!")
+            else:
+                function_cache_index = function_cache.cache_index[function.c_code]
+                print(f"{project_name} build fail! function cache index: {function_cache_index}")
+                print(error_msg)
+                exit(0)
+
 

@@ -13,7 +13,7 @@
 extern "C" {
 #endif /* --cplusplus */
 
-#define AVL_NULL_PTR 0L
+// #define AVL_NULL_PTR 0L
 
 typedef struct AVLBaseNode {
     struct AVLBaseNode *pstParent;

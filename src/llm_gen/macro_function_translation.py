@@ -4,7 +4,7 @@ from httpx import Client
 from tqdm import tqdm
 import json
 
-client = OpenAI(api_key="sk-ea5eeb6b740a435e9a068ec46c594c3f", base_url="https://api.deepseek.com/beta",
+client = OpenAI(api_key="sk-76da526dbd8b48c3954df9336a8a6592", base_url="https://api.deepseek.com/beta",
     http_client=Client(
     verify=False  # 注意：禁用 SSL 验证可能有安全风险，请根据实际情况决定是否需要这样做
 ))
