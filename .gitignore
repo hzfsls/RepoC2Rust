@@ -1,6 +1,6 @@
 .tmp/
 .direnv/
-*/__pypackages__/
+**/__pypackages__/**
 .pdm-build/
 c_metadata/
 created_project/
