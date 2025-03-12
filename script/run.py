@@ -99,30 +99,35 @@ if __name__ == "__main__":
                 "#if __cplusplus\n}\n#endif": "}\n",
                 "#if __cplusplus\n}\n\n#endif": "}\n",
             })
+
         metadata = get_metadata(files)
-        functions = {}
+        declarations_location = {}
         for f in metadata:
             for func in metadata[f].functions:
-                if "main" not in func and "test" not in func and len(func) < 4096:
-                    functions[func] = f
+                declarations_location[func] = f
+            for global_var in metadata[f].global_variables:
+                declarations_location[global_var] = f
         os.makedirs(os.path.join(c_metadata_dir, project_name), exist_ok=True)
         print(f"Project `{project_name}` resolve succeeded!")
         with open(os.path.join(c_metadata_dir, project_name, "files.json"), "w") as f:
             f.write(json.dumps(metadata, default=lambda o: o.__dict__(), indent=4, ensure_ascii=False))
-        with open(os.path.join(c_metadata_dir, project_name, "functions.json"), "w") as f:
-            f.write(json.dumps(functions, indent=4, ensure_ascii=False))
+        with open(os.path.join(c_metadata_dir, project_name, "declarations_location.json"), "w") as f:
+            f.write(json.dumps(declarations_location, indent=4, ensure_ascii=False))
+
         with open(os.path.join(c_metadata_dir, project_name, "files.json"), "r") as f:
             files_data = json.load(f)
-        with open(os.path.join(c_metadata_dir, project_name, "functions.json"), "r") as f:
-            functions_data = json.load(f)
-        metadata = resolve_metadata(files_data, functions_data)
+        with open(os.path.join(c_metadata_dir, project_name, "declarations_location.json"), "r") as f:
+            declarations_data = json.load(f)
+
+
+        metadata = resolve_metadata(files_data, declarations_data)
         os.makedirs(os.path.join(rust_metadata_dir, project_name), exist_ok=True)
         with open(os.path.join(rust_metadata_dir, project_name, "metadata.json"), "w") as f:
             json.dump(metadata.__dict__(), f, indent=4)
+
         with open(os.path.join(rust_metadata_dir, project_name, "metadata.json"), "r") as f:
             files_data = json.load(f)
         metadata = RustProjectMetadata.from_dict(files_data)
-
         proj = RustProject(project_name, metadata)
         print(f"Create rust project `{project_name}` at {proj.dir_path}")
         success, error_msg = proj.build_project()

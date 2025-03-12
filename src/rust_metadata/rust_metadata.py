@@ -89,8 +89,8 @@ def includes_to_declarations(includes: list[str], name_dict, c_name_dict) -> lis
             pass
     return declarations
 
-def resolve_metadata(files: dict[str, str], functions: dict[str, str]) -> dict[str, dict]:
-    functions_use = { f: "pub use " + c_filename_to_rust_package_name(functions[f]) + "::" + f + ";" for f in functions }
+def resolve_metadata(files: dict[str, str], declarations: dict[str, str]) -> dict[str, dict]:
+    declarations_use = { f: "pub use " + c_filename_to_rust_package_name(declarations[f]) + "::" + f + ";" for f in declarations }
     all_file_names = [ c_filename_to_rust_filename(f) for f in files ]
     c_name_dict = { f.split("/")[-1]: f for f in files }
     directories = resolve_directory(all_file_names)
@@ -114,7 +114,7 @@ def resolve_metadata(files: dict[str, str], functions: dict[str, str]) -> dict[s
     # 处理function_declarations
     for path in files:
         target_path = name_dict[c_filename_to_rust_filename(path.split("/")[-1])]
-        target_path.declarations += [ functions_use[f] for f in files[path]["function_declarations"] if f in functions_use and functions[f] != path ]
+        target_path.declarations += [ declarations_use[f] for f in files[path]["declarations"] if f in declarations_use and declarations_use[f] != path ]
     # 处理macros
     for path in files:
         target_path = name_dict[c_filename_to_rust_filename(path.split("/")[-1])]
@@ -127,10 +127,13 @@ def resolve_metadata(files: dict[str, str], functions: dict[str, str]) -> dict[s
     for path in files:
         target_path = name_dict[c_filename_to_rust_filename(path.split("/")[-1])]
         target_path.definitions += [ RustCode(t) for t in files[path]["types"]]    
-    # 处理variable_declarations
+    # 处理global_variables
     for path in files:
         target_path = name_dict[c_filename_to_rust_filename(path.split("/")[-1])]
-        target_path.definitions += [ RustCode(vd) for vd in files[path]["variable_declarations"]]
+        for f, v in files[path]["global_variables"].items():
+            code = RustCode(v)
+            code.rust_code = f"pub static {f}: i32 = 0;"
+            target_path.definitions.append(code)
     # 处理functions
     for path in files:
         target_path = name_dict[c_filename_to_rust_filename(path.split("/")[-1])]

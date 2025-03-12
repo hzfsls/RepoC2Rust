@@ -117,16 +117,17 @@ if __name__ == "__main__":
                 "#if __cplusplus\n}\n\n#endif": "}\n",
             })
         metadata = get_metadata(files)
-        functions = {}
+        declarations_location = {}
         for f in metadata:
             for func in metadata[f].functions:
-                if "main" not in func and "test" not in func and len(func) < 4096:
-                    functions[func] = f
+                declarations_location[func] = f
+            for global_var in metadata[f].global_variables:
+                declarations_location[global_var] = f
         os.makedirs(os.path.join(c_metadata_dir, project_name), exist_ok=True)
         print(f"Project `{project_name}` resolve succeeded!")
         with open(os.path.join(c_metadata_dir, project_name, "files.json"), "w") as f:
             f.write(json.dumps(metadata, default=lambda o: o.__dict__(), indent=4, ensure_ascii=False))
-        with open(os.path.join(c_metadata_dir, project_name, "functions.json"), "w") as f:
-            f.write(json.dumps(functions, indent=4, ensure_ascii=False))\
+        with open(os.path.join(c_metadata_dir, project_name, "declarations_location.json"), "w") as f:
+            f.write(json.dumps(declarations_location, indent=4, ensure_ascii=False))\
 
             

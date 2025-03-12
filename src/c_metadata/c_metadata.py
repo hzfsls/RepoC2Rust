@@ -17,13 +17,25 @@ def get_metadata(files: dict[str, str]) -> dict[str, CFileMetadata]:
         result[f] = CFileMetadata.from_code(f, files[f])
     return result
 
+def has_identifier(node: Node):
+    chind_cnt = node.child_count
+    if node.type == "identifier":
+        return True, node.text.decode("utf-8")
+    if chind_cnt == 0:
+        return False, None
+    for i in range(chind_cnt):
+        res, name = has_identifier(node.child(i))
+        if res:
+            return True, name
+    return False, None
+
+
 def has_function_declarator(node: Node):
     chind_cnt = node.child_count
     if node.type == "function_declarator":
-        identifier_node = node.child(0)
-        assert identifier_node.type == "identifier", "A"
-        name = identifier_node.text.decode("utf-8")
-        return True, name
+        res, name = has_identifier(node)
+        assert res, node.text.decode("utf-8").strip()
+        return res, name
     if chind_cnt == 0:
         return False, None
     for i in range(chind_cnt):
@@ -31,6 +43,33 @@ def has_function_declarator(node: Node):
         if res:
             return True, name
     return False, None
+
+def has_init_declarator(node: Node):
+    chind_cnt = node.child_count
+    if node.type == "init_declarator":
+        res, name = has_identifier(node)
+        assert res, node.text.decode("utf-8").strip()
+        return res, name
+    if chind_cnt == 0:
+        return False, None
+    for i in range(chind_cnt):
+        res, name = has_init_declarator(node.child(i))
+        if res:
+            return True, name
+    return False, None
+
+
+def has_extern(node: Node):
+    chind_cnt = node.child_count
+    if node.type == "extern":
+        return True
+    if chind_cnt == 0:
+        return False
+    for i in range(chind_cnt):
+        res= has_extern(node.child(i))
+        if res:
+            return True
+    return False
 
 
 
@@ -41,8 +80,8 @@ class CFileMetadata:
         self.types = []
         self.macros = []
         self.macro_functions = []
-        self.variable_declarations = []
-        self.function_declarations = {}
+        self.global_variables = {}
+        self.declarations = {}
         self.functions = {}
 
     def __str__(self):
@@ -54,8 +93,8 @@ class CFileMetadata:
             "macros": [x for x in self.macros],
             "macro_functions": [x for x in self.macro_functions],
             "types":  [x for x in self.types],
-            "variable_declarations": [x for x in self.variable_declarations],
-            "function_declarations": self.function_declarations,
+            "global_variables": self.global_variables,
+            "declarations": self.declarations,
             "functions": self.functions
         }
     
@@ -86,9 +125,20 @@ class CFileMetadata:
         elif node.type == "declaration":
             res, name = has_function_declarator(node)
             if not res:
-                self.variable_declarations.append(snippet)
+                flag = has_extern(node)
+                if flag:
+                    flag, name = has_identifier(node)
+                    assert flag == True, snippet
+                    self.declarations[name] = snippet
+                else:
+                    flag, name = has_init_declarator(node)
+                    assert flag == True, snippet
+                    if flag:
+                        self.global_variables[name] = snippet
+                    else:
+                        print(f"Warning: `{snippet}` is neither an extern declaration or global variable initialization.")
             else:
-                self.function_declarations[name] = snippet
+                self.declarations[name] = snippet
 
         else:
             chind_cnt = node.child_count
