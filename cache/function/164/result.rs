@@ -1,13 +1,3 @@
-pub fn arraylist_remove_range(mut arraylist: Ptr<ArrayList>, mut index: u32, mut length: u32) {
-    if index > arraylist.length || index + length > arraylist.length {
-        return;
-    }
-
-    c_memmove!(
-        c_ref!(arraylist.data[index]).cast(),
-        c_ref!(arraylist.data[index + length]).cast(),
-        (arraylist.length - (index + length)) * c_sizeof!(ArrayListValue)
-    );
-
-    arraylist.length -= length;
+pub fn rb_tree_node_uncle(mut node: Ptr<RBTreeNode>) -> Ptr<RBTreeNode> {
+    return rb_tree_node_sibling(node.parent.cast()).cast();
 }

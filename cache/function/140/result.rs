@@ -1,38 +1,16 @@
-pub fn binomial_tree_merge(mut heap: Ptr<BinomialHeap>, mut tree1: Ptr<BinomialTree>, mut tree2: Ptr<BinomialTree>) -> Ptr<BinomialTree> {
-    let mut new_tree: Ptr<BinomialTree>;
-    let mut tmp: Ptr<BinomialTree>;
-    let mut i: i32;
+pub fn avl_tree_node_replace(mut tree: Ptr<AVLTree>, mut node1: Ptr<AVLTreeNode>, mut node2: Ptr<AVLTreeNode>) {
+    let mut side: i32 = Default::default();
 
-    if binomial_heap_cmp(heap.cast(), tree1.value.cast(), tree2.value.cast()) > 0 {
-        tmp = tree1.cast();
-        tree1 = tree2.cast();
-        tree2 = tmp.cast();
+    if (node2 != NULL!()).as_bool() {
+        node2.parent = node1.parent.cast();
     }
 
-    new_tree = c_malloc!(c_sizeof!(BinomialTree));
+    if (node1.parent == NULL!()).as_bool() {
+        tree.root_node = node2.cast();
+    } else {
+        side = avl_tree_node_parent_side(node1.cast()).cast();
+        node1.parent.children[side] = node2.cast();
 
-    if new_tree == NULL!() {
-        return NULL!();
+        avl_tree_update_height(node1.parent.cast());
     }
-
-    new_tree.refcount = 0;
-    new_tree.order = (tree1.order + 1).cast::<u16>();
-
-    new_tree.value = tree1.value.cast();
-
-    new_tree.subtrees = c_malloc!(c_sizeof!(Ptr<BinomialTree>) * new_tree.order);
-
-    if new_tree.subtrees == NULL!() {
-        c_free!(new_tree);
-        return NULL!();
-    }
-
-    c_memcpy!(new_tree.subtrees, tree1.subtrees, c_sizeof!(Ptr<BinomialTree>) * tree1.order);
-    new_tree.subtrees[new_tree.order - 1] = tree2.cast();
-
-    c_for!(let mut i: i32 = 0; i < new_tree.order; i.prefix_plus_plus(); {
-        binomial_tree_ref(new_tree.subtrees[i].cast());
-    });
-
-    return new_tree.cast();
 }

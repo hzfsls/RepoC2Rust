@@ -1,38 +1,36 @@
-pub fn set_insert(mut set: Ptr<Set>, mut data: SetValue) -> i32 {
-    let mut newentry: Ptr<SetEntry> = Default::default();
-    let mut rover: Ptr<SetEntry> = Default::default();
-    let mut index: u32 = Default::default();
+pub fn VosAvlDelete(mut pstBaseNode: Ptr<AVLBASE_NODE_S>, mut pstBaseTree: Ptr<AVLBASE_TREE_S>) {
+    let mut pstReplaceNode: Ptr<AVLBASE_NODE_S> = Default::default();
+    let mut pstParentNode: Ptr<AVLBASE_NODE_S> = Default::default();
+    let mut sNewHeight: i16 = 0;
 
-    if (set.entries * 3) / set.table_size > 0 {
-        if !set_enlarge(set.cast()) {
-            return 0;
+    pstReplaceNode = VosAvlDeleteCheck(pstBaseTree.cast(), pstBaseNode.cast()).cast();
+
+    pstParentNode = pstBaseNode.pstParent.cast();
+
+    pstBaseNode.pstParent = AVL_NULL_PTR!();
+    pstBaseNode.pstRight = AVL_NULL_PTR!();
+    pstBaseNode.pstLeft = AVL_NULL_PTR!();
+    pstBaseNode.sRHeight = -1;
+    pstBaseNode.sLHeight = -1;
+
+    if (pstReplaceNode != AVL_NULL_PTR!()).as_bool() {
+        pstReplaceNode.pstParent = pstParentNode.cast();
+        sNewHeight = (1 + VOS_V2_AVL_MAX!(pstReplaceNode.sLHeight, pstReplaceNode.sRHeight)).cast();
+    }
+
+    if (pstParentNode != AVL_NULL_PTR!()).as_bool() {
+        if (pstParentNode.pstRight == pstBaseNode).as_bool() {
+            pstParentNode.pstRight = pstReplaceNode.cast();
+            pstParentNode.sRHeight = sNewHeight.cast();
+        } else {
+            pstParentNode.pstLeft = pstReplaceNode.cast();
+            pstParentNode.sLHeight = sNewHeight.cast();
         }
+
+        VosAvlBalanceTree(pstBaseTree.cast(), pstParentNode.cast());
+    } else {
+        pstBaseTree.pstRoot = pstReplaceNode.cast();
     }
 
-    index = (set.hash_func)(data.cast()) % set.table_size;
-
-    rover = set.table[index].cast();
-
-    while rover != NULL!() {
-        if (set.equal_func)(data.cast(), rover.data.cast()) != 0 {
-            return 0;
-        }
-
-        rover = rover.next.cast();
-    }
-
-    newentry = c_malloc!(c_sizeof!(SetEntry));
-
-    if newentry == NULL!() {
-        return 0;
-    }
-
-    newentry.data = data.cast();
-
-    newentry.next = set.table[index].cast();
-    set.table[index] = newentry.cast();
-
-    set.entries.prefix_plus_plus();
-
-    return 1;
+    return;
 }

@@ -1,1 +1,1 @@
-pub type BloomFilter = _BloomFilter;
+pub type TrieValue = VoidPtr;

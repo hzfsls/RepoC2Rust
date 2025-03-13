@@ -1,23 +1,16 @@
-pub fn bloom_filter_intersection(mut filter1: Ptr<BloomFilter>, mut filter2: Ptr<BloomFilter>) -> Ptr<BloomFilter> {
-    let mut result: Ptr<BloomFilter> = Default::default();
-    let mut i: u32 = Default::default();
-    let mut array_size: u32 = Default::default();
+pub fn avl_tree_to_array(mut tree: Ptr<AVLTree>) -> Ptr<AVLTreeValue> {
+    let mut array: Ptr<AVLTreeValue> = Default::default();
+    let mut index: i32 = Default::default();
 
-    if filter1.table_size != filter2.table_size || filter1.num_functions != filter2.num_functions || filter1.hash_func != filter2.hash_func {
+    array = c_malloc!(c_sizeof!(AVLTreeValue) * tree.num_nodes);
+
+    if (array == NULL!()).as_bool() {
         return NULL!();
     }
 
-    result = bloom_filter_new(filter1.table_size.cast(), filter1.hash_func.cast(), filter1.num_functions.cast());
+    index = 0;
 
-    if result == NULL!() {
-        return NULL!();
-    }
+    avl_tree_to_array_add_subtree(tree.root_node.cast(), array.cast(), c_ref!(index).cast());
 
-    array_size = (filter1.table_size + 7) / 8;
-
-    c_for!(let mut i: u32 = 0; i < array_size; i.prefix_plus_plus(); {
-        result.table[i] = filter1.table[i] & filter2.table[i];
-    });
-
-    return result.cast();
+    return array.cast();
 }

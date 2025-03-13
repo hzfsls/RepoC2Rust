@@ -1,6 +1,6 @@
 macro_rules! VOS_AVL_LAST {
     ($TREE:expr) => {
-        if c_ref!($TREE).pstLast != AVL_NULL_PTR!() {
+        if c_ref!($TREE).pstLast != AVL_NULL_PTR!().cast::<Ptr<AVL_NODE>>() {
             c_ref!($TREE).pstLast.pSelf
         } else {
             AVL_NULL_PTR!()

@@ -1,2 +1,2 @@
-macro_rules! BZP_MTF_ENCODE_BASE { () => { 2 } }
-pub(crate) use BZP_MTF_ENCODE_BASE;
+macro_rules! V_AVLBASE_H { () => { } }
+pub(crate) use V_AVLBASE_H;

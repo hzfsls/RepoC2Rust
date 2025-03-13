@@ -1,5 +1,3 @@
-pub fn list_set_data(mut listentry: Ptr<ListEntry>, mut value: ListValue) {
-    if listentry != NULL!() {
-        listentry.data = value.cast();
-    }
+pub fn rb_tree_node_value(mut node: Ptr<RBTreeNode>) -> RBTreeValue {
+    return node.value.cast();
 }

@@ -1,1 +1,1 @@
-pub type AVLTreeKey = VoidPtr;
+pub type HashTableEntry = _HashTableEntry;

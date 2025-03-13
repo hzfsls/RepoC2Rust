@@ -1,12 +1,8 @@
-pub fn queue_new() -> Ptr<Queue> {
-    let mut queue: Ptr<Queue> = c_malloc!(c_sizeof!(Queue));
-
-    if queue == NULL!() {
-        return NULL!();
+pub fn VosAvlNodeRightInsert(mut pstTree: Ptr<AVLBASE_TREE_S>, mut pstParentNode: Ptr<AVLBASE_NODE_S>, mut pstNode: Ptr<AVLBASE_NODE_S>) {
+    pstNode.pstParent = pstParentNode.cast();
+    pstParentNode.pstRight = pstNode.cast();
+    pstParentNode.sRHeight = 1;
+    if (pstParentNode == pstTree.pstLast).as_bool() {
+        pstTree.pstLast = pstNode.cast();
     }
-
-    queue.head = NULL!();
-    queue.tail = NULL!();
-
-    return queue.cast();
 }

@@ -1,63 +1,16 @@
-pub fn VOS_AVL_Insert_Or_Find(mut pstTree: Ptr<AVL_TREE>, mut pstNode: Ptr<AVL_NODE>) -> Ptr<Void> {
-    let mut pstParentNode: Ptr<AVL_NODE> = Default::default();
-    let mut iResult: i32 = Default::default();
+pub fn sortedarray_first_index(mut sortedarray: Ptr<SortedArray>, mut data: SortedArrayValue, mut left: u32, mut right: u32) -> u32 {
+    let mut index: u32 = left.cast();
 
-    if (pstTree == AVL_NULL_PTR!()) || (pstNode == AVL_NULL_PTR!()) || (VOS_AVL_IN_TREE!(*pstNode)) {
-        return AVL_NULL_PTR!();
-    }
+    while (left < right).as_bool() {
+        index = ((left + right) / 2).cast();
 
-    pstNode.sRHeight = 0;
-    pstNode.sLHeight = 0;
-
-    if pstTree.pstRoot == AVL_NULL_PTR!() {
-        pstTree.pstRoot = pstNode.cast();
-        pstTree.pstFirst = pstNode.cast();
-        pstTree.pstLast = pstNode.cast();
-        return AVL_NULL_PTR!();
-    }
-
-    pstParentNode = pstTree.pstRoot.cast();
-    while pstParentNode != AVL_NULL_PTR!() {
-        iResult = (pstTree.pfnCompare)(pstNode.pKey.cast(), pstParentNode.pKey.cast()).cast();
-        if iResult > 0 {
-            if pstParentNode.pstRight != AVL_NULL_PTR!() {
-                pstParentNode = pstParentNode.pstRight.cast();
-                continue;
-            }
-
-            VosAvlNodeRightInsert(
-                c_ref!(pstTree.pstRoot).cast::<Ptr<AVLBASE_TREE_S>>(),
-                pstParentNode.cast::<Ptr<AVLBASE_NODE_S>>(),
-                pstNode.cast::<Ptr<AVLBASE_NODE_S>>(),
-            );
-
-            break;
-        } else if iResult < 0 {
-            if pstParentNode.pstLeft != AVL_NULL_PTR!() {
-                pstParentNode = pstParentNode.pstLeft.cast();
-                continue;
-            }
-
-            VosAvlNodeLeftInsert(
-                c_ref!(pstTree.pstRoot).cast::<Ptr<AVLBASE_TREE_S>>(),
-                pstParentNode.cast::<Ptr<AVLBASE_NODE_S>>(),
-                pstNode.cast::<Ptr<AVLBASE_NODE_S>>(),
-            );
-
-            break;
+        let mut order: i32 = (sortedarray.cmp_func)(data.cast(), sortedarray.data[index].cast()).cast();
+        if order > 0 {
+            left = (index + 1).cast();
+        } else {
+            right = index.cast();
         }
-
-        pstNode.sRHeight = -1;
-        pstNode.sLHeight = -1;
-        return pstParentNode.pSelf.cast();
     }
 
-    if pstParentNode != AVL_NULL_PTR!() {
-        VosAvlBalanceTree(
-            c_ref!(pstTree.pstRoot).cast::<Ptr<AVLBASE_TREE_S>>(),
-            pstParentNode.cast::<Ptr<AVLBASE_NODE_S>>(),
-        );
-    }
-
-    return AVL_NULL_PTR!();
+    return index.cast();
 }

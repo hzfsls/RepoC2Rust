@@ -1,84 +1,35 @@
-pub fn binomial_heap_merge(mut heap: Ptr<BinomialHeap>, mut other: Ptr<BinomialHeap>) -> i32 {
-    let mut new_roots: Ptr<Ptr<BinomialTree>>;
-    let mut new_roots_length: u32;
-    let mut vals: Array<Ptr<BinomialTree>, 3> = Default::default();
-    let mut num_vals: i32;
-    let mut carry: Ptr<BinomialTree> = Default::default();
-    let mut new_carry: Ptr<BinomialTree> = Default::default();
-    let mut max: u32;
-    let mut i: u32;
+pub fn avl_tree_node_balance(mut tree: Ptr<AVLTree>, mut node: Ptr<AVLTreeNode>) -> Ptr<AVLTreeNode> {
+    let mut left_subtree: Ptr<AVLTreeNode> = Default::default();
+    let mut right_subtree: Ptr<AVLTreeNode> = Default::default();
+    let mut child: Ptr<AVLTreeNode> = Default::default();
+    let mut diff: i32 = Default::default();
 
-    if heap.roots_length > other.roots_length {
-        max = heap.roots_length + 1;
-    } else {
-        max = other.roots_length + 1;
+    left_subtree = node.children[AVL_TREE_NODE_LEFT!()].cast();
+    right_subtree = node.children[AVL_TREE_NODE_RIGHT!()].cast();
+
+    diff = (avl_tree_subtree_height(right_subtree.cast()) - avl_tree_subtree_height(left_subtree.cast())).cast();
+
+    if (diff >= 2).as_bool() {
+        child = right_subtree.cast();
+
+        if (avl_tree_subtree_height(child.children[AVL_TREE_NODE_RIGHT!()].cast()) <
+            avl_tree_subtree_height(child.children[AVL_TREE_NODE_LEFT!()].cast())).as_bool() {
+            avl_tree_rotate(tree.cast(), right_subtree.cast(), AVL_TREE_NODE_RIGHT!().cast());
+        }
+
+        node = avl_tree_rotate(tree.cast(), node.cast(), AVL_TREE_NODE_LEFT!().cast());
+    } else if (diff <= -2).as_bool() {
+        child = node.children[AVL_TREE_NODE_LEFT!()].cast();
+
+        if (avl_tree_subtree_height(child.children[AVL_TREE_NODE_LEFT!()].cast()) <
+            avl_tree_subtree_height(child.children[AVL_TREE_NODE_RIGHT!()].cast()).as_bool() {
+            avl_tree_rotate(tree.cast(), left_subtree.cast(), AVL_TREE_NODE_LEFT!().cast());
+        }
+
+        node = avl_tree_rotate(tree.cast(), node.cast(), AVL_TREE_NODE_RIGHT!().cast());
     }
 
-    new_roots = c_malloc!(max * c_sizeof!(Ptr<BinomialTree>));
+    avl_tree_update_height(node.cast());
 
-    if new_roots == NULL!() {
-        return 0;
-    }
-
-    new_roots_length = 0;
-    carry = NULL!();
-
-    c_for!(let mut i: u32 = 0; i < max; i.prefix_plus_plus(); {
-        num_vals = 0;
-
-        if i < heap.roots_length && heap.roots[i] != NULL!() {
-            vals[num_vals] = heap.roots[i].cast();
-            num_vals += 1;
-        }
-
-        if i < other.roots_length && other.roots[i] != NULL!() {
-            vals[num_vals] = other.roots[i].cast();
-            num_vals += 1;
-        }
-
-        if carry != NULL!() {
-            vals[num_vals] = carry.cast();
-            num_vals += 1;
-        }
-
-        if (num_vals & 1) != 0 {
-            new_roots[i] = vals[num_vals - 1].cast();
-            binomial_tree_ref(new_roots[i].cast());
-            new_roots_length = i + 1;
-        } else {
-            new_roots[i] = NULL!();
-        }
-
-        if (num_vals & 2) != 0 {
-            new_carry = binomial_tree_merge(heap.cast(), vals[0].cast(), vals[1].cast());
-
-            if new_carry == NULL!() {
-                binomial_heap_merge_undo(new_roots.cast(), i.cast());
-
-                binomial_tree_unref(carry.cast());
-
-                return 0;
-            }
-        } else {
-            new_carry = NULL!();
-        }
-
-        binomial_tree_unref(carry.cast());
-
-        carry = new_carry.cast();
-
-        binomial_tree_ref(carry.cast());
-    });
-
-    c_for!(let mut i: u32 = 0; i < heap.roots_length; i.prefix_plus_plus(); {
-        if heap.roots[i] != NULL!() {
-            binomial_tree_unref(heap.roots[i].cast());
-        }
-    });
-
-    c_free!(heap.roots);
-    heap.roots = new_roots.cast();
-    heap.roots_length = new_roots_length;
-
-    return 1;
+    return node.cast();
 }

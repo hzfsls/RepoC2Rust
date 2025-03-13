@@ -1,18 +1,31 @@
-pub fn BzpGetHuffmanTable(mut huffman: Ptr<BzpHuffmanInfo>) {
-    let mut vec: i32 = 0;
-    let mut mi: i32 = huffman.len[0].cast();
-    let mut mx: i32 = huffman.len[0].cast();
-    c_for!(let mut i: i32 = 0; i < huffman.alphaSize; i.suffix_plus_plus(); {
-        mi = BZP_MIN_FUN!(mi, huffman.len[i]).cast();
-        mx = BZP_MAX_FUN!(mx, huffman.len[i]).cast();
-    });
-    c_for!(let mut i: i32 = mi; i <= mx; i.suffix_plus_plus(); {
-        c_for!(let mut j: i32 = 0; j < huffman.alphaSize; j.suffix_plus_plus(); {
-            if huffman.len[j] == i {
-                huffman.table[j] = vec.cast();
-                vec += 1;
+pub fn set_iter_next(mut iterator: Ptr<SetIterator>) -> SetValue {
+    let mut set: Ptr<Set> = Default::default();
+    let mut result: SetValue = Default::default();
+    let mut current_entry: Ptr<SetEntry> = Default::default();
+    let mut chain: u32 = Default::default();
+
+    set = iterator.set.cast();
+
+    if (iterator.next_entry == NULL!()).as_bool() {
+        return SET_NULL!();
+    }
+
+    current_entry = iterator.next_entry.cast();
+    result = current_entry.data.cast();
+
+    if (current_entry.next != NULL!()).as_bool() {
+        iterator.next_entry = current_entry.next.cast();
+    } else {
+        iterator.next_entry = NULL!();
+        chain = (iterator.next_chain + 1).cast();
+        while (chain < set.table_size).as_bool() {
+            if (set.table[chain] != NULL!()).as_bool() {
+                iterator.next_entry = set.table[chain].cast();
+                break;
             }
-        });
-        vec <<= 1;
-    });
+            chain.prefix_plus_plus();
+        }
+        iterator.next_chain = chain.cast();
+    }
+    return result.cast();
 }

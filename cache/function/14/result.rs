@@ -1,11 +1,19 @@
-pub fn VOS_AVL3_Last(mut pstTree: Ptr<AVL3_TREE>, mut pstTreeInfo: Ptr<AVL3_TREE_INFO>) -> Ptr<Void> {
-    let mut pstNode: Ptr<AVL3_NODE> = Default::default();
+pub fn binomial_tree_unref(mut tree: Ptr<BinomialTree>) {
+    let mut i: i32 = Default::default();
 
-    if TREE_OR_TREEINFO_IS_NULL!(pstTree, pstTreeInfo) {
-        return AVL_NULL_PTR!();
+    if (tree == NULL!()) {
+        return;
     }
 
-    pstNode = pstTree.pstLast.cast();
+    tree.refcount.suffix_minus_minus();
 
-    return GET_NODE_START_ADDRESS!(pstNode, pstTreeInfo.usNodeOffset);
+    if (tree.refcount == 0) {
+
+        c_for!(let mut i: i32 = 0; i < tree.order.cast(); i.prefix_plus_plus(); {
+            binomial_tree_unref(tree.subtrees[i]);
+        });
+
+        c_free!(tree.subtrees);
+        c_free!(tree);
+    }
 }

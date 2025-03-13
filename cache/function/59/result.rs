@@ -1,9 +1,6 @@
-pub fn BzpCompressEnd(mut bzpInfo: Ptr<BzpAlgorithmInfo>) {
-    if bzpInfo.compressFile.input.filePtr != NULL!() {
-        c_fclose!(bzpInfo.compressFile.input.filePtr);
+pub fn list_next(mut listentry: Ptr<ListEntry>) -> Ptr<ListEntry> {
+    if (listentry == NULL!()).as_bool() {
+        return NULL!();
     }
-    if bzpInfo.compressFile.output.filePtr != NULL!() {
-        c_fclose!(bzpInfo.compressFile.output.filePtr);
-    }
-    BzpAlgorithmInfoFinish(bzpInfo.cast());
+    return listentry.next.cast();
 }

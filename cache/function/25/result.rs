@@ -1,21 +1,26 @@
-pub fn VosAvlSwapRightMost(mut pstTree: Ptr<AVLBASE_TREE_S>, mut pstSubTree: Ptr<AVLBASE_NODE_S>, mut pstNode: Ptr<AVLBASE_NODE_S>) {
-    let mut pstSwapNode: Ptr<AVLBASE_NODE_S> = pstSubTree.cast();
-    let mut pstSwapParent: Ptr<AVLBASE_NODE_S> = Default::default();
-    let mut pstSwapLeft: Ptr<AVLBASE_NODE_S> = Default::default();
+pub fn bloom_filter_new(mut table_size: u32, mut hash_func: BloomFilterHashFunc, mut num_functions: u32) -> Ptr<BloomFilter> {
+    let mut filter: Ptr<BloomFilter> = Default::default();
 
-    FIND_RIGHTMOST_NODE!(pstSwapNode);
-
-    if (pstSwapNode.sRHeight != 0) || (pstSwapNode.sLHeight > 1) {
-        return;
+    if (num_functions > (c_sizeof!(salts) / c_sizeof!(*salts)).cast() {
+        return NULL!();
     }
 
-    pstSwapParent = pstSwapNode.pstParent.cast();
-    pstSwapLeft = pstSwapNode.pstLeft.cast();
+    filter = c_malloc!(c_sizeof!(BloomFilter));
 
-    VosAvlUpdateSwapNode(pstTree.cast(), pstSwapNode.cast(), pstNode.cast());
-    VosAvlMoveNodeToNewPos(pstNode.cast(), pstSwapParent.cast(), pstSwapLeft.cast(), AVL_NULL_PTR!());
+    if (filter == NULL!()).as_bool() {
+        return NULL!();
+    }
 
-    pstNode.pstParent.pstRight = pstNode.cast();
+    filter.table = c_calloc!((table_size + 7) / 8, 1);
 
-    return;
+    if (filter.table == NULL!()).as_bool() {
+        c_free!(filter);
+        return NULL!();
+    }
+
+    filter.hash_func = hash_func;
+    filter.num_functions = num_functions;
+    filter.table_size = table_size;
+
+    return filter.cast();
 }

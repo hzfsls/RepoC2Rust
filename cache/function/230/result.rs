@@ -1,21 +1,15 @@
-pub fn set_free(mut set: Ptr<Set>) {
-    let mut rover: Ptr<SetEntry> = Default::default();
-    let mut next: Ptr<SetEntry> = Default::default();
-    let mut i: u32 = Default::default();
+pub fn VosAvlSearchReplaceNodeInLTree(mut pstTree: Ptr<AVLBASE_TREE_S>, mut pstNode: Ptr<AVLBASE_NODE_S>) -> Ptr<AVLBASE_NODE_S> {
+    let mut pstReplaceNode: Ptr<AVLBASE_NODE_S> = Default::default();
 
-    c_for!(let mut i: u32 = 0; i < set.table_size; i.prefix_plus_plus(); {
-        rover = set.table[i].cast();
+    if (pstNode.pstLeft.pstRight == AVL_NULL_PTR!()).as_bool() {
+        pstReplaceNode = pstNode.pstLeft.cast();
+        pstReplaceNode.pstRight = pstNode.pstRight.cast();
+        pstReplaceNode.pstRight.pstParent = pstReplaceNode.cast();
+        pstReplaceNode.sRHeight = pstNode.sRHeight.cast();
+    } else {
+        VosAvlSwapRightMost(pstTree.cast(), pstNode.pstLeft.cast(), pstNode.cast());
+        pstReplaceNode = pstNode.pstLeft.cast();
+    }
 
-        while rover != NULL!() {
-            next = rover.next.cast();
-
-            set_free_entry(set.cast(), rover.cast());
-
-            rover = next.cast();
-        }
-    });
-
-    c_free!(set.table.cast());
-
-    c_free!(set.cast());
+    return pstReplaceNode.cast();
 }

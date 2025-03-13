@@ -1,13 +1,28 @@
-pub fn BzpHeapAdjustUp(mut heap: Ptr<i32>, mut weight: Ptr<i32>, mut pos: i32) {
-    let mut tmpw: i32 = weight[heap[pos]].cast();
-    let mut tmpv: i32 = heap[pos].cast();
-    while pos > 1 {
-        if tmpw < weight[heap[pos >> 1]] {
-            heap[pos] = heap[pos >> 1].cast();
-            pos >>= 1;
-        } else {
-            break;
+pub fn set_remove(mut set: Ptr<Set>, mut data: SetValue) -> i32 {
+    let mut rover: Ptr<Ptr<SetEntry>> = Default::default();
+    let mut entry: Ptr<SetEntry> = Default::default();
+    let mut index: u32 = Default::default();
+
+    index = (set.hash_func(data) % set.table_size).cast();
+
+    rover = c_ref!(set.table[index]).cast();
+
+    while (*rover != NULL!()).as_bool() {
+        if (set.equal_func(data, (*rover).data) != 0).as_bool() {
+
+            entry = *rover;
+
+            *rover = entry.next;
+
+            set.entries -= 1;
+
+            set_free_entry(set.cast(), entry.cast());
+
+            return 1;
         }
+
+        rover = c_ref!((*rover).next).cast();
     }
-    heap[pos] = tmpv.cast();
+
+    return 0;
 }

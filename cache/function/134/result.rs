@@ -1,50 +1,13 @@
-pub fn sortedarray_insert(mut sortedarray: Ptr<SortedArray>, mut data: SortedArrayValue) -> i32 {
-    let mut left: u32 = 0;
-    let mut right: u32 = sortedarray.length.cast();
-    let mut index: u32 = 0;
+pub fn avl_tree_new(mut compare_func: AVLTreeCompareFunc) -> Ptr<AVLTree> {
+    let mut new_tree: Ptr<AVLTree> = c_malloc!(c_sizeof!(AVLTree));
 
-    right = if right > 1 { right } else { 0 };
-
-    while left != right {
-        index = (left + right) / 2;
-
-        let mut order: i32 = (sortedarray.cmp_func)(data.cast(), sortedarray.data[index].cast()).cast();
-        if order < 0 {
-            right = index;
-        } else if order > 0 {
-            left = index + 1;
-        } else {
-            break;
-        }
+    if (new_tree == NULL!()).as_bool() {
+        return NULL!();
     }
 
-    if sortedarray.length > 0 && (sortedarray.cmp_func)(data.cast(), sortedarray.data[index].cast()) > 0 {
-        index += 1;
-    }
+    new_tree.root_node = NULL!();
+    new_tree.compare_func = compare_func.cast();
+    new_tree.num_nodes = 0;
 
-    if sortedarray.length + 1 > sortedarray._alloced {
-        let mut newsize: u32;
-        let mut data: Ptr<SortedArrayValue>;
-
-        newsize = sortedarray._alloced * 2;
-        data = c_realloc!(sortedarray.data, c_sizeof!(SortedArrayValue) * newsize);
-
-        if data == NULL!() {
-            return 0;
-        } else {
-            sortedarray.data = data.cast();
-            sortedarray._alloced = newsize;
-        }
-    }
-
-    c_memmove!(
-        c_ref!(sortedarray.data[index + 1]).cast(),
-        c_ref!(sortedarray.data[index]).cast(),
-        (sortedarray.length - index) * c_sizeof!(SortedArrayValue)
-    );
-
-    sortedarray.data[index] = data.cast();
-    sortedarray.length += 1;
-
-    return 1;
+    return new_tree.cast();
 }

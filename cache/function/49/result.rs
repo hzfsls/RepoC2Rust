@@ -1,24 +1,44 @@
-pub fn BzpWriteLen(mut outData: Ptr<BzpOutComdata>, mut huffman: Ptr<BzpHuffmanGroups>) {
-    c_for!(let mut i: i32 = 0; i < huffman.nGroups; i.suffix_plus_plus(); {
-        let mut val: i32 = huffman.huffmanGroups[i].len[0].cast();
-        BzpWriteToArray(val.cast(), BZP_BITS5!(), outData.cast());
+pub fn binary_heap_pop(mut heap: Ptr<BinaryHeap>) -> BinaryHeapValue {
+    let mut result: BinaryHeapValue = Default::default();
+    let mut new_value: BinaryHeapValue = Default::default();
+    let mut index: u32 = Default::default();
+    let mut next_index: u32 = Default::default();
+    let mut child1: u32 = Default::default();
+    let mut child2: u32 = Default::default();
 
-        c_for!(let mut j: i32 = 0; j < huffman.alphaSize; j.suffix_plus_plus(); {
-            let mut tar: i32 = huffman.huffmanGroups[i].len[j].cast();
-            let mut deta: i32 = 0;
-            let mut saveVal: i32 = 0;
-            if val < tar {
-                saveVal = BZP_HUFFMAN_LEN_INCREASE!();
-                deta = 1;
-            } else if val > tar {
-                saveVal = BZP_HUFFMAN_LEN_REDUCED!();
-                deta = -1;
+    if (heap.num_values == 0) {
+        return BINARY_HEAP_NULL!();
+    }
+
+    result = heap.values[0];
+
+    let tmp0 = heap.num_values - 1;
+    new_value = heap.values[tmp0];
+    heap.num_values -= 1;
+
+    index = 0;
+
+    loop {
+        child1 = (index * 2 + 1);
+        child2 = (index * 2 + 2);
+
+        if (child1 < heap.num_values) && (binary_heap_cmp(heap, new_value, heap.values[child1]) > 0) {
+            if (child2 < heap.num_values) && (binary_heap_cmp(heap, heap.values[child1], heap.values[child2]) > 0) {
+                next_index = child2;
+            } else {
+                next_index = child1;
             }
-            while val != tar {
-                BzpWriteToArray(saveVal.cast(), BZP_BITS2!(), outData.cast());
-                val += deta;
-            }
-            BzpWriteToArray(0, BZP_BIT!(), outData.cast());
-        });
-    });
+        } else if (child2 < heap.num_values) && (binary_heap_cmp(heap, new_value, heap.values[child2]) > 0) {
+            next_index = child2;
+        } else {
+            heap.values[index] = new_value;
+            break;
+        }
+
+        heap.values[index] = heap.values[next_index];
+
+        index = next_index;
+    }
+
+    return result;
 }

@@ -1,16 +1,23 @@
-pub fn BzpInDeComdataInit() -> Ptr<InDeComdata> {
-    let mut inData: Ptr<InDeComdata> = c_malloc!(c_sizeof!(InDeComdata));
-    if inData == NULL!() {
+pub fn list_to_array(mut list: Ptr<ListEntry>) -> Ptr<ListValue> {
+    let mut rover: Ptr<ListEntry> = Default::default();
+    let mut array: Ptr<ListValue> = Default::default();
+    let mut length: u32 = Default::default();
+    let mut i: u32 = Default::default();
+
+    length = list_length(list.cast()).cast();
+
+    array = c_malloc!(c_sizeof!(ListValue) * length);
+
+    if (array == NULL!()).as_bool() {
         return NULL!();
     }
-    inData.input = NULL!();
-    inData.output = NULL!();
-    inData.num = 0;
-    inData.lasChar = BZP_ASCII_SIZE!();
-    inData.nBuf = 0;
-    inData.buf = 0;
-    inData.num = 0;
 
-    inData.blockCRC = BZP_INIT_BLOCK_CRC!();
-    return inData.cast();
+    rover = list.cast();
+
+    c_for!(let mut i: u32 = 0; i < length; i.prefix_plus_plus(); {
+        array[i] = rover.data.cast();
+        rover = rover.next.cast();
+    });
+
+    return array.cast();
 }

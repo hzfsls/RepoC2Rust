@@ -1,1 +1,1 @@
-pub type HashTableValueFreeFunc = FuncPtr<fn(HashTableValue)>;
+pub type BinomialHeapCompareFunc = FuncPtr<fn(BinomialHeapValue, BinomialHeapValue) -> i32>;

@@ -1,1 +1,6 @@
-pub type ArrayListEqualFunc = FuncPtr<fn(ArrayListValue, ArrayListValue) -> i32>;
+#[repr(C)]
+#[derive(Default, Clone, Copy)]
+pub struct _SetEntry {
+    pub data: SetValue,
+    pub next: Ptr<SetEntry>,
+}

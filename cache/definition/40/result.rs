@@ -1,1 +1,1 @@
-pub type SortedArrayValue = VoidPtr;
+pub type SetEqualFunc = FuncPtr<fn(SetValue, SetValue) -> i32>;

@@ -1,20 +1,51 @@
-pub fn BzpHuffmanDecodeInit(mut blockSize: i32) -> Ptr<BzpHuffmanDecode> {
-    if BZP_INVALID_BLOCK_SIZE!(blockSize) {
-        return NULL!();
+pub fn slist_sort_internal(mut list: Ptr<Ptr<SListEntry>>, mut compare_func: SListCompareFunc) -> Ptr<SListEntry> {
+    let mut pivot: Ptr<SListEntry> = Default::default();
+    let mut rover: Ptr<SListEntry> = Default::default();
+    let mut less_list: Ptr<SListEntry> = Default::default();
+    let mut more_list: Ptr<SListEntry> = Default::default();
+    let mut less_list_end: Ptr<SListEntry> = Default::default();
+    let mut more_list_end: Ptr<SListEntry> = Default::default();
+
+    if (*list == NULL!()).as_bool() || ((*list).next == NULL!()).as_bool() {
+        return *list;
     }
-    let mut huffman: Ptr<BzpHuffmanDecode> = c_malloc!(c_sizeof!(BzpHuffmanDecode));
-    if huffman == NULL!() {
-        return NULL!();
+
+    pivot = *list;
+
+    less_list = NULL!();
+    more_list = NULL!();
+    rover = (*list).next.cast();
+
+    while (rover != NULL!()).as_bool() {
+        let mut next: Ptr<SListEntry> = rover.next.cast();
+
+        if (compare_func(rover.data.cast(), pivot.data.cast()) < 0).as_bool() {
+            rover.next = less_list.cast();
+            less_list = rover.cast();
+        } else {
+            rover.next = more_list.cast();
+            more_list = rover.cast();
+        }
+
+        rover = next.cast();
     }
-    let mut spaceSize: i32 = BZP_BASE_BLOCK_SIZE!() * blockSize / BZP_ELEMS_NUM_IN_ONE_GROUP!();
-    huffman.select = c_malloc!(spaceSize * c_sizeof!(i32));
-    if huffman.select == NULL!() {
-        BzpHuffmanDecodeFinish(huffman.cast());
+
+    less_list_end = slist_sort_internal(c_ref!(less_list).cast(), compare_func.cast());
+    more_list_end = slist_sort_internal(c_ref!(more_list).cast(), compare_func.cast());
+
+    *list = less_list.cast();
+
+    if (less_list == NULL!()).as_bool() {
+        *list = pivot.cast();
+    } else {
+        less_list_end.next = pivot.cast();
     }
-    c_memset_s!(huffman.base, c_sizeofval!(huffman.base), 0, c_sizeofval!(huffman.base)).cast::<Void>();
-    c_memset_s!(huffman.perm, c_sizeofval!(huffman.perm), 0, c_sizeofval!(huffman.perm)).cast::<Void>();
-    c_memset_s!(huffman.limit, c_sizeofval!(huffman.limit), 0, c_sizeofval!(huffman.limit)).cast::<Void>();
-    huffman.selectCnt = 0;
-    huffman.deCodeNum = 0;
-    return huffman.cast();
+
+    pivot.next = more_list.cast();
+
+    if (more_list == NULL!()).as_bool() {
+        return pivot.cast();
+    } else {
+        return more_list_end.cast();
+    }
 }

@@ -1,9 +1,11 @@
-pub fn pointer_compare(mut location1: Ptr<Void>, mut location2: Ptr<Void>) -> i32 {
-    if location1 < location2 {
-        return -1;
-    } else if location1 > location2 {
-        return 1;
+pub fn avl_tree_lookup(mut tree: Ptr<AVLTree>, mut key: AVLTreeKey) -> AVLTreeValue {
+    let mut node: Ptr<AVLTreeNode> = Default::default();
+
+    node = avl_tree_lookup_node(tree.cast(), key.cast());
+
+    if (node == NULL!()).as_bool() {
+        return AVL_TREE_NULL!();
     } else {
-        return 0;
+        return node.value.cast();
     }
 }

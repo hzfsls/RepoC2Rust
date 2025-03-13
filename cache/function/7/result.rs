@@ -1,4 +1,3 @@
-pub fn VOS_V_AVL3Init(mut pscKey: Ptr<u8>) -> u32 {
-    pscKey.cast::<Void>();
-    return 0;
+pub fn sortedarray_remove(mut sortedarray: Ptr<SortedArray>, mut index: u32) {
+    sortedarray_remove_range(sortedarray.cast(), index.cast(), 1);
 }

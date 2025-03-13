@@ -1,6 +1,3 @@
-pub fn list_next(mut listentry: Ptr<ListEntry>) -> Ptr<ListEntry> {
-    if listentry == NULL!() {
-        return NULL!();
-    }
-    return listentry.next.cast();
+pub fn rb_tree_node_parent(mut node: Ptr<RBTreeNode>) -> Ptr<RBTreeNode> {
+    return node.parent.cast();
 }

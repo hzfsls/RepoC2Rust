@@ -1,11 +1,2 @@
-pub fn list_free(mut list: Ptr<ListEntry>) {
-    let mut entry: Ptr<ListEntry> = list.cast();
-
-    while entry != NULL!() {
-        let mut next: Ptr<ListEntry> = entry.next.cast();
-
-        c_free!(entry);
-
-        entry = next.cast();
-    }
+pub fn rb_tree_remove_node(mut tree: Ptr<RBTree>, mut node: Ptr<RBTreeNode>) {
 }

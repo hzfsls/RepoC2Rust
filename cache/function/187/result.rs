@@ -1,11 +1,11 @@
-pub fn list_length(mut list: Ptr<ListEntry>) -> u32 {
-    let mut entry: Ptr<ListEntry> = Default::default();
-    let mut length: u32 = 0;
-    length = 0;
-    entry = list.cast();
-    while entry != NULL!() {
-        length.prefix_plus_plus();
-        entry = entry.next.cast();
+pub fn trie_new() -> Ptr<Trie> {
+    let mut new_trie: Ptr<Trie> = c_malloc!(c_sizeof!(Trie));
+
+    if (new_trie == NULL!()).as_bool() {
+        return NULL!();
     }
-    return length.cast();
+
+    new_trie.root_node = NULL!();
+
+    return new_trie.cast();
 }

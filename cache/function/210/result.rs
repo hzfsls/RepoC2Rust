@@ -1,51 +1,49 @@
-pub fn slist_sort_internal(mut list: Ptr<Ptr<SListEntry>>, mut compare_func: SListCompareFunc) -> Ptr<SListEntry> {
-    let mut pivot: Ptr<SListEntry> = Default::default();
-    let mut rover: Ptr<SListEntry> = Default::default();
-    let mut less_list: Ptr<SListEntry> = Default::default();
-    let mut more_list: Ptr<SListEntry> = Default::default();
-    let mut less_list_end: Ptr<SListEntry> = Default::default();
-    let mut more_list_end: Ptr<SListEntry> = Default::default();
+pub fn VOS_AVL3_Insert_Or_Find(mut pstTree: Ptr<AVL3_TREE>, mut pstNode: Ptr<AVL3_NODE>, mut pstTreeInfo: Ptr<AVL3_TREE_INFO>) -> Ptr<Void> {
+    let mut pstParentNode: Ptr<AVL3_NODE> = Default::default();
+    let mut iResult: i32 = Default::default();
+    let mut iKeyOffset: i32 = Default::default();
 
-    if *list == NULL!() || (*list).next == NULL!() {
-        return *list;
+    if TREE_OR_TREEINFO_IS_NULL!(pstTree, pstTreeInfo).as_bool() || (pstNode == AVL_NULL_PTR!()).as_bool() {
+        return AVL_NULL_PTR!();
     }
 
-    pivot = *list;
+    pstNode.sRHeight = 0;
+    pstNode.sLHeight = 0;
 
-    less_list = NULL!();
-    more_list = NULL!();
-    rover = (*list).next;
+    if (pstTree.pstRoot == AVL_NULL_PTR!()).as_bool() {
+        pstTree.pstRoot = pstNode.cast();
+        pstTree.pstFirst = pstNode.cast();
+        pstTree.pstLast = pstNode.cast();
+        return AVL_NULL_PTR!();
+    }
 
-    while rover != NULL!() {
-        let mut next: Ptr<SListEntry> = rover.next;
+    pstParentNode = pstTree.pstRoot.cast();
 
-        if compare_func(rover.data.cast(), pivot.data.cast()) < 0 {
-            rover.next = less_list;
-            less_list = rover;
+    iKeyOffset = GET_KEYOFFSET!(pstTreeInfo).cast();
+    while (pstParentNode != AVL_NULL_PTR!()).as_bool() {
+        iResult = (pstTreeInfo.pfCompare)((c_ref!(pstNode).cast::<Ptr<u8>>() + iKeyOffset).cast::<Ptr<Void>>(),
+                                         (c_ref!(pstParentNode).cast::<Ptr<u8>>() + iKeyOffset).cast::<Ptr<Void>>()).cast();
+        if iResult > 0 {
+            if (pstParentNode.pstRight != AVL_NULL_PTR!()).as_bool() {
+                pstParentNode = pstParentNode.pstRight.cast();
+                continue;
+            }
+            VosAvlNodeRightInsert(pstTree.cast::<Ptr<AVLBASE_TREE_S>>(), pstParentNode.cast::<Ptr<AVLBASE_NODE_S>>(), pstNode.cast::<Ptr<AVLBASE_NODE_S>>());
+        } else if iResult < 0 {
+            if (pstParentNode.pstLeft != AVL_NULL_PTR!()).as_bool() {
+                pstParentNode = pstParentNode.pstLeft.cast();
+                continue;
+            }
+            VosAvlNodeLeftInsert(pstTree.cast::<Ptr<AVLBASE_TREE_S>>(), pstParentNode.cast::<Ptr<AVLBASE_NODE_S>>(), pstNode.cast::<Ptr<AVLBASE_NODE_S>>());
         } else {
-            rover.next = more_list;
-            more_list = rover;
+            pstNode.sRHeight = -1;
+            pstNode.sLHeight = -1;
+            return (c_ref!(pstParentNode).cast::<Ptr<u8>>() - pstTreeInfo.usNodeOffset).cast::<Ptr<Void>>();
         }
-
-        rover = next;
+        break;
     }
 
-    less_list_end = slist_sort_internal(c_ref!(less_list).cast(), compare_func);
-    more_list_end = slist_sort_internal(c_ref!(more_list).cast(), compare_func);
+    VosAvlBalanceTree(pstTree.cast::<Ptr<AVLBASE_TREE_S>>(), pstParentNode.cast::<Ptr<AVLBASE_NODE_S>>());
 
-    *list = less_list;
-
-    if less_list == NULL!() {
-        *list = pivot;
-    } else {
-        less_list_end.next = pivot;
-    }
-
-    pivot.next = more_list;
-
-    if more_list == NULL!() {
-        return pivot;
-    } else {
-        return more_list_end;
-    }
+    return AVL_NULL_PTR!();
 }

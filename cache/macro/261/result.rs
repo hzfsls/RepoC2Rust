@@ -1,2 +1,0 @@
-macro_rules! CMPT_ENC_ERROR_HEAD { () => { CMPTLZ_ERROR_CONVERT!(CMPTLZ_ENC_ERROR_HEAD!()) } }
-pub(crate) use CMPT_ENC_ERROR_HEAD;

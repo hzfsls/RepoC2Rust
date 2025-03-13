@@ -8,8 +8,7 @@ import subprocess
 from rust_metadata.classes import *
 from rust_metadata.rust_metadata import resolve_metadata
 
-c_metadata_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "c_metadata")
-rust_metadata_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "rust_metadata")
+
 template_project_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "project_template")
 created_project_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "created_project")
 
@@ -30,7 +29,7 @@ def create_under_current_dir(dir_path: str, rpath: RustPath):
             for k in rpath.macro_functions:
                 f.write(k.rust_code + "\n\n")
             for k in rpath.functions:
-                f.write(k.dummy_code + "\n\n")
+                f.write(k.rust_code + "\n\n")
 
 def create_under_current_dir_full(dir_path: str, rpath: RustPath):
     if rpath.type == "folder":
@@ -47,48 +46,36 @@ def create_under_current_dir_full(dir_path: str, rpath: RustPath):
             for k in rpath.macro_functions:
                 f.write(k.rust_code + "\n\n")
             for k in rpath.functions:
-                if len(k.rust_code) > 0:
-                    f.write(k.rust_code + "\n\n")
-                else:
-                    f.write(k.dummy_code + "\n\n")
+                f.write(k.rust_code + "\n\n")
 
 
 class RustProject:
-    def __init__(self, name: str, metadata: RustProjectMetadata, create_type: str = "blank"):
-        self.dir_path = os.path.join(created_project_dir, f"{name}_{int(time.time())}")
+    def __init__(self, name: str, metadata: RustProjectMetadata, parent_dir=created_project_dir, no_timestamp=False):
+        if no_timestamp:
+            self.dir_path = os.path.join(parent_dir, f"{name}")
+        else:
+            self.dir_path = os.path.join(parent_dir, f"{name}_{int(time.time() * 1000)}")
         self.metadata = metadata
-        self.create_project(create_type)    
+        self.create_project()    
     
-    def create_project(self, create_type: str):
-        if create_type == "blank":
-            self.create_blank_project()
-        elif create_type == "full":
-            self.create_full_project()
-
-    def create_blank_project(self):      
+    def create_project(self):
         os.makedirs(self.dir_path, exist_ok=True)
         shutil.copytree(template_project_dir, self.dir_path, dirs_exist_ok=True)
         paths = self.metadata.paths
         for k, v in paths.items():
             create_under_current_dir(os.path.join(self.dir_path, "src"), v)
-    
-    def create_full_project(self):
-        os.makedirs(self.dir_path, exist_ok=True)
-        shutil.copytree(template_project_dir, self.dir_path, dirs_exist_ok=True)
-        paths = self.metadata.paths
-        for k, v in paths.items():
-            create_under_current_dir_full(os.path.join(self.dir_path, "src"), v)
 
-    
 
     def build_project(self):
-        result = subprocess.run(["RUSTFLAGS=-Awarnings cargo build"], shell=True, cwd=self.dir_path, timeout=10, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        result = subprocess.run(["RUSTFLAGS=-Awarnings cargo check"], shell=True, cwd=self.dir_path, timeout=10, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         if result.returncode == 0:
             return True, ""
         else:
             error_msg = result.stderr.decode("utf-8")
             return False, error_msg
 
+c_metadata_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "c_metadata")
+rust_metadata_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "rust_metadata")
 
 if __name__ == "__main__":
     for proj_name in ["avl", "bzp", "cmptlz", "rapidlz", "md5", "sha256"]:

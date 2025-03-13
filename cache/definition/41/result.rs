@@ -1,1 +1,1 @@
-pub type SortedArray = _SortedArray;
+pub type SetFreeFunc = FuncPtr<fn(SetValue)>;

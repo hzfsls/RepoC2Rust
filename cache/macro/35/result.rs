@@ -1,2 +1,2 @@
-macro_rules! BZP_MAX_TREE_HEIGHT_ENCODE { () => { 17 } }
-pub(crate) use BZP_MAX_TREE_HEIGHT_ENCODE;
+macro_rules! AVL_TRUE { () => { 1 } }
+pub(crate) use AVL_TRUE;

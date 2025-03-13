@@ -1,20 +1,23 @@
-pub fn BzpBwtDecodeInit(mut blockSize: i32) -> Ptr<BzpBwtDecodeInfo> {
-    if BZP_INVALID_BLOCK_SIZE!(blockSize) {
+pub fn slist_to_array(mut list: Ptr<SListEntry>) -> Ptr<SListValue> {
+    let mut rover: Ptr<SListEntry> = Default::default();
+    let mut array: Ptr<SListValue> = Default::default();
+    let mut length: u32 = Default::default();
+    let mut i: u32 = Default::default();
+
+    length = slist_length(list.cast()).cast();
+
+    array = c_malloc!(c_sizeof!(SListValue) * length);
+
+    if (array == NULL!()).as_bool() {
         return NULL!();
     }
-    let mut bwt: Ptr<BzpBwtDecodeInfo> = c_malloc!(c_sizeof!(BzpBwtDecodeInfo));
-    if bwt == NULL!() {
-        return NULL!();
-    }
-    let mut spaceSize: i32 = BZP_BASE_BLOCK_SIZE!() * blockSize;
-    bwt.block = c_malloc!(spaceSize * c_sizeof!(u8));
-    bwt.deCode = c_malloc!(spaceSize * c_sizeof!(u8));
-    bwt.sorted = c_malloc!(spaceSize * c_sizeof!(i32));
-    if bwt.block == NULL!() || bwt.sorted == NULL!() || bwt.deCode == NULL!() {
-        BzpBwtDecodeFinish(bwt.cast());
-        return NULL!();
-    }
-    bwt.nBlock = 0;
-    bwt.oriPtr = 0;
-    return bwt.cast();
+
+    rover = list.cast();
+
+    c_for!(let mut i: u32 = 0; i < length; i.prefix_plus_plus(); {
+        array[i] = rover.data.cast();
+        rover = rover.next.cast();
+    });
+
+    return array.cast();
 }

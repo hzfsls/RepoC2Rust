@@ -1,1 +1,1 @@
-pub type SortedArrayCompareFunc = FuncPtr<fn(SortedArrayValue, SortedArrayValue) -> i32>;
+pub type SetHashFunc = FuncPtr<fn(SetValue) -> u32>;

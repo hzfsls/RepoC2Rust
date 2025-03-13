@@ -1,1 +1,1 @@
-pub type BloomFilterValue = VoidPtr;
+pub type TrieNode = _TrieNode;

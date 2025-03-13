@@ -1,11 +1,21 @@
-pub fn set_allocate_table(mut set: Ptr<Set>) -> i32 {
-    if set.prime_index < set_num_primes!() {
-        set.table_size = set_primes[set.prime_index].cast();
-    } else {
-        set.table_size = (set.entries * 10).cast();
+pub fn VosAvlRebalance(mut ppstSubTree: Ptr<Ptr<AVLBASE_NODE_S>>) {
+    let mut iMoment: i32 = Default::default();
+
+    iMoment = ((*ppstSubTree).sRHeight - (*ppstSubTree).sLHeight).cast();
+
+    if (iMoment > 1).as_bool() {
+        if ((*ppstSubTree).pstRight.sLHeight > (*ppstSubTree).pstRight.sRHeight).as_bool() {
+            VosAvlRotateRight(c_ref!((*ppstSubTree).pstRight).cast());
+        }
+
+        VosAvlRotateLeft(ppstSubTree.cast());
+    } else if (iMoment < -1).as_bool() {
+        if ((*ppstSubTree).pstLeft.sRHeight > (*ppstSubTree).pstLeft.sLHeight).as_bool() {
+            VosAvlRotateLeft(c_ref!((*ppstSubTree).pstLeft).cast());
+        }
+
+        VosAvlRotateRight(ppstSubTree.cast());
     }
 
-    set.table = c_calloc!(set.table_size, c_sizeof!(Ptr<SetEntry>));
-
-    return (set.table != NULL!()).cast::<i32>();
+    return;
 }

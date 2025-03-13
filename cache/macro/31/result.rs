@@ -1,2 +1,2 @@
-macro_rules! BZP_INIT_BLOCK_CRC { () => { 0xffffffff } }
-pub(crate) use BZP_INIT_BLOCK_CRC;
+macro_rules! V_AVL3_INNER_H { () => { } }
+pub(crate) use V_AVL3_INNER_H;

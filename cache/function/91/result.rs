@@ -1,7 +1,8 @@
-pub fn BzpMtfReSet(mut mtf: Ptr<BzpMtfInfo>) {
-    mtf.nUse = 0;
-    mtf.nMtf = 0;
-    mtf.block = NULL!();
-    mtf.map = NULL!();
-    mtf.inUse = NULL!();
+pub fn slist_iter_remove(mut iter: Ptr<SListIterator>) {
+    if (iter.current == NULL!() || iter.current != *iter.prev_next).as_bool() {
+    } else {
+        *iter.prev_next = iter.current.next.cast();
+        c_free!(iter.current);
+        iter.current = NULL!();
+    }
 }

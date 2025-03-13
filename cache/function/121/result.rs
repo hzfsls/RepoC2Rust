@@ -1,21 +1,22 @@
-pub fn BzpGenerateSelectMTF(mut huffman: Ptr<BzpHuffmanGroups>) {
-    let mut nGroups: i32 = huffman.nGroups.cast();
-    let mut list: Array<i32, { nGroups }> = arr![0; nGroups];
-    c_for!(let mut i: i32 = 0; i < nGroups; i.suffix_plus_plus(); {
-        list[i] = i.cast();
-    });
-    c_for!(let mut i: i32 = 0; i < huffman.nSelect; i.suffix_plus_plus(); {
-        let mut pos: i32 = 0;
-        c_for!(let mut j: i32 = 0; j < nGroups; j.suffix_plus_plus(); {
-            if huffman.select[i] == list[j] {
-                pos = j.cast();
-                break;
-            }
-        });
-        c_for!(let mut j: i32 = pos; j > 0; j.suffix_minus_minus(); {
-            list[j] = list[j - 1].cast();
-        });
-        list[0] = huffman.select[i].cast();
-        huffman.selectMTF[i] = pos.cast();
-    });
+pub fn hash_table_new(mut hash_func: HashTableHashFunc, mut equal_func: HashTableEqualFunc) -> Ptr<HashTable> {
+    let mut hash_table: Ptr<HashTable> = c_malloc!(c_sizeof!(HashTable));
+
+    if (hash_table == NULL!()).as_bool() {
+        return NULL!();
+    }
+
+    hash_table.hash_func = hash_func.cast();
+    hash_table.equal_func = equal_func.cast();
+    hash_table.key_free_func = NULL!();
+    hash_table.value_free_func = NULL!();
+    hash_table.entries = 0;
+    hash_table.prime_index = 0;
+
+    if !hash_table_allocate_table(hash_table.cast()).as_bool() {
+        c_free!(hash_table);
+
+        return NULL!();
+    }
+
+    return hash_table.cast();
 }

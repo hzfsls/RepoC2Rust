@@ -1,1 +1,1 @@
-pub type AVLTreeCompareFunc = FuncPtr<fn(AVLTreeValue, AVLTreeValue) -> i32>;
+pub type HashTable = _HashTable;

@@ -1,7 +1,7 @@
-pub fn binary_heap_cmp(mut heap: Ptr<BinaryHeap>, mut data1: BinaryHeapValue, mut data2: BinaryHeapValue) -> i32 {
-    if heap.heap_type == BINARY_HEAP_TYPE_MIN!() {
-        return (heap.compare_func)(data1.cast(), data2.cast()).cast();
+pub fn rb_tree_insert_case1(mut tree: Ptr<RBTree>, mut node: Ptr<RBTreeNode>) {
+    if (node.parent == NULL!()).as_bool() {
+        node.color = RB_TREE_NODE_BLACK!();
     } else {
-        return (-(heap.compare_func)(data1.cast(), data2.cast())).cast();
+        rb_tree_insert_case2(tree.cast(), node.cast());
     }
 }

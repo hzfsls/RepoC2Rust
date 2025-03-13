@@ -1,18 +1,11 @@
-pub fn BzpOutComDataInit(mut blockSize: i32) -> Ptr<BzpOutComdata> {
-    let mut outData: Ptr<BzpOutComdata> = c_malloc!(c_sizeof!(BzpOutComdata));
-    if outData == NULL!() {
-        return NULL!();
+pub fn arraylist_remove_range(mut arraylist: Ptr<ArrayList>, mut index: u32, mut length: u32) {
+    if (index > arraylist.length || index + length > arraylist.length) {
+        return;
     }
-    outData.out = NULL!();
-
-    outData.out = c_malloc!(blockSize * BZP_BASE_BLOCK_SIZE!() * c_sizeof!(u32));
-    if outData.out == NULL!() {
-        c_free!(outData);
-        return NULL!();
-    }
-    outData.nBuf = 0;
-    outData.buf = 0;
-    outData.num = 0;
-    outData.blockSize = blockSize;
-    return outData.cast();
+    c_memmove!(
+        c_ref!(arraylist.data[index]),
+        c_ref!(arraylist.data[index + length]),
+        (arraylist.length - (index + length)) * c_sizeof!(ArrayListValue)
+    );
+    arraylist.length -= length;
 }

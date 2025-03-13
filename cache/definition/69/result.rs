@@ -1,1 +1,1 @@
-pub type ListEqualFunc = FuncPtr<fn(ListValue, ListValue) -> i32>;
+pub type HashTableHashFunc = FuncPtr<fn(HashTableKey) -> u32>;

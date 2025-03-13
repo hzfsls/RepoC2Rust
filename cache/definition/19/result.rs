@@ -1,1 +1,1 @@
-pub type Queue = _Queue;
+pub type ArrayList = _ArrayList;

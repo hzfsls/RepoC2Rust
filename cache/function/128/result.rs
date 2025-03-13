@@ -1,6 +1,3 @@
-pub fn sortedarray_get(mut array: Ptr<SortedArray>, mut i: u32) -> Ptr<SortedArrayValue> {
-    if array == NULL!() {
-        return NULL!();
-    }
-    return array.data[i].cast();
+pub fn hash_table_num_entries(mut hash_table: Ptr<HashTable>) -> u32 {
+    return hash_table.entries.cast();
 }

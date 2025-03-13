@@ -1,5 +1,8 @@
-pub type AVLTreeNodeSide = i32;
-macro_rules! AVL_TREE_NODE_LEFT { () => { 0 } }
-pub(crate) use AVL_TREE_NODE_LEFT;
-macro_rules! AVL_TREE_NODE_RIGHT { () => { 1 } }
-pub(crate) use AVL_TREE_NODE_RIGHT;
+#[repr(C)]
+#[derive(Default, Clone, Copy)]
+pub struct _HashTablePair {
+    pub key: HashTableKey,
+    pub value: HashTableValue,
+}
+
+pub type HashTablePair = _HashTablePair;

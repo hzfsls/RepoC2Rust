@@ -1,1 +1,1 @@
-pub type QueueEntry = _QueueEntry;
+pub type SetIterator = _SetIterator;

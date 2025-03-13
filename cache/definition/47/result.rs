@@ -1,1 +1,1 @@
-pub type SetEqualFunc = FuncPtr<fn(SetValue, SetValue) -> i32>;
+pub type BinaryHeapValue = VoidPtr;

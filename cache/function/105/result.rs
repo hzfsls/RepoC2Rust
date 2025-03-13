@@ -1,10 +1,21 @@
-pub fn BzpBlockSortMain(mut bwt: Ptr<BzpBwtInfo>) {
-    BzpBinaryLiftingSort(bwt.cast());
+pub fn set_free(mut set: Ptr<Set>) {
+    let mut rover: Ptr<SetEntry> = Default::default();
+    let mut next: Ptr<SetEntry> = Default::default();
+    let mut i: u32 = Default::default();
 
-    c_for!(let mut i: i32 = 0; i < bwt.nBlock; i.suffix_plus_plus(); {
-        if bwt.sortBlock[i] == 0 {
-            bwt.oriPtr = i.cast();
-            break;
+    c_for!(let mut i = 0; i < set.table_size; i.prefix_plus_plus(); {
+        rover = set.table[i];
+
+        while (rover != NULL!()) {
+            next = rover.next;
+
+            set_free_entry(set, rover);
+
+            rover = next;
         }
     });
+
+    c_free!(set.table);
+
+    c_free!(set);
 }

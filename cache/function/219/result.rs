@@ -1,21 +1,4 @@
-pub fn queue_push_head(mut queue: Ptr<Queue>, mut data: QueueValue) -> i32 {
-    let mut new_entry: Ptr<QueueEntry> = c_malloc!(c_sizeof!(QueueEntry));
-
-    if new_entry == NULL!() {
-        return 0;
-    }
-
-    new_entry.data = data.cast();
-    new_entry.prev = NULL!();
-    new_entry.next = queue.head.cast();
-
-    if queue.head == NULL!() {
-        queue.head = new_entry.cast();
-        queue.tail = new_entry.cast();
-    } else {
-        queue.head.prev = new_entry.cast();
-        queue.head = new_entry.cast();
-    }
-
-    return 1;
+pub fn VOS_V_AVLBaseInit(mut pscKey: Ptr<u8>) -> u32 {
+    (pscKey).cast::<Void>();
+    return 0;
 }

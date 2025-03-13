@@ -1,1 +1,7 @@
-pub type AVL_V2_COMPARE_FUNC = FuncPtr<fn(VoidPtr, VoidPtr) -> i64>;
+#[repr(C)]
+#[derive(Default, Clone, Copy)]
+pub struct _ListEntry {
+    pub data: ListValue,
+    pub prev: Ptr<ListEntry>,
+    pub next: Ptr<ListEntry>,
+}

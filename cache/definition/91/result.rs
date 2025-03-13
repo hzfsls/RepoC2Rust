@@ -1,1 +1,1 @@
-pub type BloomFilterHashFunc = FuncPtr<fn(BloomFilterValue) -> u32>;
+pub type Trie = _Trie;

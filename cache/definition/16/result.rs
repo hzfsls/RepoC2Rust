@@ -1,9 +1,1 @@
-#[repr(C)]
-#[derive(Default)]
-pub struct _BinomialHeap {
-    pub heap_type: BinomialHeapType,
-    pub compare_func: BinomialHeapCompareFunc,
-    pub num_values: u32,
-    pub roots: Ptr<Ptr<BinomialTree>>,
-    pub roots_length: u32,
-}
+pub type SListCompareFunc = FuncPtr<fn(SListValue, SListValue) -> i32>;

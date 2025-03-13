@@ -1,37 +1,23 @@
-pub fn list_remove_data(mut list: Ptr<Ptr<ListEntry>>, mut callback: ListEqualFunc, mut data: ListValue) -> u32 {
-    let mut entries_removed: u32 = 0;
-    let mut rover: Ptr<ListEntry> = Default::default();
-    let mut next: Ptr<ListEntry> = Default::default();
+pub fn trie_free(mut trie: Ptr<Trie>) {
+    let mut free_list: Ptr<TrieNode> = NULL!();
+    let mut node: Ptr<TrieNode> = Default::default();
+    let mut i: i32 = Default::default();
 
-    if list == NULL!() || callback == NULL!() {
-        return 0;
+    if (trie.root_node != NULL!()).as_bool() {
+        trie_free_list_push(c_ref!(free_list).cast(), trie.root_node.cast());
     }
 
-    entries_removed = 0;
+    while (free_list != NULL!()).as_bool() {
+        node = trie_free_list_pop(c_ref!(free_list).cast());
 
-    rover = *list;
-
-    while rover != NULL!() {
-        next = rover.next;
-
-        if callback(rover.data.cast(), data.cast()) {
-            if rover.prev == NULL!() {
-                *list = rover.next;
-            } else {
-                rover.prev.next = rover.next;
+        c_for!(let mut i: i32 = 0; i < 256; i.prefix_plus_plus(); {
+            if (node.next[i] != NULL!()).as_bool() {
+                trie_free_list_push(c_ref!(free_list).cast(), node.next[i].cast());
             }
+        });
 
-            if rover.next != NULL!() {
-                rover.next.prev = rover.prev;
-            }
-
-            c_free!(rover);
-
-            entries_removed.suffix_plus_plus();
-        }
-
-        rover = next;
+        c_free!(node);
     }
 
-    return entries_removed;
+    c_free!(trie);
 }

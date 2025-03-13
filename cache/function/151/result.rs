@@ -1,4 +1,3 @@
-pub fn bloom_filter_free(mut bloomfilter: Ptr<BloomFilter>) {
-    c_free!(bloomfilter.table);
-    c_free!(bloomfilter);
+pub fn avl_tree_node_key(mut node: Ptr<AVLTreeNode>) -> AVLTreeKey {
+    return node.key.cast();
 }

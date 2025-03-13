@@ -126,7 +126,9 @@ def resolve_typedef(node: Node):
     assert node.child(0).type == "typedef" and node.child(1).type in ["type_identifier", "primitive_type", "sized_type_specifier", "struct_specifier", "union_specifier", "enum_specifier", "primitive_type"], node.text.decode("utf-8").strip()
     flag, func_name = has_function_declarator(node)
     if flag:
-        return None, ""
+        res, name = has_identifier(node)
+        assert res, node.text.decode("utf-8").strip()
+        return "", name
     else:
         seq = expand_node_tree_to_seq(node)
         assert seq[-1].type == ";", node.text.decode("utf-8").strip()

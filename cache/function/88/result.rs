@@ -1,5 +1,4 @@
-pub fn BzpGenerateDecodeTable(mut huffman: Ptr<BzpHuffmanDecode>) {
-    c_for!(let mut t: i32 = 0; t < huffman.nGroups; t.suffix_plus_plus(); {
-        BzpGetOneTable(huffman.cast(), t.cast());
-    });
+pub fn slist_iterate(mut list: Ptr<Ptr<SListEntry>>, mut iter: Ptr<SListIterator>) {
+    iter.prev_next = list.cast();
+    iter.current = NULL!();
 }

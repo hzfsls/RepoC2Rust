@@ -1,1 +1,1 @@
-pub type BinaryHeap = _BinaryHeap;
+pub type ListEqualFunc = FuncPtr<fn(ListValue, ListValue) -> i32>;

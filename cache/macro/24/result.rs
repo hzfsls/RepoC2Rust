@@ -1,2 +1,2 @@
-macro_rules! BZP_ASCII_SIZE { () => { 256 } }
-pub(crate) use BZP_ASCII_SIZE;
+macro_rules! ALGORITHM_BLOOM_FILTER_H { () => { } }
+pub(crate) use ALGORITHM_BLOOM_FILTER_H;

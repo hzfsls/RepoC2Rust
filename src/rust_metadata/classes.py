@@ -38,7 +38,7 @@ class RustPath:
             file.definitions = [ RustCode.from_dict(d) for d in data["definitions"] ]
             file.macros = [ RustCode.from_dict(m) for m in data["macros"] ]
             file.macro_functions = [ RustCode.from_dict(mf) for mf in data["macro_functions"] ]
-            file.functions = [ RustCodeWithDummy.from_dict(f) for f in data["functions"] ]
+            file.functions = [ RustCode.from_dict(f) for f in data["functions"] ]
             return file
         else:
             raise Exception("Invalid type")
@@ -128,23 +128,4 @@ class RustCode:
     def from_dict(data: dict) -> RustCode:
         code = RustCode(data["c_code"])
         code.rust_code = data["rust_code"]
-        return code
-
-class RustCodeWithDummy(RustCode):
-    def __init__(self, c_code: str):
-        super().__init__(c_code)
-        self.dummy_code = ""
-    
-    def __dict__(self):
-        return {
-            "c_code": self.c_code,
-            "rust_code": self.rust_code,
-            "dummy_code": self.dummy_code
-        }
-
-    @staticmethod
-    def from_dict(data: dict) -> RustCodeWithDummy:
-        code = RustCodeWithDummy(data["c_code"])
-        code.rust_code = data["rust_code"]
-        code.dummy_code = data["dummy_code"]
         return code

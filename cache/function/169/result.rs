@@ -1,3 +1,4 @@
-pub fn arraylist_sort(mut arraylist: Ptr<ArrayList>, mut compare_func: ArrayListCompareFunc) {
-    arraylist_sort_internal(arraylist.data.cast(), arraylist.length.cast(), compare_func.cast());
+pub fn rb_tree_free(mut tree: Ptr<RBTree>) {
+    rb_tree_free_subtree(tree.root_node.cast());
+    c_free!(tree);
 }

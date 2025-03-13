@@ -1,24 +1,13 @@
-pub fn list_prepend(mut list: Ptr<Ptr<ListEntry>>, mut data: ListValue) -> Ptr<ListEntry> {
-    let mut newentry: Ptr<ListEntry> = Default::default();
+pub fn rb_tree_remove(mut tree: Ptr<RBTree>, mut key: RBTreeKey) -> i32 {
+    let mut node: Ptr<RBTreeNode> = Default::default();
 
-    if list == NULL!() {
-        return NULL!();
+    node = rb_tree_lookup_node(tree.cast(), key.cast());
+
+    if (node == NULL!()).as_bool() {
+        return 0;
     }
 
-    newentry = c_malloc!(c_sizeof!(ListEntry));
+    rb_tree_remove_node(tree.cast(), node.cast());
 
-    if newentry == NULL!() {
-        return NULL!();
-    }
-
-    newentry.data = data.cast();
-
-    if *list != NULL!() {
-        (*list).prev = newentry.cast();
-    }
-    newentry.prev = NULL!();
-    newentry.next = *list.cast();
-    *list = newentry.cast();
-
-    return newentry.cast();
+    return 1;
 }

@@ -1,1 +1,7 @@
-pub type RBTreeCompareFunc = FuncPtr<fn(RBTreeValue, RBTreeValue) -> i32>;
+#[repr(C)]
+#[derive(Default)]
+pub struct _TrieNode {
+    pub data: TrieValue,
+    pub use_count: u32,
+    pub next: Array<Ptr<TrieNode>, 256>,
+}

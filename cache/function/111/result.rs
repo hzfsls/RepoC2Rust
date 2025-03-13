@@ -1,8 +1,3 @@
-pub fn BzpHeapInit(mut huffman: Ptr<BzpHuffmanInfo>) {
-    let mut i: i32 = 0;
-    c_for!(i = 0; i < huffman.alphaSize; i.suffix_plus_plus(); {
-        huffman.nHeap += 1;
-        huffman.heap[huffman.nHeap] = i.cast();
-        BzpHeapAdjustUp(huffman.heap.cast(), huffman.weight.cast(), huffman.nHeap.cast());
-    });
+pub fn set_num_entries(mut set: Ptr<Set>) -> u32 {
+    return set.entries.cast();
 }

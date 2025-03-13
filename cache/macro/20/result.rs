@@ -1,2 +1,2 @@
-macro_rules! BZP_BLOCK_SIZE_LEVEL_LOWER_LIMIT { () => { 1 } }
-pub(crate) use BZP_BLOCK_SIZE_LEVEL_LOWER_LIMIT;
+macro_rules! ALGORITHM_BINOMIAL_HEAP_H { () => { } }
+pub(crate) use ALGORITHM_BINOMIAL_HEAP_H;

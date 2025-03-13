@@ -4,10 +4,13 @@ from httpx import Client
 from tqdm import tqdm
 import json
 
-client = OpenAI(api_key="sk-76da526dbd8b48c3954df9336a8a6592", base_url="https://api.deepseek.com/beta",
+client = OpenAI(
+    api_key="sk-76da526dbd8b48c3954df9336a8a6592",
+    base_url="https://api.deepseek.com/beta",
     http_client=Client(
-    verify=False  # 注意：禁用 SSL 验证可能有安全风险，请根据实际情况决定是否需要这样做
-))
+        verify=False  # 注意：禁用 SSL 验证可能有安全风险，请根据实际情况决定是否需要这样做
+    ),
+)
 
 macro_text = """
 Translate the C Code to Rust. 
@@ -188,7 +191,6 @@ macro_rules! MY_CALL_FUNC_WITH_CHAR { () => { My_calledFunc(b'a' as u8) } }
 # ```
 
 
-
 # Source:
 # ```c
 # #define MY_VARGS_M(error_code, fmt, args...)                                                                           \
@@ -212,11 +214,15 @@ macro_rules! MY_CALL_FUNC_WITH_CHAR { () => { My_calledFunc(b'a' as u8) } }
 # ```
 # """
 
+
 def macro_prompt(c_code):
-    return macro_text + f"Now translate the following Macro:\n```c\n{c_code.strip()}\n```"
+    return (
+        macro_text + f"Now translate the following Macro:\n```c\n{c_code.strip()}\n```"
+    )
 
 
 results = {}
+
 
 def get_our_result_macro(value, cache):
     if value in cache:
@@ -226,17 +232,22 @@ def get_our_result_macro(value, cache):
         model="deepseek-coder",
         messages=[
             {"role": "user", "content": text},
-            {"role": "assistant", "content": "Sure, here is the rust translation:\n```rust\n", "prefix": True},
+            {
+                "role": "assistant",
+                "content": "Sure, here is the rust translation:\n```rust\n",
+                "prefix": True,
+            },
         ],
         stop=["```"],
         temperature=0,
         top_p=0.01,
         max_tokens=4096,
-        stream=False
+        stream=False,
     )
     result = response.choices[0].message.content
     cache[value] = result
     return result
+
 
 def get_our_results_macro(data, cache):
     our_result = []
@@ -244,12 +255,11 @@ def get_our_results_macro(data, cache):
     with ProcessPool(10) as pool:
         process = {}
         for idx, value in enumerate(data):
-            process[idx] = pool.schedule(get_our_result_macro, 
-                args=(value, cache))
+            process[idx] = pool.schedule(get_our_result_macro, args=(value, cache))
         results = {}
         for idx, value in enumerate(tqdm(data)):
             results[idx] = process[idx].result()
         results = list(sorted(results.items(), key=lambda item: item[0]))
         for key, value in results:
-            our_result.append(value)    
+            our_result.append(value)
     return our_result

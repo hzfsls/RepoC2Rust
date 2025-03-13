@@ -1,11 +1,11 @@
-pub fn string_nocase_hash(mut string: Ptr<Void>) -> u32 {
-    let mut result: u32 = 5381;
-    let mut p: Ptr<u8> = string.cast::<Ptr<u8>>();
+pub fn rb_tree_lookup(mut tree: Ptr<RBTree>, mut key: RBTreeKey) -> RBTreeValue {
+    let mut node: Ptr<RBTreeNode> = Default::default();
 
-    while *p != '\0' as u8 {
-        result = (result << 5) + result + c_tolower!(*p).cast::<u32>();
-        p += 1;
+    node = rb_tree_lookup_node(tree.cast(), key.cast());
+
+    if (node == NULL!()).as_bool() {
+        return RB_TREE_NULL!();
+    } else {
+        return node.value.cast();
     }
-
-    return result.cast();
 }

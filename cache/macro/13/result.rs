@@ -1,2 +1,2 @@
-macro_rules! BZP_COM_STREAM_H { () => { } }
-pub(crate) use BZP_COM_STREAM_H;
+macro_rules! AVL_TREE_NULL { () => { NULL!() } }
+pub(crate) use AVL_TREE_NULL;

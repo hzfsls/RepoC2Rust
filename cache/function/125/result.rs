@@ -1,39 +1,53 @@
-pub fn BzpHuffmanMain(mut huffman: Ptr<BzpHuffmanGroups>) {
-    let mut nGroups: i32 = BzpGetHuffmanGroups(huffman.nBlock.cast()).cast();
-    huffman.nGroups = nGroups.cast();
+pub fn hash_table_insert(mut hash_table: Ptr<HashTable>, mut key: HashTableKey, mut value: HashTableValue) -> i32 {
+    let mut rover: Ptr<HashTableEntry> = Default::default();
+    let mut pair: Ptr<HashTablePair> = Default::default();
+    let mut newentry: Ptr<HashTableEntry> = Default::default();
+    let mut index: u32 = Default::default();
 
-    BzpInitLenArray(huffman.cast());
-    let mut st: i32 = 0;
-    let mut ed: i32 = Default::default();
+    if ((hash_table.entries * 3) / hash_table.table_size > 0).as_bool() {
+        if !hash_table_enlarge(hash_table.cast()).as_bool() {
+            return 0;
+        }
+    }
 
-    c_for!(let mut i: i32 = 0; i < BZP_MAX_ITER_NUM!(); i.suffix_plus_plus(); {
-        c_for!(let mut j: i32 = 0; j < nGroups; j.suffix_plus_plus(); {
-            c_memset_s!(huffman.huffmanGroups[j].weight, c_sizeofval!(huffman.huffmanGroups[j].weight), 0, c_sizeofval!(huffman.huffmanGroups[j].weight)).cast::<Void>();
-        });
+    index = (hash_table.hash_func(key.cast()) % hash_table.table_size).cast();
 
-        st = 0;
-        huffman.nSelect = 0;
-        while st < huffman.nBlock {
-            ed = BZP_MIN_FUN!(huffman.nBlock, st + BZP_ELEMS_NUM_IN_ONE_GROUP!()).cast::<i32>() - 1;
+    rover = hash_table.table[index].cast();
 
-            BzpCalculateCost(huffman.cast(), st.cast(), ed.cast());
+    while (rover != NULL!()).as_bool() {
+        pair = c_ref!(rover.pair).cast();
 
-            let mut id: i32 = BzpSelectTree(huffman.cast()).cast();
+        if (hash_table.equal_func(pair.key.cast(), key.cast()) != 0).as_bool() {
+            if (hash_table.value_free_func != NULL!()).as_bool() {
+                hash_table.value_free_func(pair.value.cast());
+            }
 
-            c_for!(let mut k: i32 = st; k <= ed; k.suffix_plus_plus(); {
-                huffman.huffmanGroups[id].weight[huffman.block[k]] += 1;
-            });
-            st = ed + 1;
+            if (hash_table.key_free_func != NULL!()).as_bool() {
+                hash_table.key_free_func(pair.key.cast());
+            }
+
+            pair.key = key.cast();
+            pair.value = value.cast();
+
+            return 1;
         }
 
-        c_for!(let mut j: i32 = 0; j < nGroups; j.suffix_plus_plus(); {
-            BzpBuildTreeBalanceHeight(c_ref!(huffman.huffmanGroups[j]).cast());
-        });
-    });
+        rover = rover.next.cast();
+    }
 
-    BzpGenerateSelectMTF(huffman.cast());
+    newentry = c_malloc!(c_sizeof!(HashTableEntry));
 
-    c_for!(let mut i: i32 = 0; i < nGroups; i.suffix_plus_plus(); {
-        BzpGetHuffmanTable(c_ref!(huffman.huffmanGroups[i]).cast());
-    });
+    if (newentry == NULL!()).as_bool() {
+        return 0;
+    }
+
+    newentry.pair.key = key.cast();
+    newentry.pair.value = value.cast();
+
+    newentry.next = hash_table.table[index].cast();
+    hash_table.table[index] = newentry.cast();
+
+    hash_table.entries.prefix_plus_plus();
+
+    return 1;
 }

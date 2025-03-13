@@ -1,11 +1,21 @@
-pub fn BzpWriteBlockHead(mut outData: Ptr<BzpOutComdata>, mut bwt: Ptr<BzpBwtInfo>) {
-    BzpWriteToArray(BZP_BLOCK_HEAD_0!(), BZP_BITS8!(), outData.cast());
-    BzpWriteToArray(BZP_BLOCK_HEAD_1!(), BZP_BITS8!(), outData.cast());
-    BzpWriteToArray(BZP_BLOCK_HEAD_2!(), BZP_BITS8!(), outData.cast());
-    BzpWriteToArray(BZP_BLOCK_HEAD_3!(), BZP_BITS8!(), outData.cast());
-    BzpWriteToArray(BZP_BLOCK_HEAD_4!(), BZP_BITS8!(), outData.cast());
-    BzpWriteToArray(BZP_BLOCK_HEAD_5!(), BZP_BITS8!(), outData.cast());
-    BzpWriteInt32(bwt.blockCRC.cast(), outData.cast());
-    BzpWriteToArray(0, BZP_BIT!(), outData.cast());
-    BzpWriteToArray(bwt.oriPtr.cast(), BZP_BITS24!(), outData.cast());
+pub fn binary_heap_new(mut heap_type: BinaryHeapType, mut compare_func: BinaryHeapCompareFunc) -> Ptr<BinaryHeap> {
+    let mut heap: Ptr<BinaryHeap> = c_malloc!(c_sizeof!(BinaryHeap));
+
+    if (heap == NULL!()).as_bool() {
+        return NULL!();
+    }
+
+    heap.heap_type = heap_type.cast();
+    heap.num_values = 0;
+    heap.compare_func = compare_func.cast();
+
+    heap.alloced_size = 16;
+    heap.values = c_malloc!(c_sizeof!(BinaryHeapValue) * heap.alloced_size);
+
+    if (heap.values == NULL!()).as_bool() {
+        c_free!(heap);
+        return NULL!();
+    }
+
+    return heap.cast();
 }

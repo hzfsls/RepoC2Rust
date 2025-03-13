@@ -1,52 +1,20 @@
-pub fn BzpBinaryLiftingSort(mut bwt: Ptr<BzpBwtInfo>) {
-    let mut ftab: Array<i32, { BZP_ASCII_SIZE!() }> = Default::default();
-    c_memset_s!(ftab, c_sizeofval!(ftab), 0, c_sizeofval!(ftab)).cast::<Void>();
-    c_for!(let mut i: i32 = 0; i < bwt.nBlock; i.suffix_plus_plus(); {
-        ftab[bwt.block[i]] += 1;
-    });
-    c_for!(let mut i: i32 = 1; i < BZP_ASCII_SIZE!(); i.suffix_plus_plus(); {
-        ftab[i] += ftab[i - 1];
-    });
-    c_for!(let mut i: i32 = 0; i < bwt.nBlock; i.suffix_plus_plus(); {
-        let mut ch: i32 = bwt.block[i].cast();
-        ftab[ch] -= 1;
-        bwt.sortBlock[ftab[ch]] = i.cast();
-    });
-    c_for!(let mut i: i32 = 0; i < BZP_ASCII_SIZE!(); i.suffix_plus_plus(); {
-        bwt.isStartPos[ftab[i]] = 1;
-    });
-    let mut M: i32 = 1;
-    let mut sortflag: bool = true;
+pub fn set_new(mut hash_func: SetHashFunc, mut equal_func: SetEqualFunc) -> Ptr<Set> {
+    let mut new_set: Ptr<Set> = c_malloc!(c_sizeof!(Set));
 
-    while M < bwt.nBlock && sortflag {
-        let mut st: i32 = 0;
-        sortflag = false;
-
-        c_for!(let mut i: i32 = 0; i < bwt.nBlock; i.suffix_plus_plus(); {
-            if bwt.isStartPos[i] {
-                st = i.cast();
-            }
-            let mut pos: i32 = bwt.sortBlock[i] - M;
-            if pos < 0 {
-                pos += bwt.nBlock;
-            }
-            bwt.idx[pos] = st.cast();
-        });
-        let mut l: i32 = 0;
-        let mut r: i32 = 1;
-        while l < bwt.nBlock {
-            while r < bwt.nBlock && bwt.isStartPos[r] != 1 {
-                r += 1;
-            }
-            r -= 1;
-            if l < r {
-                sortflag = true;
-                BzpQuickSort(bwt.sortBlock.cast(), bwt.idx.cast(), l.cast(), r.cast());
-                BzpUpdateflag(bwt.cast(), l.cast(), r.cast());
-            }
-            l = r + 1;
-            r = l + 1;
-        }
-        M <<= 1;
+    if (new_set == NULL!()).as_bool() {
+        return NULL!();
     }
+
+    new_set.hash_func = hash_func.cast();
+    new_set.equal_func = equal_func.cast();
+    new_set.entries = 0;
+    new_set.prime_index = 0;
+    new_set.free_func = NULL!();
+
+    if !set_allocate_table(new_set.cast()).as_bool() {
+        c_free!(new_set);
+        return NULL!();
+    }
+
+    return new_set.cast();
 }

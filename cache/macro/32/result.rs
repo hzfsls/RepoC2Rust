@@ -1,2 +1,2 @@
-macro_rules! BZP_MAX_ALPHA_SIZE { () => { 258 } }
-pub(crate) use BZP_MAX_ALPHA_SIZE;
+macro_rules! V_AVLL_H { () => { } }
+pub(crate) use V_AVLL_H;

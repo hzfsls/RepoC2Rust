@@ -1,1 +1,1 @@
-pub type RBTreeNode = _RBTreeNode;
+pub type AVLL_COMPARE = AVL3_COMPARE;

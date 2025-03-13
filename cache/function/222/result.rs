@@ -1,21 +1,18 @@
-pub fn queue_push_tail(mut queue: Ptr<Queue>, mut data: QueueValue) -> i32 {
-    let mut new_entry: Ptr<QueueEntry> = c_malloc!(c_sizeof!(QueueEntry));
+pub fn VosAvlRotateLeft(mut ppstSubTree: Ptr<Ptr<AVLBASE_NODE_S>>) {
+    let mut pstRightSon: Ptr<AVLBASE_NODE_S> = (*ppstSubTree).pstRight.cast();
 
-    if new_entry == NULL!() {
-        return 0;
+    (*ppstSubTree).pstRight = pstRightSon.pstLeft.cast();
+    if ((*ppstSubTree).pstRight != AVL_NULL_PTR!()).as_bool() {
+        (*ppstSubTree).pstRight.pstParent = (*ppstSubTree).cast();
     }
 
-    new_entry.data = data.cast();
-    new_entry.prev = queue.tail.cast();
-    new_entry.next = NULL!();
+    (*ppstSubTree).sRHeight = pstRightSon.sLHeight.cast();
+    pstRightSon.pstParent = (*ppstSubTree).pstParent.cast();
+    pstRightSon.pstLeft = (*ppstSubTree).cast();
+    pstRightSon.pstLeft.pstParent = pstRightSon.cast();
+    pstRightSon.sLHeight = (1 + VOS_V2_AVL_MAX!((*ppstSubTree).sRHeight, (*ppstSubTree).sLHeight)).cast();
 
-    if queue.tail == NULL!() {
-        queue.head = new_entry.cast();
-        queue.tail = new_entry.cast();
-    } else {
-        queue.tail.next = new_entry.cast();
-        queue.tail = new_entry.cast();
-    }
+    *ppstSubTree = pstRightSon.cast();
 
-    return 1;
+    return;
 }

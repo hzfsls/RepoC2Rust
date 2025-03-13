@@ -4,10 +4,13 @@ from httpx import Client
 from tqdm import tqdm
 import json
 
-client = OpenAI(api_key="sk-76da526dbd8b48c3954df9336a8a6592", base_url="https://api.deepseek.com/beta",
+client = OpenAI(
+    api_key="sk-76da526dbd8b48c3954df9336a8a6592",
+    base_url="https://api.deepseek.com/beta",
     http_client=Client(
-    verify=False  # 注意：禁用 SSL 验证可能有安全风险，请根据实际情况决定是否需要这样做
-))
+        verify=False  # 注意：禁用 SSL 验证可能有安全风险，请根据实际情况决定是否需要这样做
+    ),
+)
 
 example_1 = """
 Source:
@@ -29,7 +32,7 @@ Translation:
 ```rust
 pub fn VOS_MD5CalcEx(mut output: Ptr<u8>, mut outputLen: u32, mut input: Ptr<u8>, mut inputLen: u32) {
     let mut context: MD5_CTX = Default::default();
-    if outputLen < MD5_DIGEST_LEN!() {
+    if (outputLen < MD5_DIGEST_LEN!()).as_bool() {
         return;
     }
     VOS_MD5Init(c_ref!(context).cast());
@@ -71,13 +74,13 @@ Translation:
 pub fn VosAvlRebalance(mut ppstSubTree: Ptr<Ptr<AVLBASE_NODE_S>>) {
     let mut iMoment: i32;
     iMoment = ((*ppstSubTree).sRHeight - (*ppstSubTree).sLHeight).cast();
-    if iMoment > 1 {
-        if (*ppstSubTree).pstRight.sLHeight > (*ppstSubTree).pstRight.sRHeight {
+    if (iMoment > 1).as_bool() {
+        if ((*ppstSubTree).pstRight.sLHeight > (*ppstSubTree).pstRight.sRHeight).as_bool() {
             VosAvlRotateRight(c_ref!((*ppstSubTree).pstRight).cast());
         }
         VosAvlRotateLeft(ppstSubTree.cast());
-    } else if iMoment < -1 {
-        if (*ppstSubTree).pstLeft.sRHeight > (*ppstSubTree).pstLeft.sLHeight {
+    } else if (iMoment < -1).as_bool() {
+        if ((*ppstSubTree).pstLeft.sRHeight > (*ppstSubTree).pstLeft.sLHeight).as_bool() {
             VosAvlRotateLeft(c_ref!((*ppstSubTree).pstLeft).cast());
         }
         VosAvlRotateRight(ppstSubTree.cast());
@@ -127,18 +130,18 @@ Translation:
 pub fn RapidlzCopyMatchFast(mut dst: Ptr<u8>, mut r#match: Ptr<u8>, mut offset: u16, mut length: u32) {
     let mut dstCurr: Ptr<u8> = dst.cast();
     let mut matchPtr: Ptr<u8> = r#match.cast();
-    if offset >= RAPIDLZ_SIXTEEN_BYTE!() {
+    if (offset >= RAPIDLZ_SIXTEEN_BYTE!()).as_bool() {
         RapidlzCopyLiteralsFast(matchPtr.cast(), dstCurr.cast(), length.cast());
         return;
     }
-    c_for!(let mut i: i32 = 0; i < RAPIDLZ_EIGHT_BYTE!(); i.prefix_plus_plus(); {
+    c_for!(let mut i: i32 = 0; i < RAPIDLZ_EIGHT_BYTE!().cast(); i.prefix_plus_plus(); {
         dstCurr[i] = matchPtr[i].cast();
     });
-    if length <= RAPIDLZ_EIGHT_BYTE!() {
+    if (length <= RAPIDLZ_EIGHT_BYTE!()).as_bool() {
         return;
     }
     let mut dstEnd: Ptr<u8> = (dstCurr + length).cast();
-    if offset < RAPIDLZ_EIGHT_BYTE!() {
+    if (offset < RAPIDLZ_EIGHT_BYTE!()).as_bool() {
         matchPtr += (*g_overlapOffAddVal.lock())[offset];
         dstCurr += RAPIDLZ_EIGHT_BYTE!();
     }
@@ -169,7 +172,7 @@ static uint16_t RapidlzReadLE16Bit(const void *addr)
 Translation:
 ```rust
 pub fn RapidlzReadLE16Bit(mut addr: Ptr<Void>) -> u16 {
-    if RapidlzIsLE() != 0 {
+    if (RapidlzIsLE() != 0).as_bool() {
         return (*addr.cast::<Ptr<u16>>()).cast();
     }
     let mut tmp1: u8 = ((addr.cast::<Ptr<u8>>())[0]).cast();
@@ -216,11 +219,11 @@ Translation:
 pub fn VOS_AVL_Find(mut pstTree: Ptr<AVL_TREE>, mut pKey: Ptr<Void>) -> Ptr<Void> {
     let mut pstNode: Ptr<AVL_NODE> = Default::default();
     let mut iResult: i32 = Default::default();
-    if pstTree == AVL_NULL_PTR!() {
+    if (pstTree == AVL_NULL_PTR!()).as_bool() {
         return AVL_NULL_PTR!();
     }
     pstNode = pstTree.pstRoot.cast();
-    while pstNode != AVL_NULL_PTR!() {
+    while (pstNode != AVL_NULL_PTR!()).as_bool() {
         iResult = (pstTree.pfnCompare)(pKey.cast(), pstNode.pKey.cast()).cast();
         if iResult > 0 {
             pstNode = pstNode.pstRight.cast();
@@ -263,7 +266,7 @@ pub fn BzpReadUInt24(mut inData: Ptr<InDeComdata>) -> u32 {
     val = (val << BZP_BITS8!()) | ch.cast::<u32>();
     ch = BzpReadBits(BZP_BITS8!(), inData.cast()).cast();
     val = (val << BZP_BITS8!()) | ch.cast::<u32>();
-    return val;
+    return val.cast();
 }
 ```
 """
@@ -307,18 +310,18 @@ pub fn BzpGetDictionaryList(mut inData: Ptr<InDeComdata>) -> i32 {
     let mut ninUse: i32 = 0;
     let mut use16: Array<bool, 16> = arr![false; 16];
     let mut inUse: Array<bool, { BZP_ASCII_SIZE!() }> = arr![false; BZP_ASCII_SIZE!()];
-    c_for!(let mut i: i32 = 0; i < BZP_GROUPS_ASCII!(); i.suffix_plus_plus(); {
+    c_for!(let mut i: i32 = 0; i < BZP_GROUPS_ASCII!().cast(); i.suffix_plus_plus(); {
         use16[i] = BzpReadBits(BZP_BIT!(), inData.cast()).cast();
     });
-    c_for!(let mut i: i32 = 0; i < BZP_GROUPS_ASCII!(); i.suffix_plus_plus(); {
-        if use16[i] {
+    c_for!(let mut i: i32 = 0; i < BZP_GROUPS_ASCII!().cast(); i.suffix_plus_plus(); {
+        if use16[i].as_bool() {
             c_for!(let mut j: i32 = 0; j < BZP_CHARS_PER_GROUP_ASCII!(); j.suffix_plus_plus(); {
                 inUse[i * BZP_GROUPS_ASCII!() + j] = BzpReadBits(BZP_BIT!(), inData.cast()).cast();
             });
         }
     });
-    c_for!(let mut i: i32 = 0; i < BZP_ASCII_SIZE!(); i.suffix_plus_plus(); {
-        if inUse[i] {
+    c_for!(let mut i: i32 = 0; i < BZP_ASCII_SIZE!().cast(); i.suffix_plus_plus(); {
+        if inUse[i].as_bool() {
             inData.list[ninUse.suffix_plus_plus()] = i.cast();
         }
     });
@@ -367,11 +370,11 @@ pub fn CmptlzLogWrite(mut errorCode: usize, mut funcName: Ptr<u8>, mut line: u16
     let mut ret: i32 = Default::default();
     let mut len: usize = Default::default();
     let mut func: CmptlzLogFunc = *g_cmptlzLogFunc.lock();
-    if func == NULL!() {
+    if (func == NULL!()).as_bool() {
         return;
     }
     ret = c_snprintf_s!(output, LOG_BUF_SIZE!(), LOG_BUF_SIZE!() - 1, cstr!("\\n[Cmptlz-Log] Func={}, Line={}, Error={}\\n"), funcName, line, errorCode);
-    if ret < 0 {
+    if (ret < 0).as_bool() {
         return;
     }
     len = ret.cast();
@@ -432,24 +435,24 @@ pub fn CmptLzDecSinglePacket(mut decCtx: Ptr<CmptLzDecCtx>, mut dicPosLimit: usi
     let mut lookAheadLen: usize = 0;
     let mut newTempBufSize: u32 = decCtx.tempBufSize.cast();
     let mut oldTmpBuf: Ptr<u8> = (c_ref!(decCtx.tempBuf[0]) + decCtx.tempBufSize).cast();
-    while newTempBufSize < CMPTLZ_REQUIRED_INPUT_MAX!() && lookAheadLen < srcInLen {
+    while (newTempBufSize < CMPTLZ_REQUIRED_INPUT_MAX!()).as_bool() && (lookAheadLen < srcInLen).as_bool() {
         decCtx.tempBuf[newTempBufSize] = pSrcIn[lookAheadLen].cast();
         newTempBufSize += 1;
         lookAheadLen += 1;
     }
     let mut bufLimit: Ptr<u8> = decCtx.tempBuf.cast::<Ptr<u8>>() + newTempBufSize;
     res = CmptLzTryDecOnePacket(decCtx.cast(), decCtx.tempBuf.cast(), c_ref!(bufLimit).cast()).cast();
-    if res == CMPTLZ_DEC_INPUT_EOF!() {
+    if (res == CMPTLZ_DEC_INPUT_EOF!()).as_bool() {
         *psrcCostLen = lookAheadLen.cast();
         decCtx.tempBufSize = newTempBufSize.cast();
         return CMPTLZ_DEC_INPUT_EOF!();
     }
-    if res == CMPT_ERROR_DATA!() {
+    if (res == CMPT_ERROR_DATA!()).as_bool() {
         return res;
     }
     decCtx.buf = c_ref!(decCtx.tempBuf[0]).cast();
     res = CmptLzDecDirectProcess(decCtx.cast(), dicPosLimit.cast(), bufLimit.cast()).cast();
-    if res != CMPT_OK!() || bufLimit != decCtx.buf || bufLimit <= oldTmpBuf {
+    if (res != CMPT_OK!()).as_bool() || (bufLimit != decCtx.buf).as_bool() || (bufLimit <= oldTmpBuf).as_bool() {
         *psrcCostLen = 0;
         return CMPT_ERROR_DATA!();
     }
@@ -492,16 +495,16 @@ BzpHuffmanDecode *BzpHuffmanDecodeInit(int32_t blockSize)
 Translation:
 ```rust
 pub fn BzpHuffmanDecodeInit(mut blockSize: i32) -> Ptr<BzpHuffmanDecode> {
-    if BZP_INVALID_BLOCK_SIZE!(blockSize) {
+    if BZP_INVALID_BLOCK_SIZE!(blockSize).as_bool() {
         return NULL!();
     }
     let mut huffman: Ptr<BzpHuffmanDecode> = c_malloc!(c_sizeof!(BzpHuffmanDecode));
-    if huffman == NULL!() {
+    if (huffman == NULL!()).as_bool() {
         return NULL!();
     }
     let mut spaceSize: i32 = BZP_BASE_BLOCK_SIZE!() * blockSize / BZP_ELEMS_NUM_IN_ONE_GROUP!();
     huffman.select = c_malloc!(spaceSize * c_sizeof!(i32));
-    if huffman.select == NULL!() {
+    if (huffman.select == NULL!()).as_bool() {
         BzpHuffmanDecodeFinish(huffman.cast());
     }
     c_memset_s!(huffman.base, c_sizeofval!(huffman.base), 0, c_sizeofval!(huffman.base)).cast::<Void>();
@@ -514,7 +517,8 @@ pub fn BzpHuffmanDecodeInit(mut blockSize: i32) -> Ptr<BzpHuffmanDecode> {
 ```
 """
 
-function_text = """
+function_text = (
+    """
 Translate the C Code to Rust. 
 You need to translate the function only.
 Here are some rules you need to follow:
@@ -549,13 +553,29 @@ Others:
     2. Don't use uninitialized variables in Rust, use Default::default() to initialize the variable. For example, `int a;` should be translated to `let mut a: i32 = Default::default();`.
     3. When translating a global variable starts with `g_`, like `g_Offset`, use `.lock()`. For example, `int a = g_offsetCc[n];` should be translated to  `let a: i32 = (*g_offsetCc.lock())[n];`. However, global variable not starts with `g_` should not add `lock()`.
 Now follow these examples for translation:
-""" + example_1 + example_2 + example_3 + example_4 + example_5 + example_6 + example_7 + example_8 + example_9 + example_10
+"""
+    + example_1
+    + example_2
+    + example_3
+    + example_4
+    + example_5
+    + example_6
+    + example_7
+    + example_8
+    + example_9
+    + example_10
+)
+
 
 def function_prompt(c_code):
-    return function_text + f"Now translate the following Function:\n```c\n{c_code.strip()}\n```"
+    return (
+        function_text
+        + f"Now translate the following Function:\n```c\n{c_code.strip()}\n```"
+    )
 
 
 results = {}
+
 
 def get_our_result_function(value, cache):
     if value in cache:
@@ -565,17 +585,22 @@ def get_our_result_function(value, cache):
         model="deepseek-coder",
         messages=[
             {"role": "user", "content": text},
-            {"role": "assistant", "content": "Sure, here is the rust translation:\n```rust\n", "prefix": True},
+            {
+                "role": "assistant",
+                "content": "Sure, here is the rust translation:\n```rust\n",
+                "prefix": True,
+            },
         ],
         stop=["```"],
         temperature=0,
         top_p=0.01,
         max_tokens=4096,
-        stream=False
+        stream=False,
     )
     result = response.choices[0].message.content
     cache[value] = result
     return result
+
 
 def get_our_results_function(data, cache):
     our_result = []
@@ -583,12 +608,11 @@ def get_our_results_function(data, cache):
     with ProcessPool(10) as pool:
         process = {}
         for idx, value in enumerate(data):
-            process[idx] = pool.schedule(get_our_result_function, 
-                args=(value, cache))
+            process[idx] = pool.schedule(get_our_result_function, args=(value, cache))
         results = {}
         for idx, value in enumerate(tqdm(data)):
             results[idx] = process[idx].result()
         results = list(sorted(results.items(), key=lambda item: item[0]))
         for key, value in results:
-            our_result.append(value)    
+            our_result.append(value)
     return our_result

@@ -1,23 +1,11 @@
-pub fn BzpQuickSort(mut sortBlock: Ptr<i32>, mut idx: Ptr<i32>, mut l: i32, mut r: i32) {
-    let mut stack: BzpQSortInfo = Default::default();
-    stack.cnt = 0;
-    stack.stackL[stack.cnt] = l;
-    stack.stackR[stack.cnt] = r;
-    stack.cnt += 1;
-    while stack.cnt > 0 {
-        stack.cnt -= 1;
-        let mut tl: i32 = stack.stackL[stack.cnt];
-        let mut tr: i32 = stack.stackR[stack.cnt];
-
-        if tl >= tr {
-            continue;
-        }
-        if tr - tl < BZP_THRESHOLD_SHELL_SORT!() {
-            BzpShellSort(sortBlock.cast(), idx.cast(), tl.cast(), tr.cast());
-            continue;
-        }
-        stack.tl = tl;
-        stack.tr = tr;
-        BzpQSortSingle(sortBlock.cast(), idx.cast(), c_ref!(stack).cast());
+pub fn set_allocate_table(mut set: Ptr<Set>) -> i32 {
+    if (set.prime_index < set_num_primes!()).as_bool() {
+        set.table_size = set_primes[set.prime_index].cast();
+    } else {
+        set.table_size = (set.entries * 10).cast();
     }
+
+    set.table = c_calloc!(set.table_size, c_sizeof!(Ptr<SetEntry>));
+
+    return (set.table != NULL!()).cast::<i32>();
 }

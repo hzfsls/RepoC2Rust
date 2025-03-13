@@ -1,10 +1,11 @@
-pub fn BzpStreamInit() -> Ptr<BzpStream> {
-    let mut stream: Ptr<BzpStream> = c_malloc!(c_sizeof!(BzpStream));
-    if stream == NULL!() {
-        return NULL!();
+pub fn list_nth_data(mut list: Ptr<ListEntry>, mut n: u32) -> ListValue {
+    let mut entry: Ptr<ListEntry> = Default::default();
+
+    entry = list_nth_entry(list.cast(), n.cast());
+
+    if (entry == NULL!()).as_bool() {
+        return LIST_NULL!();
+    } else {
+        return entry.data.cast();
     }
-    stream.filePtr = NULL!();
-    stream.pos = 0;
-    stream.nBuf = 0;
-    return stream.cast();
 }

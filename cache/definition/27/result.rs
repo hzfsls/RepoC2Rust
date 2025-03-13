@@ -1,1 +1,1 @@
-pub type SListIterator = _SListIterator;
+pub type SortedArray = _SortedArray;

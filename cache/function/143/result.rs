@@ -1,12 +1,8 @@
-pub fn binomial_heap_new(mut heap_type: BinomialHeapType, mut compare_func: BinomialHeapCompareFunc) -> Ptr<BinomialHeap> {
-    let mut new_heap: Ptr<BinomialHeap> = c_calloc!(1, c_sizeof!(BinomialHeap));
+pub fn avl_tree_balance_to_root(mut tree: Ptr<AVLTree>, mut node: Ptr<AVLTreeNode>) {
+    let mut rover: Ptr<AVLTreeNode> = node.cast();
 
-    if new_heap == NULL!() {
-        return NULL!();
+    while (rover != NULL!()).as_bool() {
+        rover = avl_tree_node_balance(tree.cast(), rover.cast()).cast();
+        rover = rover.parent.cast();
     }
-
-    new_heap.heap_type = heap_type.cast();
-    new_heap.compare_func = compare_func.cast();
-
-    return new_heap.cast();
 }

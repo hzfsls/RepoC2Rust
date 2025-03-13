@@ -1,23 +1,14 @@
-pub fn BzpMtfInit(mut blockSize: i32) -> Ptr<BzpMtfInfo> {
-    if BZP_INVALID_BLOCK_SIZE!(blockSize) {
-        return NULL!();
-    }
-    let mut mtf: Ptr<BzpMtfInfo> = c_malloc!(c_sizeof!(BzpMtfInfo));
-    if mtf == NULL!() {
-        return NULL!();
-    }
-    mtf.mtfV = NULL!();
-    mtf.mtfV = c_malloc!(blockSize * BZP_BASE_BLOCK_SIZE!() * c_sizeof!(i32));
-    if mtf.mtfV == NULL!() {
-        c_free!(mtf);
-        mtf = NULL!();
-        return NULL!();
+pub fn slist_iter_next(mut iter: Ptr<SListIterator>) -> SListValue {
+    if (iter.current == NULL!() || iter.current != *iter.prev_next) {
+        iter.current = *iter.prev_next;
+    } else {
+        iter.prev_next = c_ref!(iter.current.next);
+        iter.current = iter.current.next;
     }
 
-    mtf.nUse = 0;
-    mtf.nMtf = 0;
-    mtf.block = NULL!();
-    mtf.map = NULL!();
-    mtf.inUse = NULL!();
-    return mtf.cast();
+    if (iter.current == NULL!()) {
+        return SLIST_NULL!();
+    } else {
+        return iter.current.data;
+    }
 }

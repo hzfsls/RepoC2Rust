@@ -1,36 +1,25 @@
-pub fn VosAvlDelete(mut pstBaseNode: Ptr<AVLBASE_NODE_S>, mut pstBaseTree: Ptr<AVLBASE_TREE_S>) {
-    let mut pstReplaceNode: Ptr<AVLBASE_NODE_S> = Default::default();
-    let mut pstParentNode: Ptr<AVLBASE_NODE_S> = Default::default();
-    let mut sNewHeight: i16 = 0;
+pub fn arraylist_new(mut length: u32) -> Ptr<ArrayList> {
+    let mut new_arraylist: Ptr<ArrayList> = Default::default();
 
-    pstReplaceNode = VosAvlDeleteCheck(pstBaseTree.cast(), pstBaseNode.cast()).cast();
-
-    pstParentNode = pstBaseNode.pstParent.cast();
-
-    pstBaseNode.pstParent = AVL_NULL_PTR!();
-    pstBaseNode.pstRight = AVL_NULL_PTR!();
-    pstBaseNode.pstLeft = AVL_NULL_PTR!();
-    pstBaseNode.sRHeight = -1;
-    pstBaseNode.sLHeight = -1;
-
-    if pstReplaceNode != AVL_NULL_PTR!() {
-        pstReplaceNode.pstParent = pstParentNode.cast();
-        sNewHeight = (1 + VOS_V2_AVL_MAX!(pstReplaceNode.sLHeight, pstReplaceNode.sRHeight)).cast();
+    if (length <= 0).as_bool() {
+        length = 16;
     }
 
-    if pstParentNode != AVL_NULL_PTR!() {
-        if pstParentNode.pstRight == pstBaseNode {
-            pstParentNode.pstRight = pstReplaceNode.cast();
-            pstParentNode.sRHeight = sNewHeight.cast();
-        } else {
-            pstParentNode.pstLeft = pstReplaceNode.cast();
-            pstParentNode.sLHeight = sNewHeight.cast();
-        }
+    new_arraylist = c_malloc!(c_sizeof!(ArrayList));
 
-        VosAvlBalanceTree(pstBaseTree.cast(), pstParentNode.cast());
-    } else {
-        pstBaseTree.pstRoot = pstReplaceNode.cast();
+    if (new_arraylist == NULL!()).as_bool() {
+        return NULL!();
     }
 
-    return;
+    new_arraylist._alloced = length;
+    new_arraylist.length = 0;
+
+    new_arraylist.data = c_malloc!(length * c_sizeof!(ArrayListValue));
+
+    if (new_arraylist.data == NULL!()).as_bool() {
+        c_free!(new_arraylist);
+        return NULL!();
+    }
+
+    return new_arraylist.cast();
 }

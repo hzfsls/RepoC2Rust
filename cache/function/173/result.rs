@@ -1,35 +1,15 @@
-pub fn binary_heap_insert(mut heap: Ptr<BinaryHeap>, mut value: BinaryHeapValue) -> i32 {
-    let mut new_values: Ptr<BinaryHeapValue> = Default::default();
-    let mut index: u32 = Default::default();
-    let mut new_size: u32 = Default::default();
-    let mut parent: u32 = Default::default();
+pub fn rb_tree_insert_case4(mut tree: Ptr<RBTree>, mut node: Ptr<RBTreeNode>) {
+    let mut next_node: Ptr<RBTreeNode> = Default::default();
+    let mut side: RBTreeNodeSide = Default::default();
 
-    if heap.num_values >= heap.alloced_size {
-        new_size = heap.alloced_size * 2;
-        new_values = c_realloc!(heap.values, c_sizeof!(BinaryHeapValue) * new_size);
+    side = rb_tree_node_side(node.cast());
 
-        if new_values == NULL!() {
-            return 0;
-        }
-
-        heap.alloced_size = new_size;
-        heap.values = new_values;
+    if (side != rb_tree_node_side(node.parent)).as_bool() {
+        next_node = node.parent.cast();
+        rb_tree_rotate(tree.cast(), node.parent.cast(), (1 - side).cast());
+    } else {
+        next_node = node.cast();
     }
 
-    index = heap.num_values;
-    heap.num_values.suffix_plus_plus();
-
-    while index > 0 {
-        parent = (index - 1) / 2;
-
-        if binary_heap_cmp(heap.cast(), heap.values[parent].cast(), value.cast()) < 0 {
-            break;
-        } else {
-            heap.values[index] = heap.values[parent].cast();
-            index = parent;
-        }
-    }
-
-    heap.values[index] = value.cast();
-    return 1;
+    rb_tree_insert_case5(tree.cast(), next_node.cast());
 }

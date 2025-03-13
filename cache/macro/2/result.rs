@@ -1,2 +1,2 @@
-macro_rules! V_AVL3_INNER_H { () => { } }
-pub(crate) use V_AVL3_INNER_H;
+macro_rules! ALGORITHM_QUEUE_H { () => { } }
+pub(crate) use ALGORITHM_QUEUE_H;

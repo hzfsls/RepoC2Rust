@@ -1,16 +1,33 @@
-pub fn sortedarray_last_index(mut sortedarray: Ptr<SortedArray>, mut data: SortedArrayValue, mut left: u32, mut right: u32) -> u32 {
-    let mut index: u32 = right;
+pub fn hash_table_remove(mut hash_table: Ptr<HashTable>, mut key: HashTableKey) -> i32 {
+    let mut rover: Ptr<Ptr<HashTableEntry>> = Default::default();
+    let mut entry: Ptr<HashTableEntry> = Default::default();
+    let mut pair: Ptr<HashTablePair> = Default::default();
+    let mut index: u32 = Default::default();
+    let mut result: i32 = 0;
 
-    while left < right {
-        index = (left + right) / 2;
+    index = (hash_table.hash_func(key) % hash_table.table_size).cast();
 
-        let mut order: i32 = (sortedarray.cmp_func)(data.cast(), sortedarray.data[index].cast()).cast();
-        if order <= 0 {
-            left = index + 1;
-        } else {
-            right = index;
+    rover = c_ref!(hash_table.table[index]).cast();
+
+    while (*rover != NULL!()).as_bool() {
+        pair = c_ref!((*rover).pair).cast();
+
+        if (hash_table.equal_func(key, pair.key) != 0).as_bool() {
+            entry = *rover;
+
+            *rover = entry.next;
+
+            hash_table_free_entry(hash_table, entry);
+
+            hash_table.entries -= 1;
+
+            result = 1;
+
+            break;
         }
+
+        rover = c_ref!((*rover).next).cast();
     }
 
-    return index.cast();
+    return result.cast();
 }

@@ -1,18 +1,22 @@
-pub fn VosAvlBalanceTree(mut pstTree: Ptr<AVLBASE_TREE_S>, mut pstNode: Ptr<AVLBASE_NODE_S>) {
-    let mut pstNodeTmp: Ptr<AVLBASE_NODE_S> = pstNode.cast();
-    while pstNodeTmp.pstParent != AVL_NULL_PTR!() {
-        if pstNodeTmp.pstParent.pstRight == pstNodeTmp {
-            pstNodeTmp = pstNodeTmp.pstParent.cast();
-            VosAvlRebalance(c_ref!(pstNodeTmp.pstRight).cast());
-            pstNodeTmp.sRHeight = (1 + VOS_V2_AVL_MAX!(pstNodeTmp.pstRight.sRHeight, pstNodeTmp.pstRight.sLHeight)).cast();
-        } else {
-            pstNodeTmp = pstNodeTmp.pstParent.cast();
-            VosAvlRebalance(c_ref!(pstNodeTmp.pstLeft).cast());
-            pstNodeTmp.sLHeight = (1 + VOS_V2_AVL_MAX!(pstNodeTmp.pstLeft.sRHeight, pstNodeTmp.pstLeft.sLHeight)).cast();
+pub fn bloom_filter_query(mut bloomfilter: Ptr<BloomFilter>, mut value: BloomFilterValue) -> i32 {
+    let mut hash: u32 = Default::default();
+    let mut subhash: u32 = Default::default();
+    let mut index: u32 = Default::default();
+    let mut i: u32 = Default::default();
+    let mut b: u8 = Default::default();
+    let mut bit: i32 = Default::default();
+
+    hash = bloomfilter.hash_func(value).cast();
+
+    c_for!(let mut i: u32 = 0; i < bloomfilter.num_functions.cast(); i.prefix_plus_plus(); {
+        subhash = (hash ^ salts[i]).cast();
+        index = (subhash % bloomfilter.table_size).cast();
+        b = bloomfilter.table[index / 8].cast();
+        bit = (1 << (index % 8)).cast();
+        if ((b & bit) == 0).as_bool() {
+            return 0;
         }
-    }
-    if pstNodeTmp.sLHeight != pstNodeTmp.sRHeight {
-        VosAvlRebalance(c_ref!(pstTree.pstRoot).cast());
-    }
-    return;
+    });
+
+    return 1;
 }

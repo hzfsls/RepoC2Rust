@@ -4,10 +4,13 @@ from httpx import Client
 from tqdm import tqdm
 import json
 
-client = OpenAI(api_key="sk-76da526dbd8b48c3954df9336a8a6592", base_url="https://api.deepseek.com/beta",
+client = OpenAI(
+    api_key="sk-76da526dbd8b48c3954df9336a8a6592",
+    base_url="https://api.deepseek.com/beta",
     http_client=Client(
-    verify=False  # 注意：禁用 SSL 验证可能有安全风险，请根据实际情况决定是否需要这样做
-))
+        verify=False  # 注意：禁用 SSL 验证可能有安全风险，请根据实际情况决定是否需要这样做
+    ),
+)
 
 example_1 = """
 Source:
@@ -364,7 +367,8 @@ pub fn BzpHuffmanDecodeInit(mut blockSize: i32) -> Ptr<BzpHuffmanDecode> {
 ```
 """
 
-dummy_function_text = """
+dummy_function_text = (
+    """
 Translate the C Code to Rust. 
 You need to translate the function to a dummy function with unimplemented!() macro only.
 Here are some rules you need to follow:
@@ -374,13 +378,29 @@ Type translation:
     3. If function has array parameters, translate it to a Ptr<T> type in Rust. For example, `void MyFunction(int a[5])` should be translated to `pub fn MyFunction(mut a: Ptr<i32>)`.
     4. FILE* in C should be translated to FilePtr type in Rust.
 Now follow these examples for translation:
-""" + example_1 + example_2 + example_3 + example_4 + example_5 + example_6 + example_7 + example_8 + example_9 + example_10
+"""
+    + example_1
+    + example_2
+    + example_3
+    + example_4
+    + example_5
+    + example_6
+    + example_7
+    + example_8
+    + example_9
+    + example_10
+)
+
 
 def dummy_function_prompt(c_code):
-    return dummy_function_text + f"Now translate the following Function:\n```c\n{c_code.strip()}\n```"
+    return (
+        dummy_function_text
+        + f"Now translate the following Function:\n```c\n{c_code.strip()}\n```"
+    )
 
 
 results = {}
+
 
 def get_our_result_dummy_function(value, cache):
     if value in cache:
@@ -390,17 +410,22 @@ def get_our_result_dummy_function(value, cache):
         model="deepseek-coder",
         messages=[
             {"role": "user", "content": text},
-            {"role": "assistant", "content": "Sure, here is the rust translation:\n```rust\n", "prefix": True},
+            {
+                "role": "assistant",
+                "content": "Sure, here is the rust translation:\n```rust\n",
+                "prefix": True,
+            },
         ],
         stop=["```"],
         temperature=0,
         top_p=0.01,
         max_tokens=4096,
-        stream=False
+        stream=False,
     )
     result = response.choices[0].message.content
     cache[value] = result
     return result
+
 
 def get_our_results_dummy_function(data, cache):
     our_result = []
@@ -408,12 +433,11 @@ def get_our_results_dummy_function(data, cache):
     with ProcessPool(10) as pool:
         process = {}
         for idx, value in enumerate(data):
-            process[idx] = pool.schedule(get_our_result_function, 
-                args=(value, cache))
+            process[idx] = pool.schedule(get_our_result_function, args=(value, cache))
         results = {}
         for idx, value in enumerate(tqdm(data)):
             results[idx] = process[idx].result()
         results = list(sorted(results.items(), key=lambda item: item[0]))
         for key, value in results:
-            our_result.append(value)    
+            our_result.append(value)
     return our_result

@@ -1,42 +1,50 @@
-pub fn AVL3_Find_Or_Find_Next(mut pstTree: Ptr<AVL3_TREE>, mut pKey: Ptr<Void>, mut bFlag: u32, mut pstTreeInfo: Ptr<AVL3_TREE_INFO>) -> Ptr<Void> {
-    let mut pstNode: Ptr<AVL3_NODE> = Default::default();
-    let mut pFoundNode: Ptr<Void> = AVL_NULL_PTR!();
-    let mut iResult: i32 = Default::default();
-    let mut iKeyOffset: i32 = Default::default();
+pub fn sortedarray_insert(mut sortedarray: Ptr<SortedArray>, mut data: SortedArrayValue) -> i32 {
+    let mut left: u32 = 0;
+    let mut right: u32 = sortedarray.length;
+    let mut index: u32 = 0;
 
-    if TREE_OR_TREEINFO_IS_NULL!(pstTree, pstTreeInfo) {
-        return AVL_NULL_PTR!();
-    }
-    pstNode = pstTree.pstRoot.cast();
-    if pstNode == AVL_NULL_PTR!() {
-        return AVL_NULL_PTR!();
-    }
+    right = if right > 1 { right } else { 0 };
 
-    iKeyOffset = GET_KEYOFFSET!(pstTreeInfo);
+    while (left != right) {
+        index = (left + right) / 2;
 
-    loop {
-        iResult = (pstTreeInfo.pfCompare)(pKey.cast(), (pstNode.cast::<Ptr<u8>>() + iKeyOffset).cast()).cast();
-        if iResult > 0 {
-            if pstNode.pstRight == AVL_NULL_PTR!() {
-                pFoundNode = VOS_AVL3_Next(pstNode.cast(), pstTreeInfo.cast()).cast();
-                break;
-            }
-            pstNode = pstNode.pstRight.cast();
-        } else if iResult < 0 {
-            if pstNode.pstLeft == AVL_NULL_PTR!() {
-                pFoundNode = (pstNode.cast::<Ptr<u8>>() - pstTreeInfo.usNodeOffset).cast();
-                break;
-            }
-            pstNode = pstNode.pstLeft.cast();
+        let mut order: i32 = (sortedarray.cmp_func)(data, sortedarray.data[index]);
+        if order < 0 {
+            right = index;
+        } else if order > 0 {
+            left = index + 1;
         } else {
-            if bFlag != 0 {
-                pFoundNode = VOS_AVL3_Next(pstNode.cast(), pstTreeInfo.cast()).cast();
-            } else {
-                pFoundNode = (pstNode.cast::<Ptr<u8>>() - pstTreeInfo.usNodeOffset).cast();
-            }
             break;
         }
     }
 
-    return pFoundNode.cast();
+    if (sortedarray.length > 0) && (sortedarray.cmp_func)(data, sortedarray.data[index]) > 0 {
+        index += 1;
+    }
+
+    if (sortedarray.length + 1 > sortedarray._alloced) {
+        let mut newsize: u32;
+        let mut data: Ptr<SortedArrayValue>;
+
+        newsize = sortedarray._alloced * 2;
+        data = c_realloc!(sortedarray.data, c_sizeof!(SortedArrayValue) * newsize);
+
+        if (data == NULL!()) {
+            return 0;
+        } else {
+            sortedarray.data = data;
+            sortedarray._alloced = newsize;
+        }
+    }
+
+    c_memmove!(
+        c_ref!(sortedarray.data[index + 1]),
+        c_ref!(sortedarray.data[index]),
+        (sortedarray.length - index) * c_sizeof!(SortedArrayValue)
+    );
+
+    sortedarray.data[index] = data;
+    sortedarray.length += 1;
+
+    return 1;
 }

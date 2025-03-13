@@ -1,1 +1,1 @@
-pub type ListIterator = _ListIterator;
+pub type HashTableKeyFreeFunc = FuncPtr<fn(HashTableKey)>;

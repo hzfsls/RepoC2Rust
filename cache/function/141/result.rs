@@ -1,7 +1,21 @@
-pub fn binomial_heap_merge_undo(mut new_roots: Ptr<Ptr<BinomialTree>>, mut count: u32) {
-    let mut i: u32 = Default::default();
-    c_for!(let mut i = 0; i <= count; i.prefix_plus_plus(); {
-        binomial_tree_unref(new_roots[i].cast());
-    });
-    c_free!(new_roots);
+pub fn avl_tree_rotate(mut tree: Ptr<AVLTree>, mut node: Ptr<AVLTreeNode>, mut direction: AVLTreeNodeSide) -> Ptr<AVLTreeNode> {
+    let mut new_root: Ptr<AVLTreeNode> = Default::default();
+
+    new_root = node.children[1 - direction].cast();
+
+    avl_tree_node_replace(tree.cast(), node.cast(), new_root.cast());
+
+    node.children[1 - direction] = new_root.children[direction].cast();
+    new_root.children[direction] = node.cast();
+
+    node.parent = new_root.cast();
+
+    if (node.children[1 - direction] != NULL!()).as_bool() {
+        node.children[1 - direction].parent = node.cast();
+    }
+
+    avl_tree_update_height(new_root.cast());
+    avl_tree_update_height(node.cast());
+
+    return new_root.cast();
 }

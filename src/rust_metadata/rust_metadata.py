@@ -146,8 +146,8 @@ def resolve_metadata(files: dict[str, str], declarations: dict[str, str]) -> dic
     for path in files:
         target_path = name_dict[c_filename_to_rust_filename(path.split("/")[-1])]
         for f, v in files[path]["functions"].items():
-            code = RustCodeWithDummy(v)
-            code.dummy_code = "pub fn " + f + "() { unimplemented!(); }"
+            code = RustCode(v)
+            code.rust_code = "pub fn " + f + "() { unimplemented!(); }"
             target_path.functions.append(code)
     return metadata
 

@@ -1,20 +1,24 @@
-pub fn BzpBuffToStream(mut bzpf: Ptr<BzpFile>, mut outData: Ptr<BzpOutComdata>) -> i32 {
-    bzpf.output.pos = 0;
+pub fn list_prepend(mut list: Ptr<Ptr<ListEntry>>, mut data: ListValue) -> Ptr<ListEntry> {
+    let mut newentry: Ptr<ListEntry> = Default::default();
 
-    let mut pos: i32 = 0;
-
-    while pos < outData.num {
-        bzpf.output.nBuf = 0;
-
-        while pos < outData.num && bzpf.output.nBuf < BZP_BUF_SIZE!() {
-            bzpf.output.buf[bzpf.output.nBuf] = outData.out[pos].cast();
-            bzpf.output.nBuf += 1;
-            pos += 1;
-        }
-        let mut n2: i32 = c_fwrite!(bzpf.output.buf.cast::<Ptr<Void>>(), c_sizeof!(u8), bzpf.output.nBuf, bzpf.output.filePtr).cast();
-        if n2 != bzpf.output.nBuf {
-            return BZP_ERROR_IO!();
-        }
+    if (list == NULL!()) {
+        return NULL!();
     }
-    return BZP_OK!();
+
+    newentry = c_malloc!(c_sizeof!(ListEntry));
+
+    if (newentry == NULL!()) {
+        return NULL!();
+    }
+
+    newentry.data = data;
+
+    if (*list != NULL!()) {
+        (*list).prev = newentry;
+    }
+    newentry.prev = NULL!();
+    newentry.next = *list;
+    *list = newentry;
+
+    return newentry;
 }

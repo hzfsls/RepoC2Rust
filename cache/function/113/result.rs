@@ -1,22 +1,37 @@
-pub fn BzpBuildHuffmanTree(mut huffman: Ptr<BzpHuffmanInfo>) {
-    BzpHuffmanInitArray(huffman.cast());
-    BzpHeapInit(huffman.cast());
-    let mut idx1: i32 = Default::default();
-    let mut idx2: i32 = Default::default();
-    while huffman.nHeap > 1 {
-        idx1 = huffman.heap[1].cast();
-        huffman.heap[1] = huffman.heap[huffman.nHeap.suffix_minus_minus()].cast();
-        BzpHeapAdjustDown(huffman.heap.cast(), huffman.weight.cast(), huffman.nHeap.cast());
-        idx2 = huffman.heap[1].cast();
-        huffman.heap[1] = huffman.heap[huffman.nHeap.suffix_minus_minus()].cast();
-        BzpHeapAdjustDown(huffman.heap.cast(), huffman.weight.cast(), huffman.nHeap.cast());
-        huffman.weight[huffman.nWeight] = BzpHuffmanWeightAdd(huffman.weight[idx1].cast(), huffman.weight[idx2].cast()).cast();
-        huffman.parent[idx1] = huffman.nWeight.cast();
-        huffman.parent[idx2] = huffman.nWeight.cast();
-        huffman.parent[huffman.nWeight] = -1;
-        huffman.nHeap.prefix_plus_plus();
-        huffman.heap[huffman.nHeap] = huffman.nWeight.cast();
-        huffman.nWeight.prefix_plus_plus();
-        BzpHeapAdjustUp(huffman.heap.cast(), huffman.weight.cast(), huffman.nHeap.cast());
+pub fn set_union(mut set1: Ptr<Set>, mut set2: Ptr<Set>) -> Ptr<Set> {
+    let mut iterator: SetIterator = Default::default();
+    let mut new_set: Ptr<Set> = Default::default();
+    let mut value: SetValue = Default::default();
+
+    new_set = set_new(set1.hash_func.cast(), set1.equal_func.cast());
+
+    if (new_set == NULL!()).as_bool() {
+        return NULL!();
     }
+
+    set_iterate(set1.cast(), c_ref!(iterator).cast());
+
+    while (set_iter_has_more(c_ref!(iterator).cast()).as_bool() {
+        value = set_iter_next(c_ref!(iterator).cast()).cast();
+
+        if !set_insert(new_set.cast(), value.cast()).as_bool() {
+            set_free(new_set.cast());
+            return NULL!();
+        }
+    }
+
+    set_iterate(set2.cast(), c_ref!(iterator).cast());
+
+    while (set_iter_has_more(c_ref!(iterator).cast()).as_bool() {
+        value = set_iter_next(c_ref!(iterator).cast()).cast();
+
+        if (set_query(new_set.cast(), value.cast()) == 0).as_bool() {
+            if !set_insert(new_set.cast(), value.cast()).as_bool() {
+                set_free(new_set.cast());
+                return NULL!();
+            }
+        }
+    }
+
+    return new_set.cast();
 }

@@ -1,11 +1,49 @@
-pub fn list_iter_remove(mut iter: Ptr<ListIterator>) {
-    if iter.current == NULL!() || iter.current != *iter.prev_next {
+pub fn trie_remove(mut trie: Ptr<Trie>, mut key: Ptr<u8>) -> i32 {
+    let mut node: Ptr<TrieNode> = Default::default();
+    let mut next: Ptr<TrieNode> = Default::default();
+    let mut last_next_ptr: Ptr<Ptr<TrieNode>> = Default::default();
+    let mut p: Ptr<u8> = Default::default();
+    let mut c: u8 = Default::default();
+
+    node = trie_find_end(trie.cast(), key.cast()).cast();
+
+    if (node != NULL!()).as_bool() && (node.data != TRIE_NULL!()).as_bool() {
+        node.data = TRIE_NULL!();
     } else {
-        *iter.prev_next = iter.current.next.cast();
-        if iter.current.next != NULL!() {
-            iter.current.next.prev = iter.current.prev.cast();
-        }
-        c_free!(iter.current);
-        iter.current = NULL!();
+        return 0;
     }
+
+    node = trie.root_node.cast();
+    last_next_ptr = c_ref!(trie.root_node).cast();
+    p = key.cast();
+
+    loop {
+        c = (*p).cast();
+        next = node.next[c].cast();
+
+        node.use_count -= 1;
+
+        if (node.use_count <= 0).as_bool() {
+            c_free!(node.cast());
+
+            if (last_next_ptr != NULL!()).as_bool() {
+                *last_next_ptr = NULL!();
+                last_next_ptr = NULL!();
+            }
+        }
+
+        if (c == '\0').as_bool() {
+            break;
+        } else {
+            p += 1;
+        }
+
+        if (last_next_ptr != NULL!()).as_bool() {
+            last_next_ptr = c_ref!(node.next[c]).cast();
+        }
+
+        node = next.cast();
+    }
+
+    return 1;
 }

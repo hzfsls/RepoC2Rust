@@ -1,25 +1,7 @@
-pub fn VOS_AVL3_Find(mut pstTree: Ptr<AVL3_TREE>, mut pstKey: Ptr<Void>, mut pstTreeInfo: Ptr<AVL3_TREE_INFO>) -> Ptr<Void> {
-    let mut pstNode: Ptr<AVL3_NODE> = Default::default();
-    let mut iResult: i32 = Default::default();
-    let mut iKeyOffset: i32 = Default::default();
-
-    if TREE_OR_TREEINFO_IS_NULL!(pstTree, pstTreeInfo) {
-        return AVL_NULL_PTR!();
+pub fn binomial_heap_cmp(mut heap: Ptr<BinomialHeap>, mut data1: BinomialHeapValue, mut data2: BinomialHeapValue) -> i32 {
+    if (heap.heap_type == BINOMIAL_HEAP_TYPE_MIN!()).as_bool() {
+        return (heap.compare_func)(data1.cast(), data2.cast()).cast();
+    } else {
+        return (-(heap.compare_func)(data1.cast(), data2.cast())).cast();
     }
-
-    pstNode = pstTree.pstRoot.cast();
-    iKeyOffset = GET_KEYOFFSET!(pstTreeInfo).cast();
-
-    while pstNode != AVL_NULL_PTR!() {
-        iResult = (pstTreeInfo.pfCompare)(pstKey.cast(), (pstNode.cast::<Ptr<u8>>() + iKeyOffset).cast::<Ptr<Void>>()).cast();
-        if iResult > 0 {
-            pstNode = pstNode.pstRight.cast();
-        } else if iResult < 0 {
-            pstNode = pstNode.pstLeft.cast();
-        } else {
-            break;
-        }
-    }
-
-    return GET_NODE_START_ADDRESS!(pstNode, pstTreeInfo.usNodeOffset).cast();
 }

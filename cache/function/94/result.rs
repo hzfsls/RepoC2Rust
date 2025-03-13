@@ -1,42 +1,21 @@
-pub fn BzpMtfMain(mut mtf: Ptr<BzpMtfInfo>) {
-    let mut list: Array<u8, { BZP_MAX_ALPHA_SIZE!() }> = Default::default();
-    let mut EOB: i32 = Default::default();
-    let mut num: i32 = 0;
-    BzpMapInputChar(mtf.cast(), list.cast(), BZP_MAX_ALPHA_SIZE!());
-    EOB = mtf.nUse + 1;
-    c_for!(let mut i: i32 = 0; i <= EOB; i.suffix_plus_plus(); {
-        mtf.mtfFreq[i] = 0;
-    });
-    c_for!(let mut i: i32 = 0; i < mtf.nBlock; i.suffix_plus_plus(); {
-        let mut pos: i32 = mtf.map[i] - 1;
-        if pos < 0 {
-            pos += mtf.nBlock;
-        }
-        let mut ch: u8 = mtf.block[pos].cast();
-        if ch == list[0] {
-            num += 1;
-        } else {
-            if num > 0 {
-                BzpNumEncode(mtf.cast(), num.cast());
-                num = 0;
-            }
-            let mut pos_: i32 = 1;
-            while ch != list[pos_] && pos_ < mtf.nUse {
-                pos_ += 1;
-            }
-            c_for!(let mut j: i32 = pos_; j > 0; j.suffix_minus_minus(); {
-                list[j] = list[j - 1].cast();
-            });
-            list[0] = ch.cast();
-            mtf.mtfV[mtf.nMtf] = (pos_ + 1).cast();
-            mtf.mtfFreq[pos_ + 1] += 1;
-            mtf.nMtf += 1;
-        }
-    });
-    if num > 0 {
-        BzpNumEncode(mtf.cast(), num.cast());
+pub fn queue_push_head(mut queue: Ptr<Queue>, mut data: QueueValue) -> i32 {
+    let mut new_entry: Ptr<QueueEntry> = c_malloc!(c_sizeof!(QueueEntry));
+
+    if (new_entry == NULL!()).as_bool() {
+        return 0;
     }
-    mtf.mtfV[mtf.nMtf] = EOB.cast();
-    mtf.mtfFreq[EOB] += 1;
-    mtf.nMtf += 1;
+
+    new_entry.data = data.cast();
+    new_entry.prev = NULL!();
+    new_entry.next = queue.head.cast();
+
+    if (queue.head == NULL!()).as_bool() {
+        queue.head = new_entry.cast();
+        queue.tail = new_entry.cast();
+    } else {
+        queue.head.prev = new_entry.cast();
+        queue.head = new_entry.cast();
+    }
+
+    return 1;
 }

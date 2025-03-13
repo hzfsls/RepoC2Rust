@@ -1,2 +1,2 @@
-macro_rules! AVL_FALSE { () => { 0 } }
-pub(crate) use AVL_FALSE;
+macro_rules! ALGORITHM_SORTEDARRAY_H { () => { } }
+pub(crate) use ALGORITHM_SORTEDARRAY_H;

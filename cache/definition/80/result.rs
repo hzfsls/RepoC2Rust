@@ -1,1 +1,1 @@
-pub type HashTableEntry = _HashTableEntry;
+pub type BloomFilterValue = VoidPtr;

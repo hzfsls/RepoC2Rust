@@ -1,18 +1,7 @@
-pub fn binomial_tree_unref(mut tree: Ptr<BinomialTree>) {
-    let mut i: i32 = Default::default();
-
-    if tree == NULL!() {
-        return;
-    }
-
-    tree.refcount.suffix_minus_minus();
-
-    if tree.refcount == 0 {
-        c_for!(let mut i: i32 = 0; i < tree.order; i.prefix_plus_plus(); {
-            binomial_tree_unref(tree.subtrees[i].cast());
-        });
-
-        c_free!(tree.subtrees);
-        c_free!(tree);
+pub fn avl_tree_node_parent_side(mut node: Ptr<AVLTreeNode>) -> AVLTreeNodeSide {
+    if (node.parent.children[AVL_TREE_NODE_LEFT!()] == node).as_bool() {
+        return AVL_TREE_NODE_LEFT!();
+    } else {
+        return AVL_TREE_NODE_RIGHT!();
     }
 }

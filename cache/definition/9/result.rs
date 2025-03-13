@@ -1,9 +1,9 @@
 #[repr(C)]
 #[derive(Default, Clone, Copy)]
-pub struct avl3_tree {
-    pub pstRoot: Ptr<AVL3_NODE>,
-    pub pstFirst: Ptr<AVL3_NODE>,
-    pub pstLast: Ptr<AVL3_NODE>,
+pub struct _BinaryHeap {
+    pub heap_type: BinaryHeapType,
+    pub values: Ptr<BinaryHeapValue>,
+    pub num_values: u32,
+    pub alloced_size: u32,
+    pub compare_func: BinaryHeapCompareFunc,
 }
-
-pub type AVL3_TREE = avl3_tree;

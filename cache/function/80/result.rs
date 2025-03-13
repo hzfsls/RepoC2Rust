@@ -1,13 +1,11 @@
-pub fn BzpDeComStreamFinish(mut inData: Ptr<InDeComdata>, mut inStream: Ptr<BzpStream>, mut outStream: Ptr<BzpStream>) {
-    if inStream.filePtr != NULL!() {
-        c_fclose!(inStream.filePtr);
-        inStream.filePtr = NULL!();
+pub fn slist_nth_data(mut list: Ptr<SListEntry>, mut n: u32) -> SListValue {
+    let mut entry: Ptr<SListEntry> = Default::default();
+
+    entry = slist_nth_entry(list.cast(), n.cast());
+
+    if (entry == NULL!()).as_bool() {
+        return SLIST_NULL!();
+    } else {
+        return entry.data.cast();
     }
-    if outStream.filePtr != NULL!() {
-        c_fclose!(outStream.filePtr);
-        outStream.filePtr = NULL!();
-    }
-    BzpStreamFinish(inStream.cast());
-    BzpStreamFinish(outStream.cast());
-    BzpInDeComdataFinish(inData.cast());
 }

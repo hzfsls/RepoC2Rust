@@ -1,15 +1,5 @@
-pub fn VosAvlSearchReplaceNodeInLTree(mut pstTree: Ptr<AVLBASE_TREE_S>, mut pstNode: Ptr<AVLBASE_NODE_S>) -> Ptr<AVLBASE_NODE_S> {
-    let mut pstReplaceNode: Ptr<AVLBASE_NODE_S> = Default::default();
-
-    if pstNode.pstLeft.pstRight == AVL_NULL_PTR!() {
-        pstReplaceNode = pstNode.pstLeft.cast();
-        pstReplaceNode.pstRight = pstNode.pstRight.cast();
-        pstReplaceNode.pstRight.pstParent = pstReplaceNode.cast();
-        pstReplaceNode.sRHeight = pstNode.sRHeight.cast();
-    } else {
-        VosAvlSwapRightMost(pstTree.cast(), pstNode.pstLeft.cast(), pstNode.cast());
-        pstReplaceNode = pstNode.pstLeft.cast();
-    }
-
-    return pstReplaceNode.cast();
+pub fn bloom_filter_load(mut bloomfilter: Ptr<BloomFilter>, mut array: Ptr<u8>) {
+    let mut array_size: u32 = Default::default();
+    array_size = (bloomfilter.table_size + 7) / 8;
+    c_memcpy!(bloomfilter.table, array, array_size);
 }

@@ -1,1 +1,1 @@
-pub type ListValue = VoidPtr;
+pub type HashTableValueFreeFunc = FuncPtr<fn(HashTableValue)>;

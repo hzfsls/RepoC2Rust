@@ -1,1 +1,1 @@
-pub type SetValue = VoidPtr;
+pub type AVLTreeValue = VoidPtr;

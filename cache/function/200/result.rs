@@ -1,23 +1,7 @@
-pub fn slist_append(mut list: Ptr<Ptr<SListEntry>>, mut data: SListValue) -> Ptr<SListEntry> {
-    let mut rover: Ptr<SListEntry> = Default::default();
-    let mut newentry: Ptr<SListEntry> = c_malloc!(c_sizeof!(SListEntry));
-
-    if newentry == NULL!() {
-        return NULL!();
-    }
-
-    newentry.data = data.cast();
-    newentry.next = NULL!();
-
-    if *list == NULL!() {
-        *list = newentry.cast();
+pub fn trie_num_entries(mut trie: Ptr<Trie>) -> u32 {
+    if (trie.root_node == NULL!()).as_bool() {
+        return 0;
     } else {
-        rover = *list.cast();
-        while rover.next != NULL!() {
-            rover = rover.next.cast();
-        }
-        rover.next = newentry.cast();
+        return trie.root_node.use_count.cast();
     }
-
-    return newentry.cast();
 }

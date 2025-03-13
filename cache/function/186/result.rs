@@ -1,11 +1,3 @@
-pub fn list_nth_data(mut list: Ptr<ListEntry>, mut n: u32) -> ListValue {
-    let mut entry: Ptr<ListEntry> = Default::default();
-
-    entry = list_nth_entry(list.cast(), n.cast());
-
-    if entry == NULL!() {
-        return LIST_NULL!();
-    } else {
-        return entry.data.cast();
-    }
+pub fn rb_tree_num_entries(mut tree: Ptr<RBTree>) -> i32 {
+    return tree.num_nodes.cast();
 }

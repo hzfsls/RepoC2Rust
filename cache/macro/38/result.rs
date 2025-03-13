@@ -1,2 +1,2 @@
-macro_rules! BZP_NGROUPS_BLOCK_NUM_LIMIT2 { () => { 1200 } }
-pub(crate) use BZP_NGROUPS_BLOCK_NUM_LIMIT2;
+macro_rules! VOS_PACKEND_ZERO { () => { 1 } }
+pub(crate) use VOS_PACKEND_ZERO;

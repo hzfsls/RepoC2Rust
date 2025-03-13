@@ -1,1 +1,1 @@
-pub type HashTableKeyFreeFunc = FuncPtr<fn(HashTableKey)>;
+pub type BinomialHeapValue = VoidPtr;

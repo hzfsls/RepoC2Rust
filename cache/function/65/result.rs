@@ -1,19 +1,41 @@
-pub fn BzpReadBits(mut nBit: i32, mut inData: Ptr<InDeComdata>) -> u32 {
-    let mut res: u32 = 0;
+pub fn list_remove_data(mut list: Ptr<Ptr<ListEntry>>, mut callback: ListEqualFunc, mut data: ListValue) -> u32 {
+    let mut entries_removed: u32 = 0;
+    let mut rover: Ptr<ListEntry> = Default::default();
+    let mut next: Ptr<ListEntry> = Default::default();
 
-    while inData.nBuf < nBit {
-        if inData.input.nBuf == inData.input.pos {
-            inData.input.nBuf = c_fread!(inData.input.buf, c_sizeof!(char), c_sizeofval!(inData.input.buf), inData.input.filePtr);
-            inData.input.pos = 0;
-        }
-        let mut data: i32 = (inData.input.buf[inData.input.pos]).cast::<u32>().cast();
-
-        inData.buf = (inData.buf << BZP_BITS8!()) | data.cast::<u32>();
-        inData.input.pos.suffix_plus_plus();
-        inData.nBuf += BZP_BITS8!();
+    if (list == NULL!() || callback == NULL!()).as_bool() {
+        return 0;
     }
-    res = inData.buf >> (inData.nBuf - nBit);
-    res = res & ((1 << nBit) - 1);
-    inData.nBuf -= nBit;
-    return res.cast();
+
+    entries_removed = 0;
+
+    rover = *list;
+
+    while (rover != NULL!()).as_bool() {
+
+        next = rover.next;
+
+        if callback(rover.data.cast(), data.cast()).as_bool() {
+
+            if (rover.prev == NULL!()).as_bool() {
+
+                *list = rover.next;
+            } else {
+
+                rover.prev.next = rover.next;
+            }
+
+            if (rover.next != NULL!()).as_bool() {
+                rover.next.prev = rover.prev;
+            }
+
+            c_free!(rover);
+
+            entries_removed.prefix_plus_plus();
+        }
+
+        rover = next;
+    }
+
+    return entries_removed.cast();
 }

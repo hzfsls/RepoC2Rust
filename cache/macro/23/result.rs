@@ -1,2 +1,2 @@
-macro_rules! BZP_MAX_STACK_SIZE { () => { 100 } }
-pub(crate) use BZP_MAX_STACK_SIZE;
+macro_rules! ALGORITHM_COMPARE_STRING_H { () => { } }
+pub(crate) use ALGORITHM_COMPARE_STRING_H;

@@ -1,2 +1,2 @@
-macro_rules! BZP_INPUT_COMPRESS { () => { 0 } }
-pub(crate) use BZP_INPUT_COMPRESS;
+macro_rules! ALGORITHM_LIST_H { () => { } }
+pub(crate) use ALGORITHM_LIST_H;

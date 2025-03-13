@@ -1,1 +1,1 @@
-pub type BinaryHeapValue = VoidPtr;
+pub type ListCompareFunc = FuncPtr<fn(ListValue, ListValue) -> i32>;

@@ -1,41 +1,30 @@
-pub fn set_enlarge(mut set: Ptr<Set>) -> i32 {
-    let mut rover: Ptr<SetEntry> = Default::default();
-    let mut next: Ptr<SetEntry> = Default::default();
-    let mut old_table: Ptr<Ptr<SetEntry>> = Default::default();
-    let mut old_table_size: u32 = Default::default();
-    let mut old_prime_index: u32 = Default::default();
-    let mut index: u32 = Default::default();
-    let mut i: u32 = Default::default();
+pub fn VosAvlDeleteCheck(mut pstTree: Ptr<AVLBASE_TREE_S>, mut pstNode: Ptr<AVLBASE_NODE_S>) -> Ptr<AVLBASE_NODE_S> {
+    let mut pstReplaceNode: Ptr<AVLBASE_NODE_S> = Default::default();
 
-    old_table = set.table.cast();
-    old_table_size = set.table_size.cast();
-    old_prime_index = set.prime_index.cast();
+    if (pstNode.pstLeft == AVL_NULL_PTR!()).as_bool() && (pstNode.pstRight == AVL_NULL_PTR!()).as_bool() {
+        pstReplaceNode = AVL_NULL_PTR!();
 
-    set.prime_index.prefix_plus_plus();
-
-    if !set_allocate_table(set.cast()) {
-        set.table = old_table.cast();
-        set.table_size = old_table_size.cast();
-        set.prime_index = old_prime_index.cast();
-
-        return 0;
-    }
-
-    c_for!(let mut i: u32 = 0; i < old_table_size; i.prefix_plus_plus(); {
-        rover = old_table[i].cast();
-
-        while rover != NULL!() {
-            next = rover.next.cast();
-
-            index = (set.hash_func)(rover.data.cast()) % set.table_size.cast();
-            rover.next = set.table[index].cast();
-            set.table[index] = rover.cast();
-
-            rover = next.cast();
+        if (pstTree.pstFirst == pstNode).as_bool() {
+            pstTree.pstFirst = pstNode.pstParent.cast();
         }
-    });
 
-    c_free!(old_table);
+        if (pstTree.pstLast == pstNode).as_bool() {
+            pstTree.pstLast = pstNode.pstParent.cast();
+        }
+    } else if (pstNode.pstLeft == AVL_NULL_PTR!()).as_bool() {
+        pstReplaceNode = pstNode.pstRight.cast();
 
-    return 1;
+        if (pstTree.pstFirst == pstNode).as_bool() {
+            pstTree.pstFirst = pstReplaceNode.cast();
+        }
+    } else if (pstNode.pstRight == AVL_NULL_PTR!()).as_bool() {
+        pstReplaceNode = pstNode.pstLeft.cast();
+
+        if (pstTree.pstLast == pstNode).as_bool() {
+            pstTree.pstLast = pstReplaceNode.cast();
+        }
+    } else {
+        pstReplaceNode = VosAvlSearchReplaceNode(pstTree.cast(), pstNode.cast());
+    }
+    return pstReplaceNode.cast();
 }

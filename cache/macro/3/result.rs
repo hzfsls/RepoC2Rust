@@ -1,2 +1,2 @@
-macro_rules! V_AVLL_H { () => { } }
-pub(crate) use V_AVLL_H;
+macro_rules! QUEUE_NULL { () => { NULL!() } }
+pub(crate) use QUEUE_NULL;

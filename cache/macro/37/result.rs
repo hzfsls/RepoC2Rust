@@ -1,2 +1,2 @@
-macro_rules! BZP_NGROUPS_BLOCK_NUM_LIMIT1 { () => { 600 } }
-pub(crate) use BZP_NGROUPS_BLOCK_NUM_LIMIT1;
+macro_rules! AVL_INT32_TO_LONG { () => { 1 } }
+pub(crate) use AVL_INT32_TO_LONG;

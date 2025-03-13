@@ -1,21 +1,39 @@
-pub fn VOS_AVL3_Next(mut pstNode: Ptr<AVL3_NODE>, mut pstTreeInfo: Ptr<AVL3_TREE_INFO>) -> Ptr<Void> {
-    let mut pstNodeTmp: Ptr<AVL3_NODE> = pstNode.cast();
-    if (pstNodeTmp == AVL_NULL_PTR!()) || (pstTreeInfo == AVL_NULL_PTR!()) {
-        return AVL_NULL_PTR!();
+pub fn binomial_tree_merge(mut heap: Ptr<BinomialHeap>, mut tree1: Ptr<BinomialTree>, mut tree2: Ptr<BinomialTree>) -> Ptr<BinomialTree> {
+    let mut new_tree: Ptr<BinomialTree> = Default::default();
+    let mut tmp: Ptr<BinomialTree> = Default::default();
+    let mut i: i32 = Default::default();
+
+    if (binomial_heap_cmp(heap, tree1.value, tree2.value) > 0) {
+        tmp = tree1;
+        tree1 = tree2;
+        tree2 = tmp;
     }
 
-    if pstNodeTmp.pstRight != AVL_NULL_PTR!() {
-        pstNodeTmp = pstNodeTmp.pstRight.cast();
-        FIND_LEFTMOST_NODE!(pstNodeTmp);
-    } else {
-        while pstNodeTmp != AVL_NULL_PTR!() {
-            if (pstNodeTmp.pstParent == AVL_NULL_PTR!()) || (pstNodeTmp.pstParent.pstLeft == pstNodeTmp) {
-                pstNodeTmp = pstNodeTmp.pstParent.cast();
-                break;
-            }
-            pstNodeTmp = pstNodeTmp.pstParent.cast();
-        }
+    new_tree = c_malloc!(c_sizeof!(BinomialTree));
+
+    if (new_tree == NULL!()) {
+        return NULL!();
     }
 
-    return GET_NODE_START_ADDRESS!(pstNodeTmp, pstTreeInfo.usNodeOffset);
+    new_tree.refcount = 0;
+    new_tree.order = (tree1.order + 1).cast::<u16>();
+
+    new_tree.value = tree1.value;
+
+    new_tree.subtrees = c_malloc!(c_sizeof!(Ptr<BinomialTree>) * new_tree.order);
+
+    if (new_tree.subtrees == NULL!()) {
+        c_free!(new_tree);
+        return NULL!();
+    }
+
+    c_memcpy!(new_tree.subtrees, tree1.subtrees, c_sizeof!(Ptr<BinomialTree>) * tree1.order);
+    let tmp0 = new_tree.order - 1;
+    new_tree.subtrees[tmp0] = tree2;
+
+    c_for!(let mut i: i32 = 0; i < new_tree.order.cast(); i.prefix_plus_plus(); {
+        binomial_tree_ref(new_tree.subtrees[i]);
+    });
+
+    return new_tree;
 }

@@ -1,2 +1,2 @@
-macro_rules! AVL_INT32_TO_LONG { () => { 1 } }
-pub(crate) use AVL_INT32_TO_LONG;
+macro_rules! ALGORITHM_SET_H { () => { } }
+pub(crate) use ALGORITHM_SET_H;

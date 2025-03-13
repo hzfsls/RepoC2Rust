@@ -1,1 +1,1 @@
-pub type HashTableIterator = _HashTableIterator;
+pub type BloomFilter = _BloomFilter;

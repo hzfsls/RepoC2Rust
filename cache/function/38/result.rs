@@ -1,8 +1,3 @@
-pub fn BzpFileFinish(mut bzpF: Ptr<BzpFile>) {
-    if bzpF != NULL!() {
-        BzpStreamFinish(bzpF.input.cast());
-        BzpStreamFinish(bzpF.output.cast());
-        c_free!(bzpF);
-        bzpF = NULL!();
-    }
+pub fn arraylist_prepend(mut arraylist: Ptr<ArrayList>, mut data: ArrayListValue) -> i32 {
+    return arraylist_insert(arraylist.cast(), 0, data.cast()).cast();
 }

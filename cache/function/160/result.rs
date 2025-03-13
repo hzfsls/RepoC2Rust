@@ -1,17 +1,3 @@
-pub fn arraylist_enlarge(mut arraylist: Ptr<ArrayList>) -> i32 {
-    let mut data: Ptr<ArrayListValue>;
-    let mut newsize: u32;
-
-    newsize = arraylist._alloced * 2;
-
-    data = c_realloc!(arraylist.data, c_sizeof!(ArrayListValue) * newsize);
-
-    if data == NULL!() {
-        return 0;
-    } else {
-        arraylist.data = data.cast();
-        arraylist._alloced = newsize.cast();
-
-        return 1;
-    }
+pub fn string_nocase_equal(mut string1: Ptr<Void>, mut string2: Ptr<Void>) -> i32 {
+    return (string_nocase_compare(string1.cast::<Ptr<u8>>(), string2.cast::<Ptr<u8>>()) == 0).cast();
 }

@@ -1,1 +1,1 @@
-pub type SetEntry = _SetEntry;
+pub type AVLTreeKey = VoidPtr;

@@ -1,4 +1,10 @@
-pub fn VOS_V_AVLBaseInit(mut pscKey: Ptr<u8>) -> u32 {
-    // (void)pscKey; is a no-op, so it can be omitted
-    return 0;
+pub fn binomial_heap_free(mut heap: Ptr<BinomialHeap>) {
+    let mut i: u32 = Default::default();
+
+    c_for!(let mut i = 0; i < heap.roots_length; i.suffix_plus_plus(); {
+        binomial_tree_unref(heap.roots[i].cast());
+    });
+
+    c_free!(heap.roots);
+    c_free!(heap);
 }

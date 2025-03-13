@@ -1,2 +1,2 @@
-macro_rules! BZP_RETUEN_COMPRESS { () => { 2 } }
-pub(crate) use BZP_RETUEN_COMPRESS;
+macro_rules! ALGORITHM_HASH_TABLE_H { () => { } }
+pub(crate) use ALGORITHM_HASH_TABLE_H;

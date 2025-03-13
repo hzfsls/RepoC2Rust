@@ -1,1 +1,1 @@
-pub type SListEntry = _SListEntry;
+pub type SortedArrayValue = VoidPtr;

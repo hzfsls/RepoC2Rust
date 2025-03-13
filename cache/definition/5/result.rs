@@ -1,8 +1,8 @@
 #[repr(C)]
 #[derive(Default, Clone, Copy)]
-pub struct avll_tree {
-    pub stTree: AVL3_TREE,
-    pub stTreeInfo: AVL3_TREE_INFO,
+pub struct _BloomFilter {
+    pub hash_func: BloomFilterHashFunc,
+    pub table: Ptr<u8>,
+    pub table_size: u32,
+    pub num_functions: u32,
 }
-
-pub type AVLL_TREE = avll_tree;

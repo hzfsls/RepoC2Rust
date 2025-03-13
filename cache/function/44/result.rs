@@ -1,8 +1,3 @@
-pub fn BzpWriteFileHead(mut outData: Ptr<BzpOutComdata>, mut blockId: i32) {
-    if blockId == 0 {
-        BzpWriteToArray(BZP_HDR_B!(), BZP_BITS8!(), outData.cast());
-        BzpWriteToArray(BZP_HDR_Z!(), BZP_BITS8!(), outData.cast());
-        BzpWriteToArray(BZP_HDR_H!(), BZP_BITS8!(), outData.cast());
-        BzpWriteToArray((BZP_HDR_0!() + outData.blockSize).cast(), BZP_BITS8!(), outData.cast());
-    }
+pub fn arraylist_sort(mut arraylist: Ptr<ArrayList>, mut compare_func: ArrayListCompareFunc) {
+    arraylist_sort_internal(arraylist.data.cast(), arraylist.length.cast(), compare_func.cast());
 }

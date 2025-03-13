@@ -4,10 +4,13 @@ from httpx import Client
 from tqdm import tqdm
 import json
 
-client = OpenAI(api_key="sk-76da526dbd8b48c3954df9336a8a6592", base_url="https://api.deepseek.com/beta",
+client = OpenAI(
+    api_key="sk-76da526dbd8b48c3954df9336a8a6592",
+    base_url="https://api.deepseek.com/beta",
     http_client=Client(
-    verify=False  # 注意：禁用 SSL 验证可能有安全风险，请根据实际情况决定是否需要这样做
-))
+        verify=False  # 注意：禁用 SSL 验证可能有安全风险，请根据实际情况决定是否需要这样做
+    ),
+)
 
 definition_text = """
 Translate the C Code to Rust. 
@@ -129,6 +132,7 @@ Translation:
 pub static g_MyCustomArray: Global<Array<i32, 5>> = global!(arr![1, 2, 3, 4, 5]);
 pub const myCustomArray: Array<i32, 5>> = arr![1, 2, 3, 4, 5];
 ```
+
 Source:
 ```c
 static int[] g_A10 = {3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
@@ -141,7 +145,15 @@ pub static g_A10: Global<Array<i32, 10>> = global!(arr![3, 4, 5, 6, 7, 8, 9, 10,
 pub const A10: Array<i32, 10> = arr![3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 ```
 
-If the struct contains only basic types and pointer, translate it with derive Clone and Copy Trait.
+Source:
+```c
+static const int arr_counts = sizeof(arr) / sizeof(int);
+```
+
+Translation:
+```
+pub const arr_counts: i32 = arr.len() as i32;
+```
 
 Source:
 ```c
@@ -179,7 +191,7 @@ typedef struct _MyComplexStruct {
 Translation:
 ```rust
 #[repr(C)]
-#[derive(Default)]
+#[derive(Default, Clone, Copy)]
 pub struct _MyComplexStruct {
     pub vEntries: Ptr<Ptr<MyStructEntry>>,
     pub vlength: Ptr<u8>,
@@ -193,8 +205,6 @@ pub struct _MyComplexStruct {
 pub type MY_Com_Struct = _MyComplexStruct;
 ```
 
-Otherwise, if it has array type inside, do not derive Clone and Copy Trait. Also, if a struct is defined with `struct A {...};`, do not add `pub type` declaration.
-
 Source:
 ```c
 struct _MySimpleStruct {
@@ -207,7 +217,7 @@ struct _MySimpleStruct {
 Translation:
 ```rust
 #[repr(C)]
-#[derive(Default)]
+#[derive(Default, Clone, Copy)]
 pub struct _MySimpleStruct {
     pub arr: Array<i32, 2>,
     pub length: u32,
@@ -216,10 +226,16 @@ pub struct _MySimpleStruct {
 ```
 """
 
+
 def definition_prompt(c_code):
-    return definition_text + f"Now translate the following Definition:\n```c\n{c_code.strip()}\n```"
+    return (
+        definition_text
+        + f"Now translate the following Definition:\n```c\n{c_code.strip()}\n```"
+    )
+
 
 results = {}
+
 
 def get_our_result_definition(value, cache):
     if value in cache:
@@ -229,17 +245,22 @@ def get_our_result_definition(value, cache):
         model="deepseek-coder",
         messages=[
             {"role": "user", "content": text},
-            {"role": "assistant", "content": "Sure, here is the rust translation:\n```rust\n", "prefix": True},
+            {
+                "role": "assistant",
+                "content": "Sure, here is the rust translation:\n```rust\n",
+                "prefix": True,
+            },
         ],
         stop=["```"],
         temperature=0,
         top_p=0.01,
         max_tokens=4096,
-        stream=False
+        stream=False,
     )
     result = response.choices[0].message.content
     cache[value] = result
     return result
+
 
 def get_our_results_definition(data, cache):
     our_result = []
@@ -247,12 +268,11 @@ def get_our_results_definition(data, cache):
     with ProcessPool(10) as pool:
         process = {}
         for idx, value in enumerate(data):
-            process[idx] = pool.schedule(get_our_result_definition, 
-                args=(value, cache))
+            process[idx] = pool.schedule(get_our_result_definition, args=(value, cache))
         results = {}
         for idx, value in enumerate(tqdm(data)):
             results[idx] = process[idx].result()
         results = list(sorted(results.items(), key=lambda item: item[0]))
         for key, value in results:
-            our_result.append(value)    
+            our_result.append(value)
     return our_result

@@ -1,2 +1,2 @@
-macro_rules! BZP_MAX_ITER_NUM { () => { 4 } }
-pub(crate) use BZP_MAX_ITER_NUM;
+macro_rules! AVL_NULL_PTR { () => { NULL!() } }
+pub(crate) use AVL_NULL_PTR;

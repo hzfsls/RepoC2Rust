@@ -1,13 +1,16 @@
-pub fn VOS_AVL_Delete(mut pstTree: Ptr<AVL_TREE>, mut pstNode: Ptr<AVL_NODE>) {
-    let mut pstBaseNode: Ptr<AVLBASE_NODE_S> = Default::default();
-    let mut pstBaseTree: Ptr<AVLBASE_TREE_S> = Default::default();
+pub fn sortedarray_last_index(mut sortedarray: Ptr<SortedArray>, mut data: SortedArrayValue, mut left: u32, mut right: u32) -> u32 {
+    let mut index: u32 = right.cast();
 
-    if pstTree == AVL_NULL_PTR!() || pstNode == AVL_NULL_PTR!() || !VOS_AVL_IN_TREE!(*pstNode) {
-        return;
+    while (left < right).as_bool() {
+        index = ((left + right) / 2).cast();
+
+        let mut order: i32 = (sortedarray.cmp_func)(data.cast(), sortedarray.data[index].cast()).cast();
+        if (order <= 0).as_bool() {
+            left = (index + 1).cast();
+        } else {
+            right = index.cast();
+        }
     }
 
-    pstBaseNode = pstNode.cast::<Ptr<AVLBASE_NODE_S>>();
-    pstBaseTree = c_ref!(pstTree.pstRoot).cast::<Ptr<Void>>().cast::<Ptr<AVLBASE_TREE_S>>();
-    VosAvlDelete(pstBaseNode.cast(), pstBaseTree.cast());
-    return;
+    return index.cast();
 }

@@ -1,42 +1,38 @@
-pub fn binomial_heap_pop(mut heap: Ptr<BinomialHeap>) -> BinomialHeapValue {
-    let mut least_tree: Ptr<BinomialTree> = Default::default();
-    let mut fake_heap: BinomialHeap = Default::default();
-    let mut result: BinomialHeapValue = Default::default();
-    let mut i: u32 = Default::default();
-    let mut least_index: u32 = u32::MAX;
+pub fn avl_tree_remove_node(mut tree: Ptr<AVLTree>, mut node: Ptr<AVLTreeNode>) {
+    let mut swap_node: Ptr<AVLTreeNode> = Default::default();
+    let mut balance_startpoint: Ptr<AVLTreeNode> = Default::default();
+    let mut i: i32 = Default::default();
 
-    if heap.num_values == 0 {
-        return BINOMIAL_HEAP_NULL!();
-    }
+    swap_node = avl_tree_node_get_replacement(tree, node);
 
-    c_for!(i = 0; i < heap.roots_length; i.prefix_plus_plus(); {
-        if heap.roots[i] == NULL!() {
-            continue;
-        }
+    if (swap_node == NULL!()) {
+        avl_tree_node_replace(tree, node, NULL!());
 
-        if least_index == u32::MAX || binomial_heap_cmp(heap.cast(), heap.roots[i].value.cast(), heap.roots[least_index].value.cast()) < 0 {
-            least_index = i;
-        }
-    });
-
-    least_tree = heap.roots[least_index].cast();
-    heap.roots[least_index] = NULL!();
-
-    fake_heap.heap_type = heap.heap_type.cast();
-    fake_heap.compare_func = heap.compare_func.cast();
-    fake_heap.roots = least_tree.subtrees.cast();
-    fake_heap.roots_length = least_tree.order.cast();
-
-    if binomial_heap_merge(heap.cast(), c_ref!(fake_heap).cast()).as_bool() {
-        result = least_tree.value.cast();
-        binomial_tree_unref(least_tree.cast());
-
-        heap.num_values -= 1;
-
-        return result.cast();
+        balance_startpoint = node.parent;
     } else {
-        heap.roots[least_index] = least_tree.cast();
+        if (swap_node.parent == node) {
+            balance_startpoint = swap_node;
+        } else {
+            balance_startpoint = swap_node.parent;
+        }
 
-        return BINOMIAL_HEAP_NULL!();
+        c_for!(let mut i: i32 = 0; i < 2; i.prefix_plus_plus(); {
+            let tmp0 = i;
+            swap_node.children[tmp0];
+
+            if (swap_node.children[i] != NULL!()) {
+                swap_node.children[i].parent = swap_node;
+            }
+        });
+
+        swap_node.height = node.height;
+
+        avl_tree_node_replace(tree, node, swap_node);
     }
+
+    c_free!(node);
+
+    tree.num_nodes.suffix_minus_minus();
+
+    avl_tree_balance_to_root(tree, balance_startpoint);
 }

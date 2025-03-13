@@ -1,24 +1,9 @@
-pub fn BzpCheckFileHead(mut inData: Ptr<InDeComdata>) -> i32 {
-    let mut ch: u8 = Default::default();
-    ch = BzpReadBits(BZP_BITS8!(), inData.cast()).cast();
-    if ch != BZP_BLOCK_HEAD_1!() {
-        return BZP_ERROR_DATA!();
-    }
-    ch = BzpReadBits(BZP_BITS8!(), inData.cast()).cast();
-    if ch != BZP_BLOCK_HEAD_2!() {
-        return BZP_ERROR_DATA!();
-    }
-    ch = BzpReadBits(BZP_BITS8!(), inData.cast()).cast();
-    if ch != BZP_BLOCK_HEAD_3!() {
-        return BZP_ERROR_DATA!();
-    }
-    ch = BzpReadBits(BZP_BITS8!(), inData.cast()).cast();
-    if ch != BZP_BLOCK_HEAD_4!() {
-        return BZP_ERROR_DATA!();
-    }
-    ch = BzpReadBits(BZP_BITS8!(), inData.cast()).cast();
-    if ch != BZP_BLOCK_HEAD_5!() {
-        return BZP_ERROR_DATA!();
-    }
-    return BZP_OK!();
+pub fn list_find_data(mut list: Ptr<ListEntry>, mut callback: ListEqualFunc, mut data: ListValue) -> Ptr<ListEntry> {
+    let mut rover: Ptr<ListEntry> = list.cast();
+    c_for!(; rover != NULL!(); rover = rover.next.cast(); {
+        if (callback(rover.data.cast(), data.cast()) != 0).as_bool() {
+            return rover.cast();
+        }
+    });
+    return NULL!();
 }

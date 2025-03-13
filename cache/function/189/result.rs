@@ -1,23 +1,8 @@
-pub fn list_remove_entry(mut list: Ptr<Ptr<ListEntry>>, mut entry: Ptr<ListEntry>) -> i32 {
-    if list == NULL!() || *list == NULL!() || entry == NULL!() {
-        return 0;
-    }
+pub fn trie_free_list_pop(mut list: Ptr<Ptr<TrieNode>>) -> Ptr<TrieNode> {
+    let mut result: Ptr<TrieNode> = Default::default();
 
-    if entry.prev == NULL!() {
-        *list = entry.next.cast();
+    result = *list;
+    *list = result.data.cast();
 
-        if entry.next != NULL!() {
-            entry.next.prev = NULL!();
-        }
-    } else {
-        entry.prev.next = entry.next.cast();
-
-        if entry.next != NULL!() {
-            entry.next.prev = entry.prev.cast();
-        }
-    }
-
-    c_free!(entry);
-
-    return 1;
+    return result.cast();
 }

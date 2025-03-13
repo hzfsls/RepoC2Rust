@@ -1,21 +1,16 @@
-pub fn VosAvlRebalance(mut ppstSubTree: Ptr<Ptr<AVLBASE_NODE_S>>) {
-    let mut iMoment: i32 = Default::default();
+pub fn bloom_filter_insert(mut bloomfilter: Ptr<BloomFilter>, mut value: BloomFilterValue) {
+    let mut hash: u32 = Default::default();
+    let mut subhash: u32 = Default::default();
+    let mut index: u32 = Default::default();
+    let mut i: u32 = Default::default();
+    let mut b: u8 = Default::default();
 
-    iMoment = ((*ppstSubTree).sRHeight - (*ppstSubTree).sLHeight).cast();
+    hash = (bloomfilter.hash_func)(value.cast());
 
-    if iMoment > 1 {
-        if (*ppstSubTree).pstRight.sLHeight > (*ppstSubTree).pstRight.sRHeight {
-            VosAvlRotateRight(c_ref!((*ppstSubTree).pstRight).cast());
-        }
-
-        VosAvlRotateLeft(ppstSubTree.cast());
-    } else if iMoment < -1 {
-        if (*ppstSubTree).pstLeft.sRHeight > (*ppstSubTree).pstLeft.sLHeight {
-            VosAvlRotateLeft(c_ref!((*ppstSubTree).pstLeft).cast());
-        }
-
-        VosAvlRotateRight(ppstSubTree.cast());
-    }
-
-    return;
+    c_for!(let mut i: u32 = 0; i < bloomfilter.num_functions.cast(); i.prefix_plus_plus(); {
+        subhash = hash ^ salts[i];
+        index = subhash % bloomfilter.table_size;
+        b = (1 << (index % 8)).cast::<u8>();
+        bloomfilter.table[index / 8] |= b;
+    });
 }
