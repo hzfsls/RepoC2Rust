@@ -74,20 +74,7 @@ pub fn trie_free(mut trie: Ptr<Trie>) {
 
 
 pub fn trie_find_end(mut trie: Ptr<Trie>, mut key: Ptr<u8>) -> Ptr<TrieNode> {
-    let mut node: Ptr<TrieNode> = Default::default();
-    let mut p: Ptr<u8> = Default::default();
-
-    node = trie.root_node.cast();
-
-    c_for!(p = key; *p != 0; p.suffix_plus_plus(); {
-        if (node == NULL!()).as_bool() {
-            return NULL!();
-        }
-
-        node = node.next[(*p).cast::<u8>()].cast();
-    });
-
-    return node.cast();
+    unimplemented!();
 }
 
 
@@ -98,7 +85,7 @@ pub fn trie_find_end_binary(mut trie: Ptr<Trie>, mut key: Ptr<u8>, mut key_lengt
 
     node = trie.root_node.cast();
 
-    c_for!(let mut j: i32 = 0; j < key_length; j.suffix_plus_plus(); {
+    c_for!(let mut j = 0; j < key_length; j.suffix_plus_plus(); {
         if (node == NULL!()).as_bool() {
             return NULL!();
         }
@@ -126,7 +113,7 @@ pub fn trie_insert_rollback(mut trie: Ptr<Trie>, mut key: Ptr<u8>) {
     while (node != NULL!()).as_bool() {
         next_prev_ptr = c_ref!(node.next[*p]).cast();
         next_node = *next_prev_ptr;
-        p += 1;
+        p = p + 1;
 
         node.use_count -= 1;
 
@@ -194,7 +181,7 @@ pub fn trie_insert(mut trie: Ptr<Trie>, mut key: Ptr<u8>, mut value: TrieValue) 
         }
 
         rover = c_ref!(node.next[c]).cast();
-        p.suffix_plus_plus();
+        p.prefix_plus_plus();
     }
 
     return 1;
@@ -260,44 +247,44 @@ pub fn trie_remove_binary(mut trie: Ptr<Trie>, mut key: Ptr<u8>, mut key_length:
     let mut p: i32 = Default::default();
     let mut c: u8 = Default::default();
 
-    node = trie_find_end_binary(trie, key, key_length);
+    node = trie_find_end_binary(trie.cast(), key.cast(), key_length.cast()).cast();
 
-    if (node != NULL!()) && (node.data != TRIE_NULL!()) {
+    if (node != NULL!()).as_bool() && (node.data != TRIE_NULL!()).as_bool() {
         node.data = TRIE_NULL!();
     } else {
         return 0;
     }
 
-    node = trie.root_node;
-    last_next_ptr = c_ref!(trie.root_node);
+    node = trie.root_node.cast();
+    last_next_ptr = c_ref!(trie.root_node).cast();
     p = 0;
 
     loop {
-        c = key[p];
-        next = node.next[c];
+        c = key[p].cast();
+        next = node.next[c].cast();
 
         node.use_count -= 1;
 
-        if (node.use_count <= 0) {
+        if (node.use_count <= 0).as_bool() {
             c_free!(node);
 
-            if (last_next_ptr != NULL!()) {
+            if (last_next_ptr != NULL!()).as_bool() {
                 *last_next_ptr = NULL!();
                 last_next_ptr = NULL!();
             }
         }
 
-        if (p == key_length) {
+        if (p == key_length).as_bool() {
             break;
         } else {
             p += 1;
         }
 
-        if (last_next_ptr != NULL!()) {
-            last_next_ptr = c_ref!(node.next[c]);
+        if (last_next_ptr != NULL!()).as_bool() {
+            last_next_ptr = c_ref!(node.next[c]).cast();
         }
 
-        node = next;
+        node = next.cast();
     }
 
     return 1;

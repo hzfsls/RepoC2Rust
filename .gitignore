@@ -2,8 +2,10 @@
 .direnv/
 **/__pypackages__/**
 .pdm-build/
+cache/
 c_metadata/
 created_project/
+final_project/
 rust_metadata/
 .pdm-python
 pdm.lock

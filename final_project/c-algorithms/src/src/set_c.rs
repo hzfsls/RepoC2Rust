@@ -72,7 +72,7 @@ pub fn set_free(mut set: Ptr<Set>) {
     let mut next: Ptr<SetEntry> = Default::default();
     let mut i: u32 = Default::default();
 
-    c_for!(let mut i = 0; i < set.table_size; i.prefix_plus_plus(); {
+    c_for!(i = 0; i < set.table_size; i.prefix_plus_plus(); {
         rover = set.table[i];
 
         while (rover != NULL!()) {
@@ -144,7 +144,31 @@ pub fn set_insert(mut set: Ptr<Set>, mut data: SetValue) -> i32 {
 
 
 pub fn set_remove(mut set: Ptr<Set>, mut data: SetValue) -> i32 {
-    unimplemented!();
+    let mut rover: Ptr<Ptr<SetEntry>> = Default::default();
+    let mut entry: Ptr<SetEntry> = Default::default();
+    let mut index: u32 = Default::default();
+
+    index = (set.hash_func)(data.cast()) % set.table_size;
+
+    rover = c_ref!(set.table[index]).cast();
+
+    while (*rover != NULL!()).as_bool() {
+        if ((set.equal_func)(data.cast(), (*rover).data.cast()) != 0).as_bool() {
+            entry = *rover;
+
+            *rover = entry.next.cast();
+
+            set.entries.prefix_minus_minus();
+
+            set_free_entry(set.cast(), entry.cast());
+
+            return 1;
+        }
+
+        rover = c_ref!((*rover).next).cast();
+    }
+
+    return 0;
 }
 
 
@@ -172,7 +196,7 @@ pub fn set_to_array(mut set: Ptr<Set>) -> Ptr<SetValue> {
 
     array_counter = 0;
 
-    c_for!(let mut i: u32 = 0; i < set.table_size; i.prefix_plus_plus(); {
+    c_for!(i = 0; i < set.table_size; i.prefix_plus_plus(); {
         rover = set.table[i].cast();
 
         while (rover != NULL!()).as_bool() {
@@ -188,7 +212,41 @@ pub fn set_to_array(mut set: Ptr<Set>) -> Ptr<SetValue> {
 
 
 pub fn set_union(mut set1: Ptr<Set>, mut set2: Ptr<Set>) -> Ptr<Set> {
-    unimplemented!();
+    let mut iterator: SetIterator = Default::default();
+    let mut new_set: Ptr<Set> = Default::default();
+    let mut value: SetValue = Default::default();
+
+    new_set = set_new(set1.hash_func, set1.equal_func);
+
+    if (new_set == NULL!()).as_bool() {
+        return NULL!();
+    }
+
+    set_iterate(set1.cast(), c_ref!(iterator).cast());
+
+    while (set_iter_has_more(c_ref!(iterator).cast())).as_bool() {
+        value = set_iter_next(c_ref!(iterator).cast());
+
+        if !set_insert(new_set.cast(), value.cast()).as_bool() {
+            set_free(new_set.cast());
+            return NULL!();
+        }
+    }
+
+    set_iterate(set2.cast(), c_ref!(iterator).cast());
+
+    while (set_iter_has_more(c_ref!(iterator).cast())).as_bool() {
+        value = set_iter_next(c_ref!(iterator).cast());
+
+        if (set_query(new_set.cast(), value.cast()) == 0).as_bool() {
+            if !set_insert(new_set.cast(), value.cast()).as_bool() {
+                set_free(new_set.cast());
+                return NULL!();
+            }
+        }
+    }
+
+    return new_set.cast();
 }
 
 
@@ -205,7 +263,7 @@ pub fn set_intersection(mut set1: Ptr<Set>, mut set2: Ptr<Set>) -> Ptr<Set> {
 
     set_iterate(set1.cast(), c_ref!(iterator).cast());
 
-    while set_iter_has_more(c_ref!(iterator).cast()).as_bool() {
+    while (set_iter_has_more(c_ref!(iterator).cast()).as_bool()) {
         value = set_iter_next(c_ref!(iterator).cast()).cast();
 
         if (set_query(set2.cast(), value.cast()) != 0).as_bool() {
@@ -257,22 +315,27 @@ pub fn set_iter_next(mut iterator: Ptr<SetIterator>) -> SetValue {
         iterator.next_entry = current_entry.next.cast();
     } else {
         iterator.next_entry = NULL!();
+
         chain = (iterator.next_chain + 1).cast();
+
         while (chain < set.table_size).as_bool() {
             if (set.table[chain] != NULL!()).as_bool() {
                 iterator.next_entry = set.table[chain].cast();
                 break;
             }
+
             chain.prefix_plus_plus();
         }
+
         iterator.next_chain = chain.cast();
     }
+
     return result.cast();
 }
 
 
 pub fn set_iter_has_more(mut iterator: Ptr<SetIterator>) -> i32 {
-    return (iterator.next_entry != NULL!()).as_bool().cast();
+    return (iterator.next_entry != NULL!()).as_bool() as i32;
 }
 
 

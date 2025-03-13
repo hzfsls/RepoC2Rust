@@ -66,7 +66,11 @@ macro_rules! VOS_AVL_INIT_NODE {
 pub(crate) use VOS_AVL_INIT_NODE;
 
 
-macro_rules! VOS_AVL_INSERT { ($TREE:expr, $NODE:expr) => { VOS_AVL_Insert_Or_Find(c_ref!($TREE), c_ref!($NODE)) == AVL_NULL_PTR!() } }
+macro_rules! VOS_AVL_INSERT { ($TREE:expr, $NODE:expr) => 
+    {
+        VOS_AVL_Insert_Or_Find(c_ref!($TREE), c_ref!($NODE)) == AVL_NULL_PTR!()
+    }
+}
 pub(crate) use VOS_AVL_INSERT;
 
 
@@ -100,8 +104,8 @@ pub(crate) use VOS_AVL_PREV;
 
 macro_rules! VOS_AVL_FIRST {
     ($TREE:expr) => {
-        if c_ref!($TREE).pstFirst != AVL_NULL_PTR!().cast::<Ptr<AVL_NODE>>() {
-            c_ref!($TREE).pstFirst.pSelf
+        if c_ref!($TREE).pstFirst != AVL_NULL_PTR!() {
+            c_ref!(c_ref!($TREE).pstFirst).pSelf
         } else {
             AVL_NULL_PTR!()
         }
@@ -122,15 +126,15 @@ macro_rules! VOS_AVL_LAST {
 pub(crate) use VOS_AVL_LAST;
 
 
-macro_rules! VOS_AVL_IN_TREE {
-    ($NODE:expr) => {
-        ($NODE.sLHeight != -1) && ($NODE.sRHeight != -1)
-    }
-}
+macro_rules! VOS_AVL_IN_TREE { ($NODE:expr) => { ($NODE.sLHeight != -1) && ($NODE.sRHeight != -1) } }
 pub(crate) use VOS_AVL_IN_TREE;
 
 
-macro_rules! VOS_AVL_FIND_NEXT { ($TREE:expr, $KEY:expr) => { VOS_AVL_Find_Or_Find_Next(c_ref!($TREE), $KEY, AVL_TRUE!()) } }
+macro_rules! VOS_AVL_FIND_NEXT { ($TREE:expr, $KEY:expr) => 
+    {
+        VOS_AVL_Find_Or_Find_Next(c_ref!($TREE), $KEY, AVL_TRUE!())
+    }
+}
 pub(crate) use VOS_AVL_FIND_NEXT;
 
 

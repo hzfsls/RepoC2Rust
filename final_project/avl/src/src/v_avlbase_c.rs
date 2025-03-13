@@ -3,7 +3,7 @@ pub use crate::src::v_avlbase_h::*;
 pub use crate::include::v_avl_base_h::*;
 
 pub fn VOS_V_AVLBaseInit(mut pscKey: Ptr<u8>) -> u32 {
-    (pscKey).cast::<Void>();
+    // (void)pscKey; is not needed in Rust
     return 0;
 }
 
@@ -218,9 +218,9 @@ pub fn VosAvlSearchReplaceNode(mut pstTree: Ptr<AVLBASE_TREE_S>, mut pstNode: Pt
     let mut pstReplaceNode: Ptr<AVLBASE_NODE_S> = Default::default();
 
     if (pstNode.sRHeight > pstNode.sLHeight).as_bool() {
-        pstReplaceNode = VosAVLSearchReplaceNodeInRTree(pstTree.cast(), pstNode.cast()).cast();
+        pstReplaceNode = VosAVLSearchReplaceNodeInRTree(pstTree.cast(), pstNode.cast());
     } else {
-        pstReplaceNode = VosAvlSearchReplaceNodeInLTree(pstTree.cast(), pstNode.cast()).cast();
+        pstReplaceNode = VosAvlSearchReplaceNodeInLTree(pstTree.cast(), pstNode.cast());
     }
 
     return pstReplaceNode.cast();
@@ -253,7 +253,7 @@ pub fn VosAvlDeleteCheck(mut pstTree: Ptr<AVLBASE_TREE_S>, mut pstNode: Ptr<AVLB
             pstTree.pstLast = pstReplaceNode.cast();
         }
     } else {
-        pstReplaceNode = VosAvlSearchReplaceNode(pstTree.cast(), pstNode.cast());
+        pstReplaceNode = VosAvlSearchReplaceNode(pstTree.cast(), pstNode.cast()).cast();
     }
     return pstReplaceNode.cast();
 }

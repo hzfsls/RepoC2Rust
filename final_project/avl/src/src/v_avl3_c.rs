@@ -4,7 +4,7 @@ pub use crate::src::v_avl3_inner_h::*;
 pub use crate::src::v_avlbase_h::*;
 
 pub fn VOS_V_AVL3Init(mut pscKey: Ptr<u8>) -> u32 {
-    (pscKey).cast::<Void>();
+    pscKey.cast::<Void>();
     return 0;
 }
 
@@ -31,7 +31,7 @@ pub fn AVL3_Find_Or_Find_Next(mut pstTree: Ptr<AVL3_TREE>, mut pKey: Ptr<Void>, 
     iKeyOffset = GET_KEYOFFSET!(pstTreeInfo).cast();
 
     loop {
-        iResult = (pstTreeInfo.pfCompare)(pKey.cast(), (pstNode.cast::<Ptr<u8>>() + iKeyOffset).cast::<Ptr<Void>>()).cast();
+        iResult = (pstTreeInfo.pfCompare)(pKey.cast(), (pstNode.cast::<Ptr<u8>>() + iKeyOffset).cast()).cast();
         if iResult > 0 {
             if (pstNode.pstRight == AVL_NULL_PTR!()).as_bool() {
                 pFoundNode = VOS_AVL3_Next(pstNode.cast(), pstTreeInfo.cast()).cast();
@@ -40,7 +40,7 @@ pub fn AVL3_Find_Or_Find_Next(mut pstTree: Ptr<AVL3_TREE>, mut pKey: Ptr<Void>, 
             pstNode = pstNode.pstRight.cast();
         } else if iResult < 0 {
             if (pstNode.pstLeft == AVL_NULL_PTR!()).as_bool() {
-                pFoundNode = (pstNode.cast::<Ptr<u8>>() - pstTreeInfo.usNodeOffset).cast::<Ptr<Void>>();
+                pFoundNode = (pstNode.cast::<Ptr<u8>>() - pstTreeInfo.usNodeOffset).cast();
                 break;
             }
             pstNode = pstNode.pstLeft.cast();
@@ -48,7 +48,7 @@ pub fn AVL3_Find_Or_Find_Next(mut pstTree: Ptr<AVL3_TREE>, mut pKey: Ptr<Void>, 
             if bFlag != 0 {
                 pFoundNode = VOS_AVL3_Next(pstNode.cast(), pstTreeInfo.cast()).cast();
             } else {
-                pFoundNode = (pstNode.cast::<Ptr<u8>>() - pstTreeInfo.usNodeOffset).cast::<Ptr<Void>>();
+                pFoundNode = (pstNode.cast::<Ptr<u8>>() - pstTreeInfo.usNodeOffset).cast();
             }
             break;
         }

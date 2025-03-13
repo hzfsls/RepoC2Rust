@@ -74,9 +74,9 @@ pub(crate) use VOS_AVL3_INIT_NODE;
 
 
 macro_rules! VOS_AVL3_INSERT { ($TREE:expr, $NODE:expr, $TREE_INFO:expr) => 
-    {
-        AVL_NULL_PTR!() == VOS_AVL3_Insert_Or_Find(c_ref!($TREE), c_ref!($NODE), c_ref!($TREE_INFO))
-    }
+    { 
+        AVL_NULL_PTR!() == VOS_AVL3_Insert_Or_Find(c_ref!($TREE), c_ref!($NODE), c_ref!($TREE_INFO)) 
+    } 
 }
 pub(crate) use VOS_AVL3_INSERT;
 
@@ -89,27 +89,23 @@ macro_rules! VOS_AVL3_INSERT_OR_FIND {
 pub(crate) use VOS_AVL3_INSERT_OR_FIND;
 
 
-macro_rules! VOS_AVL3_DELETE { ($TREE:expr, $NODE:expr) => 
-    {
-        VOS_AVL3_Delete(c_ref!($TREE), c_ref!($NODE));
+macro_rules! VOS_AVL3_DELETE {
+    ($TREE:expr, $NODE:expr) => {
+        VOS_AVL3_Delete(c_ref!($TREE), c_ref!($NODE))
     }
 }
 pub(crate) use VOS_AVL3_DELETE;
 
 
-macro_rules! VOS_AVL3_FIND {
-    ($TREE:expr, $KEY:expr, $TREE_INFO:expr) => {
-        VOS_AVL3_Find(c_ref!($TREE), $KEY.cast(), c_ref!($TREE_INFO))
+macro_rules! VOS_AVL3_FIND { ($TREE:expr, $KEY:expr, $TREE_INFO:expr) => 
+    {
+        VOS_AVL3_Find(c_ref!($TREE), $KEY, c_ref!($TREE_INFO))
     }
 }
 pub(crate) use VOS_AVL3_FIND;
 
 
-macro_rules! VOS_AVL3_NEXT { ($NODE:expr, $TREE_INFO:expr) => 
-    {
-        VOS_AVL3_Next(c_ref!($NODE), c_ref!($TREE_INFO))
-    }
-}
+macro_rules! VOS_AVL3_NEXT { ($NODE:expr, $TREE_INFO:expr) => { VOS_AVL3_Next(c_ref!($NODE), c_ref!($TREE_INFO)) } }
 pub(crate) use VOS_AVL3_NEXT;
 
 
@@ -147,7 +143,7 @@ pub(crate) use VOS_AVL3_FIND_NEXT;
 
 macro_rules! VOS_AVL3_FIND_OR_FIND_NEXT {
     ($TREE:expr, $KEY:expr, $TREE_INFO:expr) => {
-        AVL3_Find_Or_Find_Next(c_ref!($TREE), $KEY, AVL_FALSE, c_ref!($TREE_INFO))
+        AVL3_Find_Or_Find_Next(c_ref!($TREE), $KEY, AVL_FALSE!(), c_ref!($TREE_INFO))
     }
 }
 pub(crate) use VOS_AVL3_FIND_OR_FIND_NEXT;

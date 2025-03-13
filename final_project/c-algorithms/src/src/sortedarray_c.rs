@@ -16,13 +16,13 @@ pub fn sortedarray_first_index(mut sortedarray: Ptr<SortedArray>, mut data: Sort
     let mut index: u32 = left.cast();
 
     while (left < right).as_bool() {
-        index = ((left + right) / 2).cast();
+        index = (left + right) / 2;
 
         let mut order: i32 = (sortedarray.cmp_func)(data.cast(), sortedarray.data[index].cast()).cast();
         if order > 0 {
-            left = (index + 1).cast();
+            left = index + 1;
         } else {
-            right = index.cast();
+            right = index;
         }
     }
 
@@ -134,13 +134,13 @@ pub fn sortedarray_insert(mut sortedarray: Ptr<SortedArray>, mut data: SortedArr
         if order < 0 {
             right = index;
         } else if order > 0 {
-            left = index + 1;
+            left = (index + 1);
         } else {
             break;
         }
     }
 
-    if (sortedarray.length > 0) && (sortedarray.cmp_func)(data, sortedarray.data[index]) > 0 {
+    if (sortedarray.length > 0) && ((sortedarray.cmp_func)(data, sortedarray.data[index]) > 0) {
         index += 1;
     }
 
@@ -159,11 +159,8 @@ pub fn sortedarray_insert(mut sortedarray: Ptr<SortedArray>, mut data: SortedArr
         }
     }
 
-    c_memmove!(
-        c_ref!(sortedarray.data[index + 1]),
-        c_ref!(sortedarray.data[index]),
-        (sortedarray.length - index) * c_sizeof!(SortedArrayValue)
-    );
+    c_memmove!(c_ref!(sortedarray.data[index + 1]), c_ref!(sortedarray.data[index]),
+               (sortedarray.length - index) * c_sizeof!(SortedArrayValue));
 
     sortedarray.data[index] = data;
     sortedarray.length += 1;
@@ -188,9 +185,9 @@ pub fn sortedarray_index_of(mut sortedarray: Ptr<SortedArray>, mut data: SortedA
 
         let mut order: i32 = (sortedarray.cmp_func)(data.cast(), sortedarray.data[index].cast()).cast();
         if order < 0 {
-            right = index;
+            right = index.cast();
         } else if order > 0 {
-            left = index + 1;
+            left = (index + 1).cast();
         } else {
             left = sortedarray_first_index(sortedarray.cast(), data.cast(), left.cast(), index.cast()).cast();
             right = sortedarray_last_index(sortedarray.cast(), data.cast(), index.cast(), right.cast()).cast();

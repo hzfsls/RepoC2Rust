@@ -55,17 +55,7 @@ pub fn VOS_AVL_Insert_Or_Find(mut pstTree: Ptr<AVL_TREE>, mut pstNode: Ptr<AVL_N
 
 
 pub fn VOS_AVL_Delete(mut pstTree: Ptr<AVL_TREE>, mut pstNode: Ptr<AVL_NODE>) {
-    let mut pstBaseNode: Ptr<AVLBASE_NODE_S> = Default::default();
-    let mut pstBaseTree: Ptr<AVLBASE_TREE_S> = Default::default();
-
-    if (pstTree == AVL_NULL_PTR!()).as_bool() || (pstNode == AVL_NULL_PTR!()).as_bool() || (!VOS_AVL_IN_TREE!(*pstNode)).as_bool() {
-        return;
-    }
-
-    pstBaseNode = pstNode.cast::<Ptr<AVLBASE_NODE_S>>();
-    pstBaseTree = c_ref!(pstTree.pstRoot).cast::<Ptr<Void>>().cast::<Ptr<AVLBASE_TREE_S>>();
-    VosAvlDelete(pstBaseNode.cast(), pstBaseTree.cast());
-    return;
+    unimplemented!();
 }
 
 
@@ -95,7 +85,7 @@ pub fn VOS_AVL_Find(mut pstTree: Ptr<AVL_TREE>, mut pKey: Ptr<Void>) -> Ptr<Void
 
 pub fn VOS_AVL_Next(mut pstNode: Ptr<AVL_NODE>) -> Ptr<Void> {
     let mut pstNodeTmp: Ptr<AVL_NODE> = pstNode.cast();
-    if (pstNodeTmp == AVL_NULL_PTR!()).as_bool() || (!VOS_AVL_IN_TREE!(*pstNodeTmp)).as_bool() {
+    if (pstNodeTmp == AVL_NULL_PTR!() || !VOS_AVL_IN_TREE!(*pstNodeTmp)).as_bool() {
         return AVL_NULL_PTR!();
     }
 
@@ -104,7 +94,7 @@ pub fn VOS_AVL_Next(mut pstNode: Ptr<AVL_NODE>) -> Ptr<Void> {
         FIND_LEFTMOST_NODE!(pstNodeTmp);
     } else {
         while (pstNodeTmp != AVL_NULL_PTR!()).as_bool() {
-            if (pstNodeTmp.pstParent == AVL_NULL_PTR!()).as_bool() || (pstNodeTmp.pstParent.pstLeft == pstNodeTmp).as_bool() {
+            if (pstNodeTmp.pstParent == AVL_NULL_PTR!() || pstNodeTmp.pstParent.pstLeft == pstNodeTmp).as_bool() {
                 pstNodeTmp = pstNodeTmp.pstParent.cast();
                 break;
             }
@@ -118,7 +108,7 @@ pub fn VOS_AVL_Next(mut pstNode: Ptr<AVL_NODE>) -> Ptr<Void> {
 
 pub fn VOS_AVL_Prev(mut pstNode: Ptr<AVL_NODE>) -> Ptr<Void> {
     let mut pstNodeTmp: Ptr<AVL_NODE> = pstNode.cast();
-    if (pstNodeTmp == AVL_NULL_PTR!()).as_bool() || (!VOS_AVL_IN_TREE!(*pstNodeTmp)).as_bool() {
+    if (pstNodeTmp == AVL_NULL_PTR!() || !VOS_AVL_IN_TREE!(*pstNodeTmp)).as_bool() {
         return AVL_NULL_PTR!();
     }
 
@@ -127,7 +117,7 @@ pub fn VOS_AVL_Prev(mut pstNode: Ptr<AVL_NODE>) -> Ptr<Void> {
         FIND_RIGHTMOST_NODE!(pstNodeTmp);
     } else {
         while (pstNodeTmp != AVL_NULL_PTR!()).as_bool() {
-            if (pstNodeTmp.pstParent == AVL_NULL_PTR!()).as_bool() || (pstNodeTmp.pstParent.pstRight == pstNodeTmp).as_bool() {
+            if (pstNodeTmp.pstParent == AVL_NULL_PTR!() || pstNodeTmp.pstParent.pstRight == pstNodeTmp).as_bool() {
                 pstNodeTmp = pstNodeTmp.pstParent.cast();
                 break;
             }

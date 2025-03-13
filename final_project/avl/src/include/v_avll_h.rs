@@ -48,7 +48,7 @@ pub(crate) use VOS_AVLL_INSERT;
 
 macro_rules! VOS_AVLL_INSERT_OR_FIND {
     ($TREE:expr, $NODE:expr) => {
-        VOS_AVL3_INSERT_OR_FIND!($TREE.stTree, $NODE, $TREE.stTreeInfo)
+        VOS_AVL3_INSERT_OR_FIND!($TREE.stTree.cast(), $NODE.cast(), $TREE.stTreeInfo.cast())
     }
 }
 pub(crate) use VOS_AVLL_INSERT_OR_FIND;
@@ -58,7 +58,11 @@ macro_rules! VOS_AVLL_DELETE { ($TREE:expr, $NODE:expr) => { VOS_AVL3_DELETE!($T
 pub(crate) use VOS_AVLL_DELETE;
 
 
-macro_rules! VOS_AVLL_FIND { ($TREE:expr, $KEY:expr) => { VOS_AVL3_FIND!($TREE.stTree, $KEY, $TREE.stTreeInfo) } }
+macro_rules! VOS_AVLL_FIND {
+    ($TREE:expr, $KEY:expr) => {
+        VOS_AVL3_FIND!($TREE.stTree, $KEY, $TREE.stTreeInfo)
+    }
+}
 pub(crate) use VOS_AVLL_FIND;
 
 
@@ -70,11 +74,7 @@ macro_rules! VOS_AVLL_PREV { ($TREE:expr, $NODE:expr) => { VOS_AVL3_PREV!($NODE,
 pub(crate) use VOS_AVLL_PREV;
 
 
-macro_rules! VOS_AVLL_FIRST {
-    ($TREE:expr) => {
-        VOS_AVL3_FIRST!($TREE.stTree.cast(), $TREE.stTreeInfo.cast())
-    }
-}
+macro_rules! VOS_AVLL_FIRST { ($TREE:expr) => { VOS_AVL3_FIRST!($TREE.stTree, $TREE.stTreeInfo) } }
 pub(crate) use VOS_AVLL_FIRST;
 
 
@@ -86,17 +86,17 @@ macro_rules! VOS_AVLL_IN_TREE { ($NODE:expr) => { VOS_AVL3_IN_TREE!($NODE) } }
 pub(crate) use VOS_AVLL_IN_TREE;
 
 
-macro_rules! VOS_AVLL_FIND_NEXT { ($TREE:expr, $KEY:expr) => 
-    {
+macro_rules! VOS_AVLL_FIND_NEXT {
+    ($TREE:expr, $KEY:expr) => {
         VOS_AVL3_FIND_NEXT!($TREE.stTree, $KEY, $TREE.stTreeInfo)
     }
 }
 pub(crate) use VOS_AVLL_FIND_NEXT;
 
 
-macro_rules! VOS_AVLL_FIND_OR_FIND_NEXT {
-    ($TREE:expr, $KEY:expr) => {
-        VOS_AVL3_FIND_OR_FIND_NEXT!($TREE.stTree.cast(), $KEY.cast(), $TREE.stTreeInfo.cast())
+macro_rules! VOS_AVLL_FIND_OR_FIND_NEXT { ($TREE:expr, $KEY:expr) => 
+    {
+        VOS_AVL3_FIND_OR_FIND_NEXT!($TREE.stTree, $KEY, $TREE.stTreeInfo)
     }
 }
 pub(crate) use VOS_AVLL_FIND_OR_FIND_NEXT;

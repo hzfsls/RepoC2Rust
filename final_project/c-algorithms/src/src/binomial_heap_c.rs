@@ -51,7 +51,6 @@ pub fn binomial_tree_unref(mut tree: Ptr<BinomialTree>) {
     tree.refcount.suffix_minus_minus();
 
     if (tree.refcount == 0) {
-
         c_for!(let mut i: i32 = 0; i < tree.order.cast(); i.prefix_plus_plus(); {
             binomial_tree_unref(tree.subtrees[i]);
         });
@@ -122,7 +121,7 @@ pub fn binomial_heap_merge(mut heap: Ptr<BinomialHeap>, mut other: Ptr<BinomialH
     let mut max: u32;
     let mut i: u32;
 
-    if (heap.roots_length > other.roots_length) {
+    if (heap.roots_length > other.roots_length).as_bool() {
         max = heap.roots_length + 1;
     } else {
         max = other.roots_length + 1;
@@ -130,7 +129,7 @@ pub fn binomial_heap_merge(mut heap: Ptr<BinomialHeap>, mut other: Ptr<BinomialH
 
     new_roots = c_malloc!(max * c_sizeof!(Ptr<BinomialTree>));
 
-    if (new_roots == NULL!()) {
+    if (new_roots == NULL!()).as_bool() {
         return 0;
     }
 
@@ -140,37 +139,36 @@ pub fn binomial_heap_merge(mut heap: Ptr<BinomialHeap>, mut other: Ptr<BinomialH
     c_for!(let mut i: u32 = 0; i < max; i.prefix_plus_plus(); {
         num_vals = 0;
 
-        if (i < heap.roots_length && heap.roots[i] != NULL!()) {
-            let tmp0 = num_vals;
-            vals[tmp0];
+        if (i < heap.roots_length && heap.roots[i] != NULL!()).as_bool() {
+            vals[num_vals] = heap.roots[i].cast();
             num_vals += 1;
         }
 
-        if (i < other.roots_length && other.roots[i] != NULL!()) {
-            vals[num_vals] = other.roots[i];
+        if (i < other.roots_length && other.roots[i] != NULL!()).as_bool() {
+            vals[num_vals] = other.roots[i].cast();
             num_vals += 1;
         }
 
-        if (carry != NULL!()) {
-            vals[num_vals] = carry;
+        if (carry != NULL!()).as_bool() {
+            vals[num_vals] = carry.cast();
             num_vals += 1;
         }
 
-        if ((num_vals & 1) != 0) {
-            new_roots[i] = vals[num_vals - 1];
-            binomial_tree_ref(new_roots[i]);
+        if ((num_vals & 1) != 0).as_bool() {
+            new_roots[i] = vals[num_vals - 1].cast();
+            binomial_tree_ref(new_roots[i].cast());
             new_roots_length = i + 1;
         } else {
             new_roots[i] = NULL!();
         }
 
-        if ((num_vals & 2) != 0) {
-            new_carry = binomial_tree_merge(heap, vals[0], vals[1]);
+        if ((num_vals & 2) != 0).as_bool() {
+            new_carry = binomial_tree_merge(heap.cast(), vals[0].cast(), vals[1].cast());
 
-            if (new_carry == NULL!()) {
-                binomial_heap_merge_undo(new_roots, i);
+            if (new_carry == NULL!()).as_bool() {
+                binomial_heap_merge_undo(new_roots.cast(), i.cast());
 
-                binomial_tree_unref(carry);
+                binomial_tree_unref(carry.cast());
 
                 return 0;
             }
@@ -178,21 +176,21 @@ pub fn binomial_heap_merge(mut heap: Ptr<BinomialHeap>, mut other: Ptr<BinomialH
             new_carry = NULL!();
         }
 
-        binomial_tree_unref(carry);
+        binomial_tree_unref(carry.cast());
 
-        carry = new_carry;
+        carry = new_carry.cast();
 
-        binomial_tree_ref(carry);
+        binomial_tree_ref(carry.cast());
     });
 
     c_for!(let mut i: u32 = 0; i < heap.roots_length; i.prefix_plus_plus(); {
-        if (heap.roots[i] != NULL!()) {
-            binomial_tree_unref(heap.roots[i]);
+        if (heap.roots[i] != NULL!()).as_bool() {
+            binomial_tree_unref(heap.roots[i].cast());
         }
     });
 
     c_free!(heap.roots);
-    heap.roots = new_roots;
+    heap.roots = new_roots.cast();
     heap.roots_length = new_roots_length;
 
     return 1;
@@ -250,7 +248,7 @@ pub fn binomial_heap_insert(mut heap: Ptr<BinomialHeap>, mut value: BinomialHeap
     result = binomial_heap_merge(heap.cast(), c_ref!(fake_heap).cast()).cast();
 
     if (result != 0).as_bool() {
-        heap.num_values.suffix_plus_plus();
+        heap.num_values.prefix_plus_plus();
     }
 
     binomial_tree_unref(new_tree.cast());
@@ -264,7 +262,7 @@ pub fn binomial_heap_pop(mut heap: Ptr<BinomialHeap>) -> BinomialHeapValue {
     let mut fake_heap: BinomialHeap = Default::default();
     let mut result: BinomialHeapValue = Default::default();
     let mut i: u32 = Default::default();
-    let mut least_index: u32 = UINT_MAX!();
+    let mut least_index: u32 = Default::default();
 
     if (heap.num_values == 0).as_bool() {
         return BINOMIAL_HEAP_NULL!();
@@ -272,7 +270,7 @@ pub fn binomial_heap_pop(mut heap: Ptr<BinomialHeap>) -> BinomialHeapValue {
 
     least_index = UINT_MAX!();
 
-    c_for!(i = 0; i < heap.roots_length; i.suffix_plus_plus(); {
+    c_for!(i = 0; i < heap.roots_length; i.prefix_plus_plus(); {
         if (heap.roots[i] == NULL!()).as_bool() {
             continue;
         }

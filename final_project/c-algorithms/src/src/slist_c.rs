@@ -140,6 +140,7 @@ pub fn slist_to_array(mut list: Ptr<SListEntry>) -> Ptr<SListValue> {
 
     c_for!(let mut i: u32 = 0; i < length; i.prefix_plus_plus(); {
         array[i] = rover.data.cast();
+
         rover = rover.next.cast();
     });
 
@@ -220,39 +221,39 @@ pub fn slist_sort_internal(mut list: Ptr<Ptr<SListEntry>>, mut compare_func: SLi
 
     less_list = NULL!();
     more_list = NULL!();
-    rover = (*list).next.cast();
+    rover = (*list).next;
 
     while (rover != NULL!()).as_bool() {
-        let mut next: Ptr<SListEntry> = rover.next.cast();
+        let mut next: Ptr<SListEntry> = rover.next;
 
         if (compare_func(rover.data.cast(), pivot.data.cast()) < 0).as_bool() {
-            rover.next = less_list.cast();
-            less_list = rover.cast();
+            rover.next = less_list;
+            less_list = rover;
         } else {
-            rover.next = more_list.cast();
-            more_list = rover.cast();
+            rover.next = more_list;
+            more_list = rover;
         }
 
-        rover = next.cast();
+        rover = next;
     }
 
-    less_list_end = slist_sort_internal(c_ref!(less_list).cast(), compare_func.cast());
-    more_list_end = slist_sort_internal(c_ref!(more_list).cast(), compare_func.cast());
+    less_list_end = slist_sort_internal(c_ref!(less_list).cast(), compare_func);
+    more_list_end = slist_sort_internal(c_ref!(more_list).cast(), compare_func);
 
-    *list = less_list.cast();
+    *list = less_list;
 
     if (less_list == NULL!()).as_bool() {
-        *list = pivot.cast();
+        *list = pivot;
     } else {
-        less_list_end.next = pivot.cast();
+        less_list_end.next = pivot;
     }
 
-    pivot.next = more_list.cast();
+    pivot.next = more_list;
 
     if (more_list == NULL!()).as_bool() {
-        return pivot.cast();
+        return pivot;
     } else {
-        return more_list_end.cast();
+        return more_list_end;
     }
 }
 
@@ -264,11 +265,12 @@ pub fn slist_sort(mut list: Ptr<Ptr<SListEntry>>, mut compare_func: SListCompare
 
 pub fn slist_find_data(mut list: Ptr<SListEntry>, mut callback: SListEqualFunc, mut data: SListValue) -> Ptr<SListEntry> {
     let mut rover: Ptr<SListEntry> = list.cast();
-    c_for!(; rover != NULL!(); rover = rover.next.cast(); {
+    while (rover != NULL!()).as_bool() {
         if (callback(rover.data.cast(), data.cast()) != 0).as_bool() {
             return rover.cast();
         }
-    });
+        rover = rover.next.cast();
+    }
     return NULL!();
 }
 

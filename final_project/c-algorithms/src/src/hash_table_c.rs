@@ -82,12 +82,12 @@ pub fn hash_table_free(mut hash_table: Ptr<HashTable>) {
     let mut next: Ptr<HashTableEntry> = Default::default();
     let mut i: u32 = Default::default();
 
-    c_for!(i = 0; i < hash_table.table_size; i.prefix_plus_plus(); {
-        rover = hash_table.table[i].cast();
-        while (rover != NULL!()).as_bool() {
-            next = rover.next.cast();
-            hash_table_free_entry(hash_table.cast(), rover.cast());
-            rover = next.cast();
+    c_for!(let mut i = 0; i < hash_table.table_size; i.prefix_plus_plus(); {
+        rover = hash_table.table[i];
+        while (rover != NULL!()) {
+            next = rover.next;
+            hash_table_free_entry(hash_table, rover);
+            rover = next;
         }
     });
 

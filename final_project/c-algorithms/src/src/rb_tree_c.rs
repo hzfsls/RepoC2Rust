@@ -129,9 +129,9 @@ pub fn rb_tree_insert_case3(mut tree: Ptr<RBTree>, mut node: Ptr<RBTreeNode>) {
     let mut uncle: Ptr<RBTreeNode> = Default::default();
 
     grandparent = node.parent.parent.cast();
-    uncle = rb_tree_node_uncle(node.cast());
+    uncle = rb_tree_node_uncle(node.cast()).cast();
 
-    if (uncle != NULL!() && uncle.color == RB_TREE_NODE_RED!()).as_bool() {
+    if (uncle != NULL!()).as_bool() && (uncle.color == RB_TREE_NODE_RED!()).as_bool() {
         node.parent.color = RB_TREE_NODE_BLACK!();
         uncle.color = RB_TREE_NODE_BLACK!();
         grandparent.color = RB_TREE_NODE_RED!();
@@ -151,6 +151,7 @@ pub fn rb_tree_insert_case4(mut tree: Ptr<RBTree>, mut node: Ptr<RBTreeNode>) {
 
     if (side != rb_tree_node_side(node.parent)).as_bool() {
         next_node = node.parent.cast();
+
         rb_tree_rotate(tree.cast(), node.parent.cast(), (1 - side).cast());
     } else {
         next_node = node.cast();

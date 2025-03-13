@@ -69,12 +69,12 @@ pub fn binary_heap_insert(mut heap: Ptr<BinaryHeap>, mut value: BinaryHeapValue)
     }
 
     index = heap.num_values;
-    heap.num_values.suffix_plus_plus();
+    heap.num_values.prefix_plus_plus();
 
     while (index > 0).as_bool() {
         parent = (index - 1) / 2;
 
-        if (binary_heap_cmp(heap.cast(), heap.values[parent].cast(), value.cast()) < 0).as_bool() {
+        if (binary_heap_cmp(heap, heap.values[parent], value) < 0).as_bool() {
             break;
         } else {
             heap.values[index] = heap.values[parent].cast();
@@ -108,8 +108,8 @@ pub fn binary_heap_pop(mut heap: Ptr<BinaryHeap>) -> BinaryHeapValue {
     index = 0;
 
     loop {
-        child1 = (index * 2 + 1);
-        child2 = (index * 2 + 2);
+        child1 = index * 2 + 1;
+        child2 = index * 2 + 2;
 
         if (child1 < heap.num_values) && (binary_heap_cmp(heap, new_value, heap.values[child1]) > 0) {
             if (child2 < heap.num_values) && (binary_heap_cmp(heap, heap.values[child1], heap.values[child2]) > 0) {

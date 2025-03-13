@@ -117,21 +117,21 @@ pub fn list_next(mut listentry: Ptr<ListEntry>) -> Ptr<ListEntry> {
 pub fn list_nth_entry(mut list: Ptr<ListEntry>, mut n: u32) -> Ptr<ListEntry> {
     let mut entry: Ptr<ListEntry> = list.cast();
     let mut i: u32 = 0;
+
     c_for!(; i < n; i.prefix_plus_plus(); {
         if (entry == NULL!()).as_bool() {
             return NULL!();
         }
         entry = entry.next.cast();
     });
+
     return entry.cast();
 }
 
 
 pub fn list_nth_data(mut list: Ptr<ListEntry>, mut n: u32) -> ListValue {
     let mut entry: Ptr<ListEntry> = Default::default();
-
     entry = list_nth_entry(list.cast(), n.cast());
-
     if (entry == NULL!()).as_bool() {
         return LIST_NULL!();
     } else {
@@ -323,11 +323,12 @@ pub fn list_sort(mut list: Ptr<Ptr<ListEntry>>, mut compare_func: ListCompareFun
 
 pub fn list_find_data(mut list: Ptr<ListEntry>, mut callback: ListEqualFunc, mut data: ListValue) -> Ptr<ListEntry> {
     let mut rover: Ptr<ListEntry> = list.cast();
-    c_for!(; rover != NULL!(); rover = rover.next.cast(); {
+    while (rover != NULL!()).as_bool() {
         if (callback(rover.data.cast(), data.cast()) != 0).as_bool() {
             return rover.cast();
         }
-    });
+        rover = rover.next.cast();
+    }
     return NULL!();
 }
 
@@ -340,22 +341,22 @@ pub fn list_iterate(mut list: Ptr<Ptr<ListEntry>>, mut iter: Ptr<ListIterator>) 
 
 pub fn list_iter_has_more(mut iter: Ptr<ListIterator>) -> i32 {
     if (iter.current == NULL!() || iter.current != *iter.prev_next).as_bool() {
-        return (*iter.prev_next != NULL!()).cast();
+        return (*iter.prev_next != NULL!()).cast::<i32>();
     } else {
-        return (iter.current.next != NULL!()).cast();
+        return (iter.current.next != NULL!()).cast::<i32>();
     }
 }
 
 
 pub fn list_iter_next(mut iter: Ptr<ListIterator>) -> ListValue {
-    if (iter.current == NULL!() || iter.current != *iter.prev_next) {
+    if (iter.current == NULL!() || iter.current != *iter.prev_next).as_bool() {
         iter.current = *iter.prev_next;
     } else {
-        iter.prev_next = c_ref!(iter.current.next);
+        iter.prev_next = c_ref!(iter.current.next).cast();
         iter.current = iter.current.next;
     }
 
-    if (iter.current == NULL!()) {
+    if (iter.current == NULL!()).as_bool() {
         return LIST_NULL!();
     } else {
         return iter.current.data;
