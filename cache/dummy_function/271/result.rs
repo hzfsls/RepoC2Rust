@@ -1,3 +1,3 @@
-pub fn RapidlzDictSizeNorm(mut strmCtx: Ptr<RapidlzStreamCtx>, mut src: Ptr<u8>, mut dictEnd: Ptr<u8>) {
+pub fn avl_tree_remove_node(mut tree: Ptr<AVLTree>, mut node: Ptr<AVLTreeNode>) {
     unimplemented!();
 }

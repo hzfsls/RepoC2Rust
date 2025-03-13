@@ -1,18 +1,21 @@
-pub fn VosAvlBalanceTree(mut pstTree: Ptr<AVLBASE_TREE_S>, mut pstNode: Ptr<AVLBASE_NODE_S>) {
-    let mut pstNodeTmp: Ptr<AVLBASE_NODE_S> = pstNode.cast();
-    while pstNodeTmp.pstParent != AVL_NULL_PTR!() {
-        if pstNodeTmp.pstParent.pstRight == pstNodeTmp {
-            pstNodeTmp = pstNodeTmp.pstParent.cast();
-            VosAvlRebalance(c_ref!(pstNodeTmp.pstRight).cast());
-            pstNodeTmp.sRHeight = (1 + VOS_V2_AVL_MAX!(pstNodeTmp.pstRight.sRHeight, pstNodeTmp.pstRight.sLHeight)).cast();
-        } else {
-            pstNodeTmp = pstNodeTmp.pstParent.cast();
-            VosAvlRebalance(c_ref!(pstNodeTmp.pstLeft).cast());
-            pstNodeTmp.sLHeight = (1 + VOS_V2_AVL_MAX!(pstNodeTmp.pstLeft.sRHeight, pstNodeTmp.pstLeft.sLHeight)).cast();
+pub fn VosAvlRebalance(mut ppstSubTree: Ptr<Ptr<AVLBASE_NODE_S>>) {
+    let mut iMoment: i32 = Default::default();
+
+    iMoment = ((*ppstSubTree).sRHeight - (*ppstSubTree).sLHeight).cast();
+
+    if iMoment > 1 {
+        if (*ppstSubTree).pstRight.sLHeight > (*ppstSubTree).pstRight.sRHeight {
+            VosAvlRotateRight(c_ref!((*ppstSubTree).pstRight).cast());
         }
+
+        VosAvlRotateLeft(ppstSubTree.cast());
+    } else if iMoment < -1 {
+        if (*ppstSubTree).pstLeft.sRHeight > (*ppstSubTree).pstLeft.sLHeight {
+            VosAvlRotateLeft(c_ref!((*ppstSubTree).pstLeft).cast());
+        }
+
+        VosAvlRotateRight(ppstSubTree.cast());
     }
-    if pstNodeTmp.sLHeight != pstNodeTmp.sRHeight {
-        VosAvlRebalance(c_ref!(pstTree.pstRoot).cast());
-    }
+
     return;
 }

@@ -1,2 +1,2 @@
-macro_rules! CMPTLZ_REP4 { () => { 4 } }
-pub(crate) use CMPTLZ_REP4;
+macro_rules! CMPTLZ_HASH_2_MASK { () => { (CMPTLZ_HASH_2_SIZE!() - 1) } }
+pub(crate) use CMPTLZ_HASH_2_MASK;

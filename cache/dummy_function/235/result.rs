@@ -1,3 +1,3 @@
-pub fn CmptBtSkip(mut mf: Ptr<CmptMfCtx>, mut lenLimit: u32, mut pos: u32, mut cur: Ptr<u8>, mut curMatch: u32) {
+pub fn set_query(mut set: Ptr<Set>, mut data: SetValue) -> i32 {
     unimplemented!();
 }

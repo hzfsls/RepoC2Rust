@@ -1,2 +1,2 @@
-macro_rules! CMPTLZ_PROB_MAX_NUM { () => { 2048 } }
-pub(crate) use CMPTLZ_PROB_MAX_NUM;
+macro_rules! CMPT_PRICE_COUNT { () => { 64 } }
+pub(crate) use CMPT_PRICE_COUNT;

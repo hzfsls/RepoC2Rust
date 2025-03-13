@@ -1,2 +1,2 @@
-macro_rules! RAPIDLZ_FALLTHROUGH { () => { #[allow(unreachable_code)] } }
-pub(crate) use RAPIDLZ_FALLTHROUGH;
+macro_rules! RAPIDLZ_MAX_4BIT_VALUE { () => { 15 } }
+pub(crate) use RAPIDLZ_MAX_4BIT_VALUE;

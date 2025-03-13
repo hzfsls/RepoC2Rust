@@ -1,2 +1,2 @@
-macro_rules! CMPTLZ_PROB_LG { () => { 1 << CMPTLZ_PROB_LG_BIT!() } }
-pub(crate) use CMPTLZ_PROB_LG;
+macro_rules! CMPTLZ_LEN_CHOICE { () => { CMPTLZ_LOW_LENPROB_OFFSET!() } }
+pub(crate) use CMPTLZ_LEN_CHOICE;

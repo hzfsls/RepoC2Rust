@@ -1,8 +1,11 @@
-pub fn CmptLzRangeCodeInit(mut decCtx: Ptr<CmptLzDecCtx>) {
-    let mut rangeCode: u32 = (decCtx.tempBuf[1].cast::<u32>()) << 24;
-    rangeCode |= (decCtx.tempBuf[2].cast::<u32>()) << 16;
-    rangeCode |= (decCtx.tempBuf[3].cast::<u32>()) << 8;
-    rangeCode |= decCtx.tempBuf[4].cast::<u32>();
-    decCtx.code = rangeCode.cast();
-    decCtx.range = 0xFFFFFFFF.cast();
+pub fn arraylist_index_of(mut arraylist: Ptr<ArrayList>, mut callback: ArrayListEqualFunc, mut data: ArrayListValue) -> i32 {
+    let mut i: u32 = 0;
+
+    c_for!(i = 0; i < arraylist.length; i.prefix_plus_plus(); {
+        if callback(arraylist.data[i].cast(), data.cast()) != 0 {
+            return i.cast::<i32>();
+        }
+    });
+
+    return -1;
 }

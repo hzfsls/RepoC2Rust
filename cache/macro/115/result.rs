@@ -1,2 +1,2 @@
-macro_rules! CMPT_OK { () => { 0 } }
-pub(crate) use CMPT_OK;
+macro_rules! ALGORITHM_COMPARE_POINTER_H { () => { } }
+pub(crate) use ALGORITHM_COMPARE_POINTER_H;

@@ -1,2 +1,6 @@
-macro_rules! GET_KEYOFFSET { ($pstTreeInfo:expr) => { ($pstTreeInfo.usKeyOffset - $pstTreeInfo.usNodeOffset) as i32 } }
-pub(crate) use GET_KEYOFFSET;
+macro_rules! VOS_AVL_FIND_OR_FIND_NEXT {
+    ($TREE:expr, $KEY:expr) => {
+        VOS_AVL_Find_Or_Find_Next(c_ref!($TREE), $KEY, AVL_FALSE!())
+    }
+}
+pub(crate) use VOS_AVL_FIND_OR_FIND_NEXT;

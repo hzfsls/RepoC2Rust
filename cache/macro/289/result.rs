@@ -1,2 +1,2 @@
-macro_rules! RAPIDLZ_MAX_BYTE_VALUE { () => { 255 } }
-pub(crate) use RAPIDLZ_MAX_BYTE_VALUE;
+macro_rules! RAPIDLZ_PTR_DIFF_MAX_32 { () => { 0x80000000 } }
+pub(crate) use RAPIDLZ_PTR_DIFF_MAX_32;

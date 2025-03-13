@@ -1,2 +1,2 @@
-macro_rules! CMPTLZ_MKSTATE_NUM { () => { 12 } }
-pub(crate) use CMPTLZ_MKSTATE_NUM;
+macro_rules! CMPTLZ_LOW_LEN_CLASS { () => { 1 << CMPTLZ_LOW_LEN_BIT!() } }
+pub(crate) use CMPTLZ_LOW_LEN_CLASS;

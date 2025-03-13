@@ -1,44 +1,53 @@
-pub fn CmptRcLenProcess(mut lenEncoder: Ptr<CmptLenEncoder>, mut rcCtx: Ptr<CmptRcCtx>, mut len: u32, mut posState: u64) -> i32 {
-    let mut shiftRes: i32 = CMPT_OK!();
-    let mut range: u32 = rcCtx.range.cast();
-    let mut newBound: u32 = Default::default();
-    let mut bit0Prob: u32 = Default::default();
-    len -= CMPTLZ_MATCH_LEN_MIN!();
+pub fn hash_table_insert(mut hash_table: Ptr<HashTable>, mut key: HashTableKey, mut value: HashTableValue) -> i32 {
+    let mut rover: Ptr<HashTableEntry> = Default::default();
+    let mut pair: Ptr<HashTablePair> = Default::default();
+    let mut newentry: Ptr<HashTableEntry> = Default::default();
+    let mut index: u32 = Default::default();
 
-    let mut probs: Ptr<CmptlzProb> = lenEncoder.low.cast();
-    CMPT_RC_GET_NEWBOUND!(probs, bit0Prob, range, newBound);
-    if len >= CMPT_LEN_BOUND!() {
-        CMPT_RC_BIT_1_PROCESS!(rcCtx, probs, newBound, range, bit0Prob, shiftRes);
-        CMPTLZ_RETURN_IF_NOT_OK!(shiftRes);
-        probs += CMPT_LEN_BOUND!();
-        CMPT_RC_GET_NEWBOUND!(probs, bit0Prob, range, newBound);
-        if len >= CMPT_LEN_BOUND!() * CMPT_DOUBLE!() {
-            CMPT_RC_BIT_1_PROCESS!(rcCtx, probs, newBound, range, bit0Prob, shiftRes);
-            CMPTLZ_RETURN_IF_NOT_OK!(shiftRes);
-            rcCtx.range = range.cast();
-            shiftRes = CmptRcLitProcess(rcCtx.cast(), lenEncoder.high.cast(), len - CMPT_LEN_BOUND!() * CMPT_DOUBLE!()).cast();
-            CMPTLZ_RETURN_IF_NOT_OK!(shiftRes);
-            return CMPT_OK!();
+    if (hash_table.entries * 3) / hash_table.table_size > 0 {
+        if !hash_table_enlarge(hash_table.cast()) {
+            return 0;
         }
-        len -= CMPT_LEN_BOUND!();
     }
 
-    let mut m: u32 = Default::default();
-    let mut bit: u32 = Default::default();
-    CMPT_RC_BIT_0_PROCESS!(rcCtx, probs, newBound, range, bit0Prob, shiftRes);
-    CMPTLZ_RETURN_IF_NOT_OK!(shiftRes);
-    probs += (posState << (1 + 3)).cast();
-    bit = (len >> 2).cast();
-    CMPT_RC_BIT_PROCESS!(rcCtx, probs + 1, bit, bit0Prob, range, newBound, shiftRes);
-    CMPTLZ_RETURN_IF_NOT_OK!(shiftRes);
-    m = (1 << 1) + bit;
-    bit = (len >> 1) & 1;
-    CMPT_RC_BIT_PROCESS!(rcCtx, probs + m, bit, bit0Prob, range, newBound, shiftRes);
-    CMPTLZ_RETURN_IF_NOT_OK!(shiftRes);
-    m = (m << 1) + bit;
-    bit = len & 1;
-    CMPT_RC_BIT_PROCESS!(rcCtx, probs + m, bit, bit0Prob, range, newBound, shiftRes);
-    CMPTLZ_RETURN_IF_NOT_OK!(shiftRes);
-    rcCtx.range = range.cast();
-    return CMPT_OK!();
+    index = (hash_table.hash_func)(key.cast()) % hash_table.table_size;
+
+    rover = hash_table.table[index].cast();
+
+    while rover != NULL!() {
+        pair = c_ref!(rover.pair).cast();
+
+        if (hash_table.equal_func)(pair.key.cast(), key.cast()) != 0 {
+            if hash_table.value_free_func != NULL!() {
+                (hash_table.value_free_func)(pair.value.cast());
+            }
+
+            if hash_table.key_free_func != NULL!() {
+                (hash_table.key_free_func)(pair.key.cast());
+            }
+
+            pair.key = key.cast();
+            pair.value = value.cast();
+
+            return 1;
+        }
+
+        rover = rover.next.cast();
+    }
+
+    newentry = c_malloc!(c_sizeof!(HashTableEntry));
+
+    if newentry == NULL!() {
+        return 0;
+    }
+
+    newentry.pair.key = key.cast();
+    newentry.pair.value = value.cast();
+
+    newentry.next = hash_table.table[index].cast();
+    hash_table.table[index] = newentry.cast();
+
+    hash_table.entries.prefix_plus_plus();
+
+    return 1;
 }

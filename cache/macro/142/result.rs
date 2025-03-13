@@ -1,2 +1,2 @@
-macro_rules! ALWAYS_NO_INLINE { () => { #[inline(never)] } }
-pub(crate) use ALWAYS_NO_INLINE;
+macro_rules! CMPTLZ_DEC_INPUT_EOF { () => { 1 } }
+pub(crate) use CMPTLZ_DEC_INPUT_EOF;

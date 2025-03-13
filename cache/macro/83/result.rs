@@ -1,2 +1,2 @@
-macro_rules! BZP_BUF_SIZE { () => { 5000 } }
-pub(crate) use BZP_BUF_SIZE;
+macro_rules! BZP_RLC_NUM_LOWER_LIMIT { () => { 1 } }
+pub(crate) use BZP_RLC_NUM_LOWER_LIMIT;

@@ -1,3 +1,3 @@
-pub fn CmptLzDecByDistAndLen(mut decCtx: Ptr<CmptLzDecCtx>, mut matchDist: usize, mut matchLen: u32, mut dicPosLimit: usize) -> u32 {
+pub fn list_remove_data(mut list: Ptr<Ptr<ListEntry>>, mut callback: ListEqualFunc, mut data: ListValue) -> u32 {
     unimplemented!();
 }

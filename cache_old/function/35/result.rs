@@ -1,12 +1,13 @@
-pub fn VOS_MD5Init(mut context: Ptr<MD5_CTX>) {
-    if context == NULL!() {
-        return;
+pub fn BzpOpenFile(mut bzpInfo: Ptr<BzpAlgorithmInfo>, mut inName: Ptr<u8>, mut outName: Ptr<u8>) -> i32 {
+    if bzpInfo == NULL!() {
+        return BZP_ERROR_PARAM!();
     }
-
-    c_memset_s!(context, c_sizeof!(MD5_CTX), 0, c_sizeof!(MD5_CTX)).cast::<Void>();
-
-    context.aulState[0] = 0x67452301;
-    context.aulState[1] = 0xefcdab89;
-    context.aulState[2] = 0x98badcfe;
-    context.aulState[3] = 0x10325476;
+    bzpInfo.compressFile.input.filePtr = c_fopen!(inName, cstr!("rb"));
+    bzpInfo.compressFile.output.filePtr = c_fopen!(outName, cstr!("wb"));
+    if bzpInfo.compressFile.input.filePtr == NULL!() || bzpInfo.compressFile.output.filePtr == NULL!() {
+        BzpAlgorithmInfoFinish(bzpInfo.cast());
+        c_remove!(outName);
+        return BZP_ERROR_IO!();
+    }
+    return BZP_OK!();
 }

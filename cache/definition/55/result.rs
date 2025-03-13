@@ -1,20 +1,12 @@
 #[repr(C)]
 #[derive(Default)]
-pub struct TagCmptMatchFinder {
-    pub srcStart: Ptr<u8>,
-    pub srcLen: usize,
-    pub hashRootTable: Array<u32, 256>,
-    pub mfStart: u32,
-    pub niceLen: u32,
-    pub readAhead: u32,
-    pub readPos: u32,
-    pub cyclePos: u32,
-    pub cycleSize: u32,
-    pub offset: u32,
-    pub hash: Ptr<u32>,
-    pub son: Ptr<u32>,
-    pub depth: u32,
-    pub hashCount: u32,
-    pub sonsCount: u32,
-    pub hashMask: u32,
+pub struct _HashTable {
+    pub table: Ptr<Ptr<HashTableEntry>>,
+    pub table_size: u32,
+    pub hash_func: HashTableHashFunc,
+    pub equal_func: HashTableEqualFunc,
+    pub key_free_func: HashTableKeyFreeFunc,
+    pub value_free_func: HashTableValueFreeFunc,
+    pub entries: u32,
+    pub prime_index: u32,
 }

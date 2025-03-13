@@ -1,3 +1,3 @@
-pub fn BzpDeHuffmanLen(mut inData: Ptr<InDeComdata>, mut huffman: Ptr<BzpHuffmanDecode>) -> i32 {
+pub fn BzpGenerateDecodeTable(mut huffman: Ptr<BzpHuffmanDecode>) {
     unimplemented!();
 }

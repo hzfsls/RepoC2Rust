@@ -1,2 +1,2 @@
-macro_rules! CMPTLZ_LEN_CHOICE { () => { CMPTLZ_LOW_LENPROB_OFFSET!() } }
-pub(crate) use CMPTLZ_LEN_CHOICE;
+macro_rules! CMPTLZ_SPEC_POS { () => { (-CMPTLZ_OFFSET!()) } }
+pub(crate) use CMPTLZ_SPEC_POS;

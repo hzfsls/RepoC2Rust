@@ -1,2 +1,2 @@
-macro_rules! CMPT_ONE_BLOCK_MAX_SIZE { () => { 1 << 17 } }
-pub(crate) use CMPT_ONE_BLOCK_MAX_SIZE;
+macro_rules! CMPT_ERROR_DATA { () => { CMPTLZ_ERROR_CONVERT!(CMPTLZ_ERROR_DATA!()) } }
+pub(crate) use CMPT_ERROR_DATA;

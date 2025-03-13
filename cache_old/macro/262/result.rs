@@ -1,2 +1,2 @@
-macro_rules! RAPIDLZ_STREAM_HASH_SIZE { () => { 1 << 12 } }
-pub(crate) use RAPIDLZ_STREAM_HASH_SIZE;
+macro_rules! CMPT_ENC_ERROR_PARAM { () => { CMPTLZ_ERROR_CONVERT!(CMPTLZ_ENC_ERROR_PARAM!()) } }
+pub(crate) use CMPT_ENC_ERROR_PARAM;

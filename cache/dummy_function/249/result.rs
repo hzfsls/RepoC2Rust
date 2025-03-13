@@ -1,3 +1,3 @@
-pub fn CmptRcCtxInit(mut rcCtx: Ptr<CmptRcCtx>) {
+pub fn hash_table_enlarge(mut hash_table: Ptr<HashTable>) -> i32 {
     unimplemented!();
 }

@@ -1,2 +1,2 @@
-macro_rules! CMPTLZ_MIN_DICTSIZE { () => { 1024 } }
-pub(crate) use CMPTLZ_MIN_DICTSIZE;
+macro_rules! CMPT_ENC_RC_INIT_FAIL { () => { CMPTLZ_ERROR_CONVERT!(CMPTLZ_ENC_RC_INIT_FAIL!()) } }
+pub(crate) use CMPT_ENC_RC_INIT_FAIL;

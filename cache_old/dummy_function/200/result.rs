@@ -1,3 +1,3 @@
-pub fn CmptlzDpPre(mut encCtx: Ptr<CmptLzEncCtx>, mut mainReps: Ptr<u32>, mut cur: u32) {
+pub fn slist_append(mut list: Ptr<Ptr<SListEntry>>, mut data: SListValue) -> Ptr<SListEntry> {
     unimplemented!();
 }

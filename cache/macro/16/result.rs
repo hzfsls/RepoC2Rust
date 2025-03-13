@@ -1,2 +1,2 @@
-macro_rules! MD5_TEXT_IN_BUFFER_MAX { () => { 56 } }
-pub(crate) use MD5_TEXT_IN_BUFFER_MAX;
+macro_rules! BZP_RETUEN_COMPRESS { () => { 2 } }
+pub(crate) use BZP_RETUEN_COMPRESS;

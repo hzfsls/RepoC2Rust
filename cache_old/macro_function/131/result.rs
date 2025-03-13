@@ -1,6 +1,8 @@
-macro_rules! RAPIDLZ_LITERAL_LEN_COPY_END {
-    ($curDest:expr, $len:expr) => {
-        $curDest + $len + 1 + (($len + RAPIDLZ_MAX_BYTE_VALUE!() - RAPIDLZ_MAX_4BIT_VALUE!()) / RAPIDLZ_MAX_BYTE_VALUE!())
+macro_rules! RAPIDLZ_CONTINUE_IF_NOT_A_MATCH {
+    ($matchOffset:expr, $prefixDictLimit:expr, $current:expr) => {
+        if ($matchOffset < $prefixDictLimit) || ($matchOffset + RAPIDLZ_MAX_OFFSET!() < $current) {
+            continue;
+        }
     }
 }
-pub(crate) use RAPIDLZ_LITERAL_LEN_COPY_END;
+pub(crate) use RAPIDLZ_CONTINUE_IF_NOT_A_MATCH;

@@ -1,3 +1,3 @@
-pub fn BzpOutComDataInit(mut blockSize: i32) -> Ptr<BzpOutComdata> {
+pub fn BzpAddCharToBlock(mut lasch: u8, mut num: i32, mut bwt: Ptr<BzpBwtInfo>) {
     unimplemented!();
 }

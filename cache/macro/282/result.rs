@@ -1,2 +1,2 @@
-macro_rules! RAPIDLZ_MAX_4BIT_MATCH { () => { 19 } }
-pub(crate) use RAPIDLZ_MAX_4BIT_MATCH;
+macro_rules! RAPIDLZ_DEC_NOT_OK { () => { 0 } }
+pub(crate) use RAPIDLZ_DEC_NOT_OK;

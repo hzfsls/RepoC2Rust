@@ -1,3 +1,3 @@
-pub fn BzpBlockSortMain(mut bwt: Ptr<BzpBwtInfo>) {
+pub fn BzpGenerateSelectMTF(mut huffman: Ptr<BzpHuffmanGroups>) {
     unimplemented!();
 }

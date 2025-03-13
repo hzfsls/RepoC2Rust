@@ -1,2 +1,2 @@
-macro_rules! BZP_COM_STREAM_H { () => { } }
-pub(crate) use BZP_COM_STREAM_H;
+macro_rules! BZP_MTF_ENCODE0 { () => { 0 } }
+pub(crate) use BZP_MTF_ENCODE0;

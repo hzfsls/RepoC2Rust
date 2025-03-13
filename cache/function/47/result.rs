@@ -1,54 +1,23 @@
-pub fn vosSha256CompressBlock(mut state: Ptr<u32>, mut block: Ptr<u8>) {
-    let mut W: Array<u32, 64> = Default::default();
-    let mut i: u32 = Default::default();
-    let mut j: u32 = Default::default();
-    let mut a: u32 = Default::default();
-    let mut b: u32 = Default::default();
-    let mut c: u32 = Default::default();
-    let mut d: u32 = Default::default();
-    let mut e: u32 = Default::default();
-    let mut f: u32 = Default::default();
-    let mut g: u32 = Default::default();
-    let mut h: u32 = Default::default();
+pub fn BzpWriteValidASCII(mut outData: Ptr<BzpOutComdata>, mut bwt: Ptr<BzpBwtInfo>) {
+    let mut validGid: Array<i32, { BZP_ASCII_SIZE!() }> = Default::default();
+    let mut cnt: i32 = 0;
+    let mut use16: Array<bool, { BZP_ASCII_SIZE!() }> = Default::default();
+    c_memset_s!(use16, c_sizeofval!(use16), 0, c_sizeofval!(use16)).cast::<Void>();
 
-    c_for!(let mut i: u32 = 0; i < 16; i.suffix_plus_plus(); {
-        W[i] = GET_UINT32_BE!(block, 4 * i);
+    c_for!(let mut i: i32 = 0; i < BZP_ASCII_SIZE!(); i.suffix_plus_plus(); {
+        let mut gid: i32 = i / BZP_CHARS_PER_GROUP_ASCII!();
+        use16[gid] |= bwt.inUse[i];
     });
-
-    c_for!(let mut i: u32 = 16; i < 64; i.suffix_plus_plus(); {
-        W[i] = W[i - 16] + W[i - 7] + (VOS_ROTR32!(W[i - 15], 7) ^ VOS_ROTR32!(W[i - 15], 18) ^ (W[i - 15] >> 3)) +
-               (VOS_ROTR32!(W[i - 2], 17) ^ VOS_ROTR32!(W[i - 2], 19) ^ (W[i - 2] >> 10));
+    c_for!(let mut i: i32 = 0; i < BZP_GROUPS_ASCII!(); i.suffix_plus_plus(); {
+        BzpWriteToArray(use16[i].cast::<i32>(), BZP_BIT!(), outData.cast());
+        if use16[i] {
+            validGid[cnt.suffix_plus_plus()] = i.cast();
+        }
     });
-
-    j = 0;
-    a = state[j.suffix_plus_plus()];
-    b = state[j.suffix_plus_plus()];
-    c = state[j.suffix_plus_plus()];
-    d = state[j.suffix_plus_plus()];
-    e = state[j.suffix_plus_plus()];
-    f = state[j.suffix_plus_plus()];
-    g = state[j.suffix_plus_plus()];
-    h = state[j];
-
-    c_for!(let mut i: u32 = 0; i < 64; i += 8; {
-        j = 0;
-        VOS_ROUND!(a, b, c, d, e, f, g, h, i + (j.suffix_plus_plus()), K256[i + 0], W);
-        VOS_ROUND!(h, a, b, c, d, e, f, g, i + (j.suffix_plus_plus()), K256[i + 1], W);
-        VOS_ROUND!(g, h, a, b, c, d, e, f, i + (j.suffix_plus_plus()), K256[i + 2], W);
-        VOS_ROUND!(f, g, h, a, b, c, d, e, i + (j.suffix_plus_plus()), K256[i + 3], W);
-        VOS_ROUND!(e, f, g, h, a, b, c, d, i + (j.suffix_plus_plus()), K256[i + 4], W);
-        VOS_ROUND!(d, e, f, g, h, a, b, c, i + (j.suffix_plus_plus()), K256[i + 5], W);
-        VOS_ROUND!(c, d, e, f, g, h, a, b, i + (j.suffix_plus_plus()), K256[i + 6], W);
-        VOS_ROUND!(b, c, d, e, f, g, h, a, i + j, K256[i + 7], W);
+    c_for!(let mut i: i32 = 0; i < cnt; i.suffix_plus_plus(); {
+        c_for!(let mut j: i32 = 0; j < BZP_CHARS_PER_GROUP_ASCII!(); j.suffix_plus_plus(); {
+            let mut valid: i32 = validGid[i] * BZP_CHARS_PER_GROUP_ASCII!() + j;
+            BzpWriteToArray(bwt.inUse[valid].cast::<i32>(), BZP_BIT!(), outData.cast());
+        });
     });
-
-    j = 0;
-    state[j.suffix_plus_plus()] += a;
-    state[j.suffix_plus_plus()] += b;
-    state[j.suffix_plus_plus()] += c;
-    state[j.suffix_plus_plus()] += d;
-    state[j.suffix_plus_plus()] += e;
-    state[j.suffix_plus_plus()] += f;
-    state[j.suffix_plus_plus()] += g;
-    state[j] += h;
 }

@@ -1,9 +1,23 @@
-pub fn RapidlzWildCopy8(mut srcPtr: Ptr<u8>, mut dstPtr: Ptr<u8>, mut dstEnd: Ptr<u8>) {
-    let mut tmpDstPtr: Ptr<u8> = dstPtr.cast();
-    let mut tmpSrcPtr: Ptr<u8> = srcPtr.cast();
-    c_do!({
-        RapidlzCopy8Byte(tmpDstPtr.cast(), tmpSrcPtr.cast());
-        tmpDstPtr += 8;
-        tmpSrcPtr += 8;
-    } while tmpDstPtr < dstEnd);
+pub fn rb_tree_lookup_node(mut tree: Ptr<RBTree>, mut key: RBTreeKey) -> Ptr<RBTreeNode> {
+    let mut node: Ptr<RBTreeNode> = Default::default();
+    let mut side: RBTreeNodeSide = Default::default();
+    let mut diff: i32 = Default::default();
+
+    node = tree.root_node.cast();
+
+    while node != NULL!() {
+        diff = (tree.compare_func)(key.cast(), node.key.cast()).cast();
+
+        if diff == 0 {
+            return node.cast();
+        } else if diff < 0 {
+            side = RB_TREE_NODE_LEFT!();
+        } else {
+            side = RB_TREE_NODE_RIGHT!();
+        }
+
+        node = node.children[side].cast();
+    }
+
+    return NULL!();
 }

@@ -1,2 +1,2 @@
-macro_rules! CMPT_ERROR_MEM { () => { CMPTLZ_ERROR_CONVERT!(CMPTLZ_ERROR_MEM!()) } }
-pub(crate) use CMPT_ERROR_MEM;
+macro_rules! ALGORITHM_BINOMIAL_HEAP_H { () => { } }
+pub(crate) use ALGORITHM_BINOMIAL_HEAP_H;

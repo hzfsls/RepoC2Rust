@@ -1,19 +1,12 @@
-macro_rules! CMPTLZ_MATCH_BIT_DEC {
-    ($probSlot:expr, $range:expr, $rangeCode:expr, $rangeBound:expr, $decSym:expr, $matchSym:expr, $offset:expr, $bit:expr, $bufToDec:expr) => {
-        $matchSym <<= 1;
-        $bit = $offset;
-        $offset &= $matchSym;
-        $probLit = $probSlot + ($offset + $bit + $decSym);
-        $rangeBound = ($range >> CMPTLZ_PROB_LG_BIT) * (*$probLit);
-        if $rangeCode < $rangeBound {
-            CMPTLZ_RANGE_UPDATE_0!($probLit, $range, $rangeBound);
-            $decSym = $decSym << 1;
-            $offset ^= $bit;
-        } else {
-            CMPTLZ_RANGE_UPDATE_1!($probLit, $range, $rangeCode, $rangeBound);
-            $decSym = ($decSym << 1) + 1;
+macro_rules! CMPT_MF_MOVE_POS { ($mf:expr) =>
+    {
+        $mf.readPos.plus_plus();
+        $mf.cyclePos.plus_plus();
+        $mf.cyclePos = if $mf.cyclePos == $mf.cycleSize { 0 } else { $mf.cyclePos };
+        if CMPTLZ_UNLIKELY!($mf.readPos + $mf.offset == CMPTLZ_UINT32_MAX)
+        {
+            CmptMfMovePos($mf);
         }
-        CMPTLZ_RANGE_NORMALIZE!($range, $rangeCode, $bufToDec);
     }
 }
-pub(crate) use CMPTLZ_MATCH_BIT_DEC;
+pub(crate) use CMPT_MF_MOVE_POS;

@@ -1,1 +1,1 @@
-pub type CmptlzProb = u16;
+pub type QueueEntry = _QueueEntry;

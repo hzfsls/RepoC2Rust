@@ -1,25 +1,20 @@
-pub fn CmptPriceLongRep(mut encCtx: Ptr<CmptLzEncCtx>, mut longRepIndex: u32, mut state: CmptlzState, mut posState: u32) -> u32 {
-    let mut price: u32 = 0;
-    c_switch!(longRepIndex, {
-        0 => {
-            price = CmptPriceBit0(encCtx.cast(), encCtx.isRepG0[state].cast()).cast() + CmptPriceBit1(encCtx.cast(), encCtx.isRep0Long[state][posState].cast()).cast();
-            break;
-        },
-        1 => {
-            price = CmptPriceBit1(encCtx.cast(), encCtx.isRepG0[state].cast()).cast() + CmptPriceBit0(encCtx.cast(), encCtx.isRepG1[state].cast()).cast();
-            break;
-        },
-        2 => {
-            price = CmptPriceBit1(encCtx.cast(), encCtx.isRepG0[state].cast()).cast() + CmptPriceBit1(encCtx.cast(), encCtx.isRepG1[state].cast()).cast() + CmptPriceBit0(encCtx.cast(), encCtx.isRepG2[state].cast()).cast();
-            break;
-        },
-        3 => {
-            price = CmptPriceBit1(encCtx.cast(), encCtx.isRepG0[state].cast()).cast() + CmptPriceBit1(encCtx.cast(), encCtx.isRepG1[state].cast()).cast() + CmptPriceBit1(encCtx.cast(), encCtx.isRepG2[state].cast()).cast();
-            break;
-        },
-        _ => {
-            break;
-        },
-    });
-    return price.cast();
+pub fn set_new(mut hash_func: SetHashFunc, mut equal_func: SetEqualFunc) -> Ptr<Set> {
+    let mut new_set: Ptr<Set> = c_malloc!(c_sizeof!(Set));
+
+    if new_set == NULL!() {
+        return NULL!();
+    }
+
+    new_set.hash_func = hash_func.cast();
+    new_set.equal_func = equal_func.cast();
+    new_set.entries = 0;
+    new_set.prime_index = 0;
+    new_set.free_func = NULL!();
+
+    if !set_allocate_table(new_set.cast()) {
+        c_free!(new_set);
+        return NULL!();
+    }
+
+    return new_set.cast();
 }

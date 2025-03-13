@@ -1,2 +1,2 @@
-macro_rules! VOS_SHA256_CTX_BUF_LEN { () => { 16 } }
-pub(crate) use VOS_SHA256_CTX_BUF_LEN;
+macro_rules! BZP_BLOCK_SIZE_LEVEL_UPPER_LIMIT { () => { 9 } }
+pub(crate) use BZP_BLOCK_SIZE_LEVEL_UPPER_LIMIT;

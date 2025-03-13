@@ -1,3 +1,3 @@
-pub fn BzpBwtDecodeInit(mut blockSize: i32) -> Ptr<BzpBwtDecodeInfo> {
+pub fn BzpSwap2Elem(mut sortBlock: Ptr<i32>, mut lPos: i32, mut rPos: i32) {
     unimplemented!();
 }

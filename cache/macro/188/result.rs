@@ -1,2 +1,2 @@
-macro_rules! CMPTLZ_IS_MATCH { () => { CMPTLZ_MATCH_LEN_CODER!() + CMPTLZ_LENPROB_NUM!() } }
-pub(crate) use CMPTLZ_IS_MATCH;
+macro_rules! CMPTLZ_LIT_POS_MAX { () => { 5 } }
+pub(crate) use CMPTLZ_LIT_POS_MAX;

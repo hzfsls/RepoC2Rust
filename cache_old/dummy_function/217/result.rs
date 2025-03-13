@@ -1,3 +1,3 @@
-pub fn CmptlzCompress(mut src: Ptr<Void>, mut srcSize: usize, mut dst: Ptr<Void>, mut dstSize: Ptr<usize>, mut param: Ptr<CmptlzCompParam>) -> i32 {
+pub fn queue_new() -> Ptr<Queue> {
     unimplemented!();
 }

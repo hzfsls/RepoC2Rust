@@ -1,2 +1,2 @@
-macro_rules! BZP_BITS16 { () => { 16 } }
-pub(crate) use BZP_BITS16;
+macro_rules! BZP_HUFFMAN_DECODE_H { () => { } }
+pub(crate) use BZP_HUFFMAN_DECODE_H;

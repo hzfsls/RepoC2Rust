@@ -1,2 +1,2 @@
-macro_rules! BZP_ASCII_SIZE { () => { 256 } }
-pub(crate) use BZP_ASCII_SIZE;
+macro_rules! BZP_NGROUPS_BLOCK_NUM_LIMIT3 { () => { 2400 } }
+pub(crate) use BZP_NGROUPS_BLOCK_NUM_LIMIT3;

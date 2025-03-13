@@ -1,19 +1,21 @@
-pub fn CmptRcLitAfterMatch(mut rcCtx: Ptr<CmptRcCtx>, mut prob: Ptr<CmptlzProb>, mut sym: u32, mut matchByte: u32) -> i32 {
-    let mut shiftRes: i32 = CMPT_OK!();
-    let mut range: u32 = rcCtx.range;
-    let mut offs: u32 = 0x100;
-    let mut bit0Prob: u32;
-    let mut newBound: u32;
-    let mut curBit: u32;
-    c_for!(sym |= 0x100; sym < 0x10000; {
-        matchByte <<= 1;
-        let mut litProbTableIndex: Ptr<CmptlzProb> = (prob + (offs + (matchByte & offs) + (sym >> 8))).cast();
-        curBit = (sym >> 7) & 1;
-        sym <<= 1;
-        offs &= !(matchByte ^ sym);
-        CMPT_RC_BIT_PROCESS!(rcCtx, litProbTableIndex, curBit, bit0Prob, range, newBound, shiftRes);
-        CMPTLZ_RETURN_IF_NOT_OK!(shiftRes);
-    });
-    rcCtx.range = range;
-    return CMPT_OK!();
+pub fn queue_push_head(mut queue: Ptr<Queue>, mut data: QueueValue) -> i32 {
+    let mut new_entry: Ptr<QueueEntry> = c_malloc!(c_sizeof!(QueueEntry));
+
+    if new_entry == NULL!() {
+        return 0;
+    }
+
+    new_entry.data = data.cast();
+    new_entry.prev = NULL!();
+    new_entry.next = queue.head.cast();
+
+    if queue.head == NULL!() {
+        queue.head = new_entry.cast();
+        queue.tail = new_entry.cast();
+    } else {
+        queue.head.prev = new_entry.cast();
+        queue.head = new_entry.cast();
+    }
+
+    return 1;
 }

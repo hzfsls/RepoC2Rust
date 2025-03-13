@@ -1,17 +1,13 @@
-pub fn BzpNumEncode(mut mtf: Ptr<BzpMtfInfo>, mut num: i32) {
-    num <<= 1;
-
-    c_do!({
-        num >>= 1;
-        num -= 1;
-        if (num & 1).as_bool() {
-            let tmp = mtf.nMtf.suffix_plus_plus();
-            mtf.mtfV[tmp] = BZP_MTF_ENCODE1!();
-            mtf.mtfFreq[BZP_MTF_ENCODE1!()] += 1;
+pub fn BzpHeapAdjustUp(mut heap: Ptr<i32>, mut weight: Ptr<i32>, mut pos: i32) {
+    let mut tmpw: i32 = weight[heap[pos]].cast();
+    let mut tmpv: i32 = heap[pos].cast();
+    while pos > 1 {
+        if tmpw < weight[heap[pos >> 1]] {
+            heap[pos] = heap[pos >> 1].cast();
+            pos >>= 1;
         } else {
-            let tmp = mtf.nMtf.suffix_plus_plus();
-            mtf.mtfV[tmp] = BZP_MTF_ENCODE0!();
-            mtf.mtfFreq[BZP_MTF_ENCODE0!()] += 1;
+            break;
         }
-    } while num >= BZP_MTF_ENCODE_BASE!());
+    }
+    heap[pos] = tmpv.cast();
 }

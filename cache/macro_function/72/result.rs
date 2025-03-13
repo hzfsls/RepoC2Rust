@@ -1,2 +1,7 @@
-macro_rules! CMPTLZ_ERROR_CONVERT { ($x:expr) => { (CMPTLZ_MODULE!() << 16) | ($x as u32) as i32 } }
-pub(crate) use CMPTLZ_ERROR_CONVERT;
+macro_rules! CMPTLZ_LEN_BIT_DEC {
+    ($probSlot:expr, $range:expr, $rangeCode:expr, $rangeBound:expr, $decSym:expr, $bufToDec:expr) => {
+        CMPTLZ_NORMAL_BIT_DEC!($probSlot, $range, $rangeCode, $rangeBound, $decSym);
+        CMPTLZ_RANGE_NORMALIZE!($range, $rangeCode, $bufToDec);
+    }
+}
+pub(crate) use CMPTLZ_LEN_BIT_DEC;

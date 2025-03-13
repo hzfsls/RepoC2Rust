@@ -1,2 +1,2 @@
-macro_rules! RAPIDLZ_STEP_FORWARD_BASE { () => { 6 } }
-pub(crate) use RAPIDLZ_STEP_FORWARD_BASE;
+macro_rules! RAPIDLZ_MIN_COMPRESSED_SIZE { () => { 12 } }
+pub(crate) use RAPIDLZ_MIN_COMPRESSED_SIZE;

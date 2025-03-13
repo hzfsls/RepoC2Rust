@@ -1,2 +1,2 @@
-macro_rules! SHA256_H { () => { } }
-pub(crate) use SHA256_H;
+macro_rules! BZP_UTILS_H { () => { } }
+pub(crate) use BZP_UTILS_H;

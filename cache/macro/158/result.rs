@@ -1,2 +1,2 @@
-macro_rules! CMPTLZ_LIT_STATES { () => { 7 } }
-pub(crate) use CMPTLZ_LIT_STATES;
+macro_rules! CMPTLZ_HIGH_LEN_BIT { () => { 8 } }
+pub(crate) use CMPTLZ_HIGH_LEN_BIT;

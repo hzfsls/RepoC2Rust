@@ -1,2 +1,2 @@
-macro_rules! BZP_HDR_H { () => { 0x68 } }
-pub(crate) use BZP_HDR_H;
+macro_rules! BZP_EOF { () => { -1 } }
+pub(crate) use BZP_EOF;

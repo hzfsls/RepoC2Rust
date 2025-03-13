@@ -1,22 +1,22 @@
-pub fn BzpMtfInit(mut blockSize: i32) -> Ptr<BzpMtfInfo> {
-    if BZP_INVALID_BLOCK_SIZE!(blockSize) {
-        return NULL!();
+pub fn BzpBwtFinish(mut bwt: Ptr<BzpBwtInfo>) {
+    if bwt != NULL!() {
+        if bwt.block != NULL!() {
+            c_free!(bwt.block);
+            bwt.block = NULL!();
+        }
+        if bwt.sortBlock != NULL!() {
+            c_free!(bwt.sortBlock);
+            bwt.sortBlock = NULL!();
+        }
+        if bwt.idx != NULL!() {
+            c_free!(bwt.idx);
+            bwt.idx = NULL!();
+        }
+        if bwt.isStartPos != NULL!() {
+            c_free!(bwt.isStartPos);
+            bwt.isStartPos = NULL!();
+        }
+        c_free!(bwt);
+        bwt = NULL!();
     }
-    let mut mtf: Ptr<BzpMtfInfo> = c_malloc!(c_sizeof!(BzpMtfInfo));
-    if mtf == NULL!() {
-        return NULL!();
-    }
-    mtf.mtfV = NULL!();
-    mtf.mtfV = c_malloc!(blockSize * BZP_BASE_BLOCK_SIZE!() * c_sizeof!(i32));
-    if mtf.mtfV == NULL!() {
-        c_free!(mtf);
-        mtf = NULL!();
-        return NULL!();
-    }
-    mtf.nUse = 0;
-    mtf.nMtf = 0;
-    mtf.block = NULL!();
-    mtf.map = NULL!();
-    mtf.inUse = NULL!();
-    return mtf.cast();
 }

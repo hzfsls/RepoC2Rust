@@ -1,2 +1,2 @@
-macro_rules! CMPTLZ_RANGE_DOWN_LIMIT { () => { (1isize as u32) << 24 } }
-pub(crate) use CMPTLZ_RANGE_DOWN_LIMIT;
+macro_rules! CMPTLZ_HIGH_LEN_CLASS { () => { 1 << CMPTLZ_HIGH_LEN_BIT!() } }
+pub(crate) use CMPTLZ_HIGH_LEN_CLASS;

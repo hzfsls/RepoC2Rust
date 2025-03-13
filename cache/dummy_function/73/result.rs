@@ -1,3 +1,3 @@
-pub fn BzpResetCompress(mut bwt: Ptr<BzpBwtInfo>, mut outData: Ptr<BzpOutComdata>) {
+pub fn BzpMTFDeCode(mut inData: Ptr<InDeComdata>, mut huffman: Ptr<BzpHuffmanDecode>, mut debwt: Ptr<BzpBwtDecodeInfo>) -> i32 {
     unimplemented!();
 }

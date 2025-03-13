@@ -1,3 +1,3 @@
-pub fn CmptLzFreeDict(mut decCtx: Ptr<CmptLzDecCtx>, mut memHook: Ptr<CmptLzMemHook>) {
+pub fn list_data(mut listentry: Ptr<ListEntry>) -> ListValue {
     unimplemented!();
 }

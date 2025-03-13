@@ -1,7 +1,12 @@
-macro_rules! CMPT_RC_BIT_0_PROCESS {
-    ($rcCtx:expr, $prob:expr, $newBound:expr, $range:expr, $bit0Prob:expr, $shiftRes:expr) => {
-        CMPT_RC_BIT_0!($prob, $newBound, $range, $bit0Prob);
-        CMPT_RC_NORMALIZE!($rcCtx, $range, $shiftRes);
+macro_rules! CMPTLZ_SET_DICTSIZE_BY_LEVEL { ($level:expr, $dictSize:expr) =>
+    {
+        $dictSize = if $level <= 5 {
+            1 << ($level * 2 + 14)
+        } else if $level <= 7 {
+            1 << 25
+        } else {
+            1 << 26
+        };
     }
 }
-pub(crate) use CMPT_RC_BIT_0_PROCESS;
+pub(crate) use CMPTLZ_SET_DICTSIZE_BY_LEVEL;

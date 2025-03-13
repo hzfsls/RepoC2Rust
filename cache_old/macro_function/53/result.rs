@@ -1,9 +1,6 @@
-macro_rules! MD5_CHANGE_STATE_IN_TURN { ($state:expr, $value:expr) =>
+macro_rules! BZP_UPDATE_CRC { ($crcVar:expr, $cha:expr) => 
     {
-        $state[0] = $state[3];
-        $state[3] = $state[2];
-        $state[2] = $state[1];
-        $state[1] = $state[1] + $value;
+        $crcVar = ($crcVar << 8) ^ (*g_bzpCRC32Table.lock())[(($crcVar >> 24) ^ ($cha as u8)];
     }
 }
-pub(crate) use MD5_CHANGE_STATE_IN_TURN;
+pub(crate) use BZP_UPDATE_CRC;

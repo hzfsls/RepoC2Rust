@@ -1,2 +1,2 @@
-macro_rules! CMPTLZ_UINT32_MAX { () => { (-1isize) as u32 } }
-pub(crate) use CMPTLZ_UINT32_MAX;
+macro_rules! CMPT_ENC_CTX_INIT_FAIL { () => { CMPTLZ_ERROR_CONVERT!(CMPTLZ_ENC_CTX_INIT_FAIL!()) } }
+pub(crate) use CMPT_ENC_CTX_INIT_FAIL;

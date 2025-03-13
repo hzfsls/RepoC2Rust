@@ -1,2 +1,2 @@
-macro_rules! CMPT_ERROR_DATA { () => { CMPTLZ_ERROR_CONVERT!(CMPTLZ_ERROR_DATA!()) } }
-pub(crate) use CMPT_ERROR_DATA;
+macro_rules! ALGORITHM_HASH_POINTER_H { () => { } }
+pub(crate) use ALGORITHM_HASH_POINTER_H;

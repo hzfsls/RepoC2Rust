@@ -1,2 +1,2 @@
-macro_rules! RAPIDLZ_H { () => { } }
-pub(crate) use RAPIDLZ_H;
+macro_rules! CMPT_ENC_ERROR_HEAD { () => { CMPTLZ_ERROR_CONVERT!(CMPTLZ_ENC_ERROR_HEAD!()) } }
+pub(crate) use CMPT_ENC_ERROR_HEAD;

@@ -1,3 +1,3 @@
-pub fn CmptPriceShortRep(mut encCtx: Ptr<CmptLzEncCtx>, mut state: CmptlzState, mut posState: u32) -> u32 {
+pub fn set_free_entry(mut set: Ptr<Set>, mut entry: Ptr<SetEntry>) {
     unimplemented!();
 }

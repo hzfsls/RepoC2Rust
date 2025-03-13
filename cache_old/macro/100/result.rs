@@ -1,2 +1,2 @@
-macro_rules! BZP_GROUPS_ASCII { () => { 16 } }
-pub(crate) use BZP_GROUPS_ASCII;
+macro_rules! QUEUE_NULL { () => { NULL!() } }
+pub(crate) use QUEUE_NULL;

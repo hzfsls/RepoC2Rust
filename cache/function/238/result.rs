@@ -1,24 +1,37 @@
-pub fn CmptlzMatchFinder(mut mf: Ptr<CmptMfCtx>, mut pCount: Ptr<u32>, mut matches: Ptr<CmptlzMatchPair>) -> u32 {
-    if CMPTLZ_UNLIKELY!(mf.srcLen - mf.readPos < mf.niceLen) {
-        *pCount = 0;
-        mf.readPos.suffix_plus_plus();
-        mf.readAhead.suffix_plus_plus();
-        return 0;
+pub fn set_union(mut set1: Ptr<Set>, mut set2: Ptr<Set>) -> Ptr<Set> {
+    let mut iterator: SetIterator = Default::default();
+    let mut new_set: Ptr<Set> = Default::default();
+    let mut value: SetValue = Default::default();
+
+    new_set = set_new(set1.hash_func.cast(), set1.equal_func.cast());
+
+    if new_set == NULL!() {
+        return NULL!();
     }
-    let mut count: u32 = CmptlzBt4Finder(mf.cast(), matches.cast()).cast();
-    if count == 0 {
-        *pCount = 0;
-        mf.readAhead.suffix_plus_plus();
-        return 0;
+
+    set_iterate(set1.cast(), c_ref!(iterator).cast());
+
+    while set_iter_has_more(c_ref!(iterator).cast()) {
+        value = set_iter_next(c_ref!(iterator).cast());
+
+        if !set_insert(new_set.cast(), value.cast()) {
+            set_free(new_set.cast());
+            return NULL!();
+        }
     }
-    let mut longestLen: u32 = matches[count - 1].len.cast();
-    if longestLen == mf.niceLen {
-        let mut bytesAvail: u32 = CMPTLZ_FIND_MIN!(mf.srcLen - mf.readPos + 1, CMPT_MF_LONGEST_MATCH!()).cast();
-        let mut p1: Ptr<u8> = (mf.srcStart + mf.readPos - 1).cast::<Ptr<u8>>();
-        let mut p2: Ptr<u8> = (p1 - matches[count - 1].dist - 1).cast::<Ptr<u8>>();
-        longestLen = CmptMemCmpLenSafe(p1.cast(), p2.cast(), longestLen.cast(), bytesAvail.cast()).cast();
+
+    set_iterate(set2.cast(), c_ref!(iterator).cast());
+
+    while set_iter_has_more(c_ref!(iterator).cast()) {
+        value = set_iter_next(c_ref!(iterator).cast());
+
+        if set_query(new_set.cast(), value.cast()) == 0 {
+            if !set_insert(new_set.cast(), value.cast()) {
+                set_free(new_set.cast());
+                return NULL!();
+            }
+        }
     }
-    *pCount = count.cast();
-    mf.readAhead.suffix_plus_plus();
-    return longestLen.cast();
+
+    return new_set.cast();
 }

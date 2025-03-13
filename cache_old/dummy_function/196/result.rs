@@ -1,3 +1,3 @@
-pub fn CmptlzDpInitShortRep(mut encCtx: Ptr<CmptLzEncCtx>, mut repMatchPrice: u32, mut posState: u32) {
+pub fn list_iter_next(mut iter: Ptr<ListIterator>) -> ListValue {
     unimplemented!();
 }

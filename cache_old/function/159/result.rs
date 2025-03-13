@@ -1,3 +1,6 @@
-pub fn CmptLzGetMatchLenCoderProb(mut probsMatrix: Ptr<CmptLzDecProb>) -> Ptr<CmptLzDecProb> {
-    return (probsMatrix + CMPTLZ_MATCH_LEN_CODER!()).cast();
+pub fn arraylist_free(mut arraylist: Ptr<ArrayList>) {
+    if arraylist != NULL!() {
+        c_free!(arraylist.data);
+        c_free!(arraylist);
+    }
 }

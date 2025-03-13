@@ -1,2 +1,2 @@
-macro_rules! RAPIDLZ_MIN_MATCH { () => { 4 } }
-pub(crate) use RAPIDLZ_MIN_MATCH;
+macro_rules! RAPIDLZ_LAST_LITERAL_LENGTH { () => { 13 } }
+pub(crate) use RAPIDLZ_LAST_LITERAL_LENGTH;

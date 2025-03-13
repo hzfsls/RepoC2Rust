@@ -1,7 +1,3 @@
-pub fn RapidlzPutPosOnTable(mut pos: u32, mut hashValue: u32, mut hashTable: Ptr<u8>, mut hashType: u8) {
-    if hashType == 4 {
-        *((hashTable.cast::<Ptr<u16>>() + hashValue).cast()) = pos.cast::<u16>();
-    } else if hashType == 5 {
-        *((hashTable.cast::<Ptr<u32>>() + hashValue).cast()) = pos.cast::<u32>();
-    }
+pub fn rb_tree_node_parent(mut node: Ptr<RBTreeNode>) -> Ptr<RBTreeNode> {
+    return node.parent.cast();
 }

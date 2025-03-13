@@ -1,2 +1,2 @@
-macro_rules! BZP_INIT_BLOCK_CRC { () => { 0xffffffff } }
-pub(crate) use BZP_INIT_BLOCK_CRC;
+macro_rules! BZP_HUFFMAN_HEIGHT_WEIGHT_BITS { () => { 8 } }
+pub(crate) use BZP_HUFFMAN_HEIGHT_WEIGHT_BITS;

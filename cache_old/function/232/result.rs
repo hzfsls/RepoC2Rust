@@ -1,38 +1,41 @@
-pub fn CmptMfPrepare(mut encCtx: Ptr<CmptLzEncCtx>, mut src: Ptr<u8>, mut srcLen: usize, mut alloc: Ptr<CmptLzMemHook>) -> i32 {
-    let mut mf: Ptr<CmptMfCtx> = alloc.CmptLzAlloc(CMPTLZ_MF_CCTX_HANDLE!(), c_sizeof!(CmptMfCtx));
-    if mf == NULL!() {
-        return CMPT_ENC_MF_INIT_FAIL!();
-    }
-    c_memset_s!(mf, c_sizeof!(CmptMfCtx), 0, c_sizeof!(CmptMfCtx)).cast::<Void>();
+pub fn set_enlarge(mut set: Ptr<Set>) -> i32 {
+    let mut rover: Ptr<SetEntry> = Default::default();
+    let mut next: Ptr<SetEntry> = Default::default();
+    let mut old_table: Ptr<Ptr<SetEntry>> = Default::default();
+    let mut old_table_size: u32 = Default::default();
+    let mut old_prime_index: u32 = Default::default();
+    let mut index: u32 = Default::default();
+    let mut i: u32 = Default::default();
 
-    encCtx.mfCtx = mf.cast();
-    mf.cycleSize = encCtx.dicSize + 1;
-    let mut hashMask: u32 = encCtx.dicSize - 1;
-    CMPT_HASH_MASK_CALC!(hashMask);
-    mf.hashMask = hashMask;
-    hashMask += 1;
-    hashMask += CMPTLZ_HASH_2_SIZE!();
-    hashMask += CMPTLZ_HASH_3_SIZE!();
-    mf.hashCount = hashMask;
-    mf.sonsCount = mf.cycleSize * 2;
-    mf.hash = NULL!();
-    mf.son = NULL!();
-    mf.hash = alloc.CmptLzAlloc(CMPTLZ_MF_HASH_HANDLE!(), mf.hashCount * c_sizeof!(u32));
-    c_memset_s!(mf.hash, mf.hashCount * c_sizeof!(u32), 0, mf.hashCount * c_sizeof!(u32)).cast::<Void>();
-    if mf.hash == NULL!() {
-        return CMPT_ENC_MF_INIT_FAIL!();
-    }
-    mf.son = alloc.CmptLzAlloc(CMPTLZ_MF_SON_HANDLE!(), mf.sonsCount * c_sizeof!(u32));
-    c_memset_s!(mf.son, mf.sonsCount * c_sizeof!(u32), 0, mf.sonsCount * c_sizeof!(u32)).cast::<Void>();
-    if mf.son == NULL!() {
-        return CMPT_ENC_MF_INIT_FAIL!();
+    old_table = set.table.cast();
+    old_table_size = set.table_size.cast();
+    old_prime_index = set.prime_index.cast();
+
+    set.prime_index.prefix_plus_plus();
+
+    if !set_allocate_table(set.cast()) {
+        set.table = old_table.cast();
+        set.table_size = old_table_size.cast();
+        set.prime_index = old_prime_index.cast();
+
+        return 0;
     }
 
-    CmptlzMfGenHashTable(mf.cast());
-    mf.srcStart = src.cast();
-    mf.srcLen = srcLen.cast();
-    mf.offset = mf.cycleSize.cast();
-    mf.niceLen = encCtx.numFastBytes.cast();
-    mf.depth = CMPT_MF_BASE_DEPTH!() + mf.niceLen / 2;
-    return 0;
+    c_for!(let mut i: u32 = 0; i < old_table_size; i.prefix_plus_plus(); {
+        rover = old_table[i].cast();
+
+        while rover != NULL!() {
+            next = rover.next.cast();
+
+            index = (set.hash_func)(rover.data.cast()) % set.table_size.cast();
+            rover.next = set.table[index].cast();
+            set.table[index] = rover.cast();
+
+            rover = next.cast();
+        }
+    });
+
+    c_free!(old_table);
+
+    return 1;
 }

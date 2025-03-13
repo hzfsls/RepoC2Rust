@@ -1,2 +1,2 @@
-macro_rules! VOS_V2_AVL_MAX { ($X:expr, $Y:expr) => { if $X > $Y { $X } else { $Y } } }
-pub(crate) use VOS_V2_AVL_MAX;
+macro_rules! VOS_AVL_PREV { ($NODE:expr) => { VOS_AVL_Prev(c_ref!($NODE)) } }
+pub(crate) use VOS_AVL_PREV;

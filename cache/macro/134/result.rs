@@ -1,2 +1,2 @@
-macro_rules! CMPTLZ_MF_SON_HANDLE { () => { CMPTLZ_HANDLE_CONVERT!(CMPTLZ_MF_SON!()) } }
-pub(crate) use CMPTLZ_MF_SON_HANDLE;
+macro_rules! ALWAYS_NO_INLINE { () => { #[inline(never)] } }
+pub(crate) use ALWAYS_NO_INLINE;

@@ -1,3 +1,3 @@
-pub fn RapidlzStoreLastLiterals(mut dst: Ptr<u8>, mut dstEnd: Ptr<u8>, mut srcCurr: Ptr<u8>, mut litLength: u32, mut bufferLimit: u8) -> Ptr<u8> {
+pub fn trie_free_list_push(mut list: Ptr<Ptr<TrieNode>>, mut node: Ptr<TrieNode>) {
     unimplemented!();
 }

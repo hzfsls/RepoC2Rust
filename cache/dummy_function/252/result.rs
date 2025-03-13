@@ -1,3 +1,3 @@
-pub fn CmptRcReverseProcess(mut rcCtx: Ptr<CmptRcCtx>, mut probs: Ptr<CmptlzProb>, mut numBits: u32, mut sym: u32) -> i32 {
+pub fn hash_table_remove(mut hash_table: Ptr<HashTable>, mut key: HashTableKey) -> i32 {
     unimplemented!();
 }

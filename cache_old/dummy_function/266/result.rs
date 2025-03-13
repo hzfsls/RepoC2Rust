@@ -1,3 +1,3 @@
-pub fn CmptlzEncLit(mut encCtx: Ptr<CmptLzEncCtx>, mut mf: Ptr<CmptMfCtx>, mut nowpos32: u32) -> i32 {
+pub fn avl_tree_rotate(mut tree: Ptr<AVLTree>, mut node: Ptr<AVLTreeNode>, mut direction: AVLTreeNodeSide) -> Ptr<AVLTreeNode> {
     unimplemented!();
 }

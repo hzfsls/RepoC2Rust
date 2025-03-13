@@ -1,2 +1,2 @@
-macro_rules! BZP_EOF { () => { -1 } }
-pub(crate) use BZP_EOF;
+macro_rules! BZP_RLC_NUM_UPPER_LIMIT { () => { 255 } }
+pub(crate) use BZP_RLC_NUM_UPPER_LIMIT;

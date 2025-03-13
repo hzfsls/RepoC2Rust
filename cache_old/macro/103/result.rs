@@ -1,2 +1,2 @@
-macro_rules! BZP_HUFFMAN_LEN_INCREASE { () => { 2 } }
-pub(crate) use BZP_HUFFMAN_LEN_INCREASE;
+macro_rules! ALGORITHM_ARRAYLIST_H { () => { } }
+pub(crate) use ALGORITHM_ARRAYLIST_H;

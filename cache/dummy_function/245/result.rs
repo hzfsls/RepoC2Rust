@@ -1,3 +1,3 @@
-pub fn CmptRcPrepare(mut encCtx: Ptr<CmptLzEncCtx>, mut dest: Ptr<u8>, mut destLen: Ptr<usize>, mut alloc: Ptr<CmptLzMemHook>) -> i32 {
+pub fn hash_table_free_entry(mut hash_table: Ptr<HashTable>, mut entry: Ptr<HashTableEntry>) {
     unimplemented!();
 }

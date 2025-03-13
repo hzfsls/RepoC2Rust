@@ -1,3 +1,3 @@
-pub fn RapidlzCompressExpandBackward(mut matchLimit: Ptr<u8>, mut matchPtr: Ptr<u8>, mut srcCurr: Ptr<u8>) -> Ptr<u8> {
+pub fn rb_tree_root_node(mut tree: Ptr<RBTree>) -> Ptr<RBTreeNode> {
     unimplemented!();
 }

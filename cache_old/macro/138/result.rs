@@ -1,2 +1,2 @@
-macro_rules! CMPTLZ_DEC_H { () => { } }
-pub(crate) use CMPTLZ_DEC_H;
+macro_rules! CMPTLZ_STATIC { () => { static } }
+pub(crate) use CMPTLZ_STATIC;

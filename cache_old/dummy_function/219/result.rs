@@ -1,3 +1,3 @@
-pub fn CmptRcLitAfterMatch(mut rcCtx: Ptr<CmptRcCtx>, mut prob: Ptr<CmptlzProb>, mut sym: u32, mut matchByte: u32) -> i32 {
+pub fn queue_push_head(mut queue: Ptr<Queue>, mut data: QueueValue) -> i32 {
     unimplemented!();
 }

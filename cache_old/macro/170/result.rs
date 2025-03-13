@@ -1,2 +1,2 @@
-macro_rules! CMPTLZ_HIGH_LEN_CLASS { () => { 1 << CMPTLZ_HIGH_LEN_BIT!() } }
-pub(crate) use CMPTLZ_HIGH_LEN_CLASS;
+macro_rules! CMPTLZ_LARGE_DIST_LOW_BITS { () => { 4 } }
+pub(crate) use CMPTLZ_LARGE_DIST_LOW_BITS;

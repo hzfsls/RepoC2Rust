@@ -1,3 +1,3 @@
-pub fn BzpDeCodeToStream(mut inData: Ptr<InDeComdata>, mut debwt: Ptr<BzpBwtDecodeInfo>) -> i32 {
+pub fn BzpMtfInit(mut blockSize: i32) -> Ptr<BzpMtfInfo> {
     unimplemented!();
 }

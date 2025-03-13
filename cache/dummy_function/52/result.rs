@@ -1,3 +1,3 @@
-pub fn BzpAlgorithmInfoFinish(mut bzpInfo: Ptr<BzpAlgorithmInfo>) {
+pub fn BzpFlushbuf(mut outData: Ptr<BzpOutComdata>) {
     unimplemented!();
 }

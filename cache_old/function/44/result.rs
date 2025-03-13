@@ -1,24 +1,8 @@
-pub fn vosSha256HashByBlcMulti(mut pucData: Ptr<u8>, mut uiLen: u32, mut pstCtx: Ptr<VOS_SHA256_CTX>) {
-    let mut err: errno_t = Default::default();
-    let mut uiBlcLen: u32 = Default::default();
-    let mut uiLenTmp: u32 = uiLen;
-    let mut pucSrc: Ptr<u8> = pucData.cast();
-
-    uiBlcLen = (uiLenTmp / SHA256_BLOCK_SIZE!()).cast();
-    if uiBlcLen > 0 {
-        vosSha256CompressMul(pstCtx.cast(), pucSrc.cast(), uiBlcLen.cast());
-        uiBlcLen *= SHA256_BLOCK_SIZE!();
-        pucSrc += uiBlcLen;
-        uiLenTmp -= uiBlcLen;
+pub fn BzpWriteFileHead(mut outData: Ptr<BzpOutComdata>, mut blockId: i32) {
+    if blockId == 0 {
+        BzpWriteToArray(BZP_HDR_B!(), BZP_BITS8!(), outData.cast());
+        BzpWriteToArray(BZP_HDR_Z!(), BZP_BITS8!(), outData.cast());
+        BzpWriteToArray(BZP_HDR_H!(), BZP_BITS8!(), outData.cast());
+        BzpWriteToArray((BZP_HDR_0!() + outData.blockSize).cast(), BZP_BITS8!(), outData.cast());
     }
-
-    if uiLenTmp != 0 {
-        pstCtx.blocklen = uiLenTmp.cast();
-        err = c_memcpy_s!(pstCtx.block.cast::<Ptr<u8>>(), SHA256_BLOCK_SIZE!(), pucSrc.cast(), uiLenTmp).cast();
-        if err != EOK!() {
-            pstCtx.corrupted = 1;
-            return;
-        }
-    }
-    return;
 }

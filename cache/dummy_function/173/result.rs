@@ -1,3 +1,3 @@
-pub fn CmptLzTryDecOnePacket(mut decCtx: Ptr<CmptLzDecCtx>, mut bufTryDec: Ptr<u8>, mut pbufLimit: Ptr<Ptr<u8>>) -> i32 {
+pub fn binary_heap_insert(mut heap: Ptr<BinaryHeap>, mut value: BinaryHeapValue) -> i32 {
     unimplemented!();
 }

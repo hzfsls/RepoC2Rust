@@ -1,3 +1,3 @@
-pub fn RapidlzCompressProcess(mut dst: Ptr<Void>, mut dstSize: usize, mut src: Ptr<Void>, mut srcSize: usize, mut cCtx: Ptr<RapidlzCCtx>) -> usize {
+pub fn trie_find_end(mut trie: Ptr<Trie>, mut key: Ptr<u8>) -> Ptr<TrieNode> {
     unimplemented!();
 }

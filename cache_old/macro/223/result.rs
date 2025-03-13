@@ -1,2 +1,2 @@
-macro_rules! CMPTLZ_LC_MAX { () => { 8 } }
-pub(crate) use CMPTLZ_LC_MAX;
+macro_rules! CMPTLZ_ALIGN_BITS { () => { 4 } }
+pub(crate) use CMPTLZ_ALIGN_BITS;

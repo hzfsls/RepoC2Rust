@@ -1,2 +1,2 @@
-macro_rules! BZP_HUFFMAN_DECODE_H { () => { } }
-pub(crate) use BZP_HUFFMAN_DECODE_H;
+macro_rules! BINARY_HEAP_NULL { () => { NULL!() } }
+pub(crate) use BINARY_HEAP_NULL;

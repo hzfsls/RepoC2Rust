@@ -1,2 +1,2 @@
-macro_rules! BZP_BITS15 { () => { 15 } }
-pub(crate) use BZP_BITS15;
+macro_rules! BZP_EXTRA_CHARS_NUM { () => { 2 } }
+pub(crate) use BZP_EXTRA_CHARS_NUM;

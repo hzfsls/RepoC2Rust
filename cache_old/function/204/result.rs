@@ -1,21 +1,13 @@
-pub fn CmptlzDpTryCurAndMatch(mut encCtx: Ptr<CmptLzEncCtx>, mut startLen: u32, mut matchCount: u32, mut normalmatch_prefixPrice: u32, mut cur: u32, mut posState: u32) {
+pub fn slist_nth_entry(mut list: Ptr<SListEntry>, mut n: u32) -> Ptr<SListEntry> {
+    let mut entry: Ptr<SListEntry> = list.cast();
     let mut i: u32 = 0;
-    while startLen > encCtx.matches[i].len {
-        i += 1;
-    }
-    let mut lenTest: u32;
-    c_for!(lenTest = startLen; ; lenTest += 1 {
-        let mut curBack: u32 = encCtx.matches[i].dist;
-        let mut cur_normalmatchPrice: u32 = normalmatch_prefixPrice + CmptPriceDistWithLen(encCtx.cast(), curBack.cast(), lenTest.cast(), posState.cast()).cast();
-        if cur_normalmatchPrice < encCtx.opts[cur + lenTest].price {
-            encCtx.opts[cur + lenTest].price = cur_normalmatchPrice.cast();
-            encCtx.opts[cur + lenTest].posPrev = cur.cast();
-            encCtx.opts[cur + lenTest].backPrev = (curBack + CMPTLZ_NUM_REPS!()).cast();
+
+    c_for!(; i < n; i.prefix_plus_plus(); {
+        if entry == NULL!() {
+            return NULL!();
         }
-        if lenTest == encCtx.matches[i].len {
-            if i.prefix_plus_plus() == matchCount {
-                break;
-            }
-        }
+        entry = entry.next.cast();
     });
+
+    return entry.cast();
 }

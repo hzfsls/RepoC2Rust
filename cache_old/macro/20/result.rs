@@ -1,2 +1,2 @@
-macro_rules! SHA256_BLOCK_SIZE { () => { 64 } }
-pub(crate) use SHA256_BLOCK_SIZE;
+macro_rules! BZP_BLOCK_SIZE_LEVEL_LOWER_LIMIT { () => { 1 } }
+pub(crate) use BZP_BLOCK_SIZE_LEVEL_LOWER_LIMIT;

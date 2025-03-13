@@ -1,6 +1,9 @@
-macro_rules! CMPTLZ_SET_FB_BY_LEVEL { ($level:expr, $fastBytes:expr) => 
-    {
-        $fastBytes = if $level < 7 { 32 } else { 64 };
+macro_rules! RAPIDLZ_RETURN_IF_NOT_TRUE {
+    ($condition:expr, $errCode:expr) => {
+        if !$condition {
+            RAPIDLZ_LOG!($errCode, cstr!(" "));
+            return $errCode;
+        }
     }
 }
-pub(crate) use CMPTLZ_SET_FB_BY_LEVEL;
+pub(crate) use RAPIDLZ_RETURN_IF_NOT_TRUE;

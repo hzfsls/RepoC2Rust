@@ -1,7 +1,11 @@
-pub fn CmptLzDecInit(mut decCtx: Ptr<CmptLzDecCtx>) {
-    decCtx.dictPos = 0;
-    decCtx.tempBufSize = 0;
-    decCtx.processedPos = 0;
-    decCtx.checkDicSize = 0;
-    decCtx.remainLen = CMPTLZ_MATCH_MAX_LEN!() + 2;
+pub fn string_nocase_hash(mut string: Ptr<Void>) -> u32 {
+    let mut result: u32 = 5381;
+    let mut p: Ptr<u8> = string.cast::<Ptr<u8>>();
+
+    while *p != '\0' as u8 {
+        result = (result << 5) + result + c_tolower!(*p).cast::<u32>();
+        p += 1;
+    }
+
+    return result.cast();
 }

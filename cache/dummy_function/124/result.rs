@@ -1,3 +1,3 @@
-pub fn BzpHuffmanInitArray(mut huffman: Ptr<BzpHuffmanInfo>) {
+pub fn BzpSelectTree(mut huffman: Ptr<BzpHuffmanGroups>) -> i32 {
     unimplemented!();
 }

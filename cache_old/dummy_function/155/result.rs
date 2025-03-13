@@ -1,3 +1,3 @@
-pub fn CmptLzGetPosSlotProb(mut probsMatrix: Ptr<CmptLzDecProb>) -> Ptr<CmptLzDecProb> {
+pub fn bloom_filter_load(mut bloomfilter: Ptr<BloomFilter>, mut array: Ptr<u8>) {
     unimplemented!();
 }

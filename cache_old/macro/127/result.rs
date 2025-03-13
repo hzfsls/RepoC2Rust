@@ -1,2 +1,2 @@
-macro_rules! CMPTLZ_UNCOMP_SIZE { () => { 8 } }
-pub(crate) use CMPTLZ_UNCOMP_SIZE;
+macro_rules! CMPTLZ_LOG_H { () => { } }
+pub(crate) use CMPTLZ_LOG_H;

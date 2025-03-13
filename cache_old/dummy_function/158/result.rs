@@ -1,3 +1,3 @@
-pub fn CmptLzGetRepLenCoderProb(mut probsMatrix: Ptr<CmptLzDecProb>) -> Ptr<CmptLzDecProb> {
+pub fn arraylist_new(mut length: u32) -> Ptr<ArrayList> {
     unimplemented!();
 }

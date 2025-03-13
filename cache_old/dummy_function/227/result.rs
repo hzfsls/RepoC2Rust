@@ -1,3 +1,3 @@
-pub fn CmptPriceLen(mut lenEncoder: Ptr<CmptLenEncoder>, mut len: u32, mut posState: u32) -> u32 {
+pub fn set_allocate_table(mut set: Ptr<Set>) -> i32 {
     unimplemented!();
 }

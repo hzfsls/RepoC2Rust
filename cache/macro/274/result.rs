@@ -1,2 +1,2 @@
-macro_rules! RAPIDLZ_LAST_LITERAL_LENGTH { () => { 13 } }
-pub(crate) use RAPIDLZ_LAST_LITERAL_LENGTH;
+macro_rules! CMPTLZ_DEC_H { () => { } }
+pub(crate) use CMPTLZ_DEC_H;

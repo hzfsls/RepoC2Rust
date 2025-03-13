@@ -1,15 +1,9 @@
-macro_rules! CMPTLZ_DIST_BIT_DEC {
-    ($probDist:expr, $probSlot:expr, $range:expr, $rangeCode:expr, $rangeBound:expr, $decDist:expr, $decBit:expr) => 
+macro_rules! CMPT_MF_LEFT_SON_UPDATE { ($ptr1:expr, $pair:expr, $curMatch:expr, $len1:expr, $len:expr) =>
     {
-        $probDist = $probSlot + $decDist;
-        $rangeBound = ($range >> CMPTLZ_PROB_LG_BIT!()) * (*$probDist);
-        if $rangeCode < $rangeBound {
-            CMPTLZ_RANGE_UPDATE_0!($probDist, $range, $rangeBound);
-            $decDist += $decBit;
-        } else {
-            CMPTLZ_RANGE_UPDATE_1!($probDist, $range, $rangeCode, $rangeBound);
-            $decDist += $decBit * 2;
-        }
+        *$ptr1 = $curMatch;
+        $ptr1 = $pair + 1;
+        $curMatch = *$ptr1;
+        $len1 = $len;
     }
 }
-pub(crate) use CMPTLZ_DIST_BIT_DEC;
+pub(crate) use CMPT_MF_LEFT_SON_UPDATE;

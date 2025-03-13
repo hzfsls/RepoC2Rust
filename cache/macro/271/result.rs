@@ -1,2 +1,2 @@
-macro_rules! RAPIDLZ_STREAM_ACCELERAT_MAX { () => { 10 } }
-pub(crate) use RAPIDLZ_STREAM_ACCELERAT_MAX;
+macro_rules! CMPTLZ_RC_CCTX_HANDLE { () => { CMPTLZ_HANDLE_CONVERT!(CMPTLZ_RC_CCTX!()) } }
+pub(crate) use CMPTLZ_RC_CCTX_HANDLE;

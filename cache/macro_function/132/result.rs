@@ -1,6 +1,6 @@
-macro_rules! RAPIDLZ_LIT_AND_MATCH_COPY_END { ($curDest:expr, $matchLen:expr) => 
-    {
-        $curDest + (1 + RAPIDLZ_LAST_LITERALS!()) + (($matchLen + 240) / RAPIDLZ_MAX_BYTE_VALUE!())
+macro_rules! RAPIDLZ_DICT_FAST_COPY_AVAIL {
+    ($curSrc:expr, $len:expr, $srcEndFast:expr, $curDest:expr, $destEndFast:expr) => {
+        ($curSrc + $len <= $srcEndFast) && ($curDest + $len <= $destEndFast)
     }
 }
-pub(crate) use RAPIDLZ_LIT_AND_MATCH_COPY_END;
+pub(crate) use RAPIDLZ_DICT_FAST_COPY_AVAIL;

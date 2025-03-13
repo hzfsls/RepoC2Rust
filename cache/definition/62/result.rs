@@ -1,1 +1,1 @@
-pub type RapidlzStreamCtx = TagRapidlzStreamCtx;
+pub type AVLTreeCompareFunc = FuncPtr<fn(AVLTreeValue, AVLTreeValue) -> i32>;

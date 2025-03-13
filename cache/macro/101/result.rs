@@ -1,2 +1,2 @@
-macro_rules! BZP_CHARS_PER_GROUP_ASCII { () => { 16 } }
-pub(crate) use BZP_CHARS_PER_GROUP_ASCII;
+macro_rules! ALGORITHM_SLIST_H { () => { } }
+pub(crate) use ALGORITHM_SLIST_H;

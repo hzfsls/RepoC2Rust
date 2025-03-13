@@ -1,2 +1,2 @@
-macro_rules! CMPT_NUM_LEN_POS_STATE { () => { 4 } }
-pub(crate) use CMPT_NUM_LEN_POS_STATE;
+macro_rules! CMPTLZ_NUM_STATES { () => { 12 } }
+pub(crate) use CMPTLZ_NUM_STATES;

@@ -1,2 +1,2 @@
-macro_rules! BZP_RLC_NUM_3 { () => { 3 } }
-pub(crate) use BZP_RLC_NUM_3;
+macro_rules! BZP_TYPE_H { () => { } }
+pub(crate) use BZP_TYPE_H;

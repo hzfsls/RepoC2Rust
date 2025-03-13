@@ -1,42 +1,18 @@
-pub fn BzpMtfMain(mut mtf: Ptr<BzpMtfInfo>) {
-    let mut list: Array<u8, { BZP_MAX_ALPHA_SIZE!() }> = Default::default();
-    let mut EOB: i32 = Default::default();
-    let mut num: i32 = 0;
-    BzpMapInputChar(mtf.cast(), list.cast(), BZP_MAX_ALPHA_SIZE!().cast());
-    EOB = mtf.nUse + 1;
-    c_for!(let mut i: i32 = 0; i <= EOB; i.suffix_plus_plus(); {
-        mtf.mtfFreq[i] = 0;
-    });
-    c_for!(let mut i: i32 = 0; i < mtf.nBlock; i.suffix_plus_plus(); {
-        let mut pos: i32 = mtf.map[i] - 1;
-        if pos < 0 {
-            pos += mtf.nBlock;
+pub fn BzpHeapAdjustDown(mut heap: Ptr<i32>, mut weight: Ptr<i32>, mut nHeap: i32) {
+    let mut pos: i32 = 1;
+    let mut chpos: i32 = pos << 1;
+    let mut tmpid: i32 = heap[pos];
+    let mut tmpv: i32 = weight[tmpid];
+    while chpos <= nHeap {
+        if (chpos | 1) <= nHeap && weight[heap[chpos]] > weight[heap[chpos | 1]] {
+            chpos |= 1;
         }
-        let mut ch: u8 = mtf.block[pos].cast();
-        if ch == list[0] {
-            num += 1;
-        } else {
-            if num > 0 {
-                BzpNumEncode(mtf.cast(), num.cast());
-                num = 0;
-            }
-            let mut pos_: i32 = 1;
-            while ch != list[pos_] && pos_ < mtf.nUse {
-                pos_ += 1;
-            }
-            c_for!(let mut j: i32 = pos_; j > 0; j.suffix_minus_minus(); {
-                list[j] = list[j - 1].cast();
-            });
-            list[0] = ch.cast();
-            mtf.mtfV[mtf.nMtf] = pos_ + 1;
-            mtf.mtfFreq[pos_ + 1] += 1;
-            mtf.nMtf += 1;
+        if tmpv < weight[heap[chpos]] {
+            break;
         }
-    });
-    if num > 0 {
-        BzpNumEncode(mtf.cast(), num.cast());
+        heap[pos] = heap[chpos];
+        pos = chpos;
+        chpos = pos << 1;
     }
-    mtf.mtfV[mtf.nMtf] = EOB;
-    mtf.mtfFreq[EOB] += 1;
-    mtf.nMtf += 1;
+    heap[pos] = tmpid;
 }

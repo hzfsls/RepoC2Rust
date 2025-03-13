@@ -1,16 +1,7 @@
-pub fn RapidlzCountLeadZero64(mut x: u64) -> u8 {
-    #[cfg(all(target_arch = "x86_64", target_feature = "lzcnt"))]
-    {
-        return x.leading_zeros() as u8;
+pub fn rb_tree_insert_case1(mut tree: Ptr<RBTree>, mut node: Ptr<RBTreeNode>) {
+    if node.parent == NULL!() {
+        node.color = RB_TREE_NODE_BLACK!();
+    } else {
+        rb_tree_insert_case2(tree.cast(), node.cast());
     }
-    if x == 0 {
-        return 0;
-    }
-    let mut num: u8 = 0;
-    let mut val: u64 = x;
-    while (val & 0x8000000000000000u64) == 0 {
-        val <<= 1;
-        num += 1;
-    }
-    return num;
 }

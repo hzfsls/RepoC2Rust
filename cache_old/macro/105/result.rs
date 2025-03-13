@@ -1,2 +1,2 @@
-macro_rules! BZP_EXTRA_CHARS_NUM { () => { 2 } }
-pub(crate) use BZP_EXTRA_CHARS_NUM;
+macro_rules! ALGORITHM_SET_H { () => { } }
+pub(crate) use ALGORITHM_SET_H;

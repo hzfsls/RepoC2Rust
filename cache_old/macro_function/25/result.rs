@@ -1,6 +1,6 @@
-macro_rules! VOS_AVL3_FIND_OR_FIND_NEXT {
-    ($TREE:expr, $KEY:expr, $TREE_INFO:expr) => {
-        AVL3_Find_Or_Find_Next(c_ref!($TREE), $KEY, AVL_FALSE!(), c_ref!($TREE_INFO))
+macro_rules! VOS_AVL3_NEXT { ($NODE:expr, $TREE_INFO:expr) => 
+    {
+        VOS_AVL3_Next(c_ref!($NODE), c_ref!($TREE_INFO))
     }
 }
-pub(crate) use VOS_AVL3_FIND_OR_FIND_NEXT;
+pub(crate) use VOS_AVL3_NEXT;

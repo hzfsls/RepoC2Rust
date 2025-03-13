@@ -1,8 +1,23 @@
-pub fn BzpHuffmanDecodeReset(mut huffman: Ptr<BzpHuffmanDecode>) {
-    c_memset_s!(huffman.base, c_sizeofval!(huffman.base), 0, c_sizeofval!(huffman.base)).cast::<Void>();
-    c_memset_s!(huffman.perm, c_sizeofval!(huffman.perm), 0, c_sizeofval!(huffman.perm)).cast::<Void>();
-    c_memset_s!(huffman.limit, c_sizeofval!(huffman.limit), 0, c_sizeofval!(huffman.limit)).cast::<Void>();
+pub fn BzpQuickSort(mut sortBlock: Ptr<i32>, mut idx: Ptr<i32>, mut l: i32, mut r: i32) {
+    let mut stack: BzpQSortInfo = Default::default();
+    stack.cnt = 0;
+    stack.stackL[stack.cnt] = l;
+    stack.stackR[stack.cnt] = r;
+    stack.cnt += 1;
+    while stack.cnt > 0 {
+        stack.cnt -= 1;
+        let mut tl: i32 = stack.stackL[stack.cnt];
+        let mut tr: i32 = stack.stackR[stack.cnt];
 
-    huffman.selectCnt = 0;
-    huffman.deCodeNum = 0;
+        if tl >= tr {
+            continue;
+        }
+        if tr - tl < BZP_THRESHOLD_SHELL_SORT!() {
+            BzpShellSort(sortBlock.cast(), idx.cast(), tl.cast(), tr.cast());
+            continue;
+        }
+        stack.tl = tl;
+        stack.tr = tr;
+        BzpQSortSingle(sortBlock.cast(), idx.cast(), c_ref!(stack).cast());
+    }
 }

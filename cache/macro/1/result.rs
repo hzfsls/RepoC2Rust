@@ -1,2 +1,2 @@
-macro_rules! AVL_ADAPT_H { () => { } }
-pub(crate) use AVL_ADAPT_H;
+macro_rules! V_AVLBASE_H { () => { } }
+pub(crate) use V_AVLBASE_H;

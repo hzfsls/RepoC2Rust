@@ -1,2 +1,2 @@
-macro_rules! RAPIDLZ_LAST_LITERALS { () => { 5 } }
-pub(crate) use RAPIDLZ_LAST_LITERALS;
+macro_rules! CMPTLZ_UNCOMP_SIZE { () => { 8 } }
+pub(crate) use CMPTLZ_UNCOMP_SIZE;

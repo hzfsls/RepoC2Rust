@@ -1,2 +1,2 @@
-macro_rules! CMPT_MF_LONGEST_MATCH { () => { 273 } }
-pub(crate) use CMPT_MF_LONGEST_MATCH;
+macro_rules! CMPTLZ_ENC_INNER_H { () => { } }
+pub(crate) use CMPTLZ_ENC_INNER_H;

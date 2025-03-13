@@ -1,82 +1,35 @@
-pub fn CmptLzTryDecOnePacket(mut decCtx: Ptr<CmptLzDecCtx>, mut bufTryDec: Ptr<u8>, mut pbufLimit: Ptr<Ptr<u8>>) -> i32 {
-    let mut rangeBound: u32 = 0;
-    let mut range: u32 = decCtx.range.cast();
-    let mut rangeCode: u32 = decCtx.code.cast();
-    let mut mkState: u32 = decCtx.state.cast();
-    let mut bufLimit: Ptr<u8> = *pbufLimit.cast();
+pub fn binary_heap_insert(mut heap: Ptr<BinaryHeap>, mut value: BinaryHeapValue) -> i32 {
+    let mut new_values: Ptr<BinaryHeapValue> = Default::default();
+    let mut index: u32 = Default::default();
+    let mut new_size: u32 = Default::default();
+    let mut parent: u32 = Default::default();
 
-    let mut probSlot: Ptr<CmptLzDecProb> = Default::default();
-    let mut probSlot1: Ptr<CmptLzDecProb> = Default::default();
-    let mut probSlot2: Ptr<CmptLzDecProb> = Default::default();
-    let mut probsMatrix: Ptr<CmptLzDecProb> = CmptLzGetProbsMatrix(decCtx.cast());
+    if heap.num_values >= heap.alloced_size {
+        new_size = heap.alloced_size * 2;
+        new_values = c_realloc!(heap.values, c_sizeof!(BinaryHeapValue) * new_size);
 
-    let mut pbMask: u32 = ((1 as u32) << decCtx.prop.posBits) - 1;
-    let mut posState: u32 = CMPTLZ_CALC_POS_STATE!(decCtx.processedPos, pbMask);
+        if new_values == NULL!() {
+            return 0;
+        }
 
-    probSlot1 = (CmptLzGetIsMatchProb(probsMatrix.cast()) + posState + mkState;
-    rangeBound = (range >> CMPTLZ_PROB_LG_BIT!()) * (*probSlot1);
-    if rangeCode < rangeBound {
-        CMPTLZ_RANGE_UPDATE_AFTER_DEC_BIT0!(range, rangeBound);
-        CMPTLZ_RANGE_TRY_NORMALIZE!(range, rangeCode, bufTryDec, bufLimit);
-        return CmptLzTryDecLitPacket(decCtx.cast(), range.cast(), rangeCode.cast(), rangeBound.cast(), bufTryDec.cast(), pbufLimit.cast());
+        heap.alloced_size = new_size;
+        heap.values = new_values;
     }
 
-    CMPTLZ_RANGE_UPDATE_AFTER_DEC_BIT1!(range, rangeCode, rangeBound);
-    CMPTLZ_RANGE_TRY_NORMALIZE!(range, rangeCode, bufTryDec, bufLimit);
+    index = heap.num_values;
+    heap.num_values.suffix_plus_plus();
 
-    probSlot2 = CmptLzGetIsRepProb(probsMatrix.cast()) + mkState;
-    rangeBound = (range >> CMPTLZ_PROB_LG_BIT!()) * (*probSlot2);
-    if rangeCode < rangeBound {
-        CMPTLZ_RANGE_UPDATE_AFTER_DEC_BIT0!(range, rangeBound);
-        probSlot = CmptLzGetMatchLenCoderProb(probsMatrix.cast());
-        mkState = 0;
-    } else {
-        if decCtx.dictPos >= decCtx.dictBufSize {
-            return CMPT_ERROR_DATA!();
-        }
-        CMPTLZ_RANGE_UPDATE_AFTER_DEC_BIT1!(range, rangeCode, rangeBound);
-        CMPTLZ_RANGE_TRY_NORMALIZE!(range, rangeCode, bufTryDec, bufLimit);
+    while index > 0 {
+        parent = (index - 1) / 2;
 
-        probSlot = CmptLzGetIsRepG0Prob(probsMatrix.cast()) + mkState;
-        rangeBound = (range >> CMPTLZ_PROB_LG_BIT!()) * (*probSlot);
-        if rangeCode < rangeBound {
-            CMPTLZ_RANGE_UPDATE_AFTER_DEC_BIT0!(range, rangeBound);
-            CMPTLZ_RANGE_TRY_NORMALIZE!(range, rangeCode, bufTryDec, bufLimit);
-
-            probSlot = CmptLzGetIsRepG0LongProb(probsMatrix.cast()) + posState + mkState;
-            rangeBound = (range >> CMPTLZ_PROB_LG_BIT!()) * (*probSlot);
-            if rangeCode < rangeBound {
-                CMPTLZ_RANGE_UPDATE_AFTER_DEC_BIT0!(range, rangeBound);
-                CMPTLZ_RANGE_TRY_NORMALIZE!(range, rangeCode, bufTryDec, bufLimit);
-                *pbufLimit = bufTryDec.cast();
-                return CMPT_OK!();
-            } else {
-                CMPTLZ_RANGE_UPDATE_AFTER_DEC_BIT1!(range, rangeCode, rangeBound);
-            }
+        if binary_heap_cmp(heap.cast(), heap.values[parent].cast(), value.cast()) < 0 {
+            break;
         } else {
-            CMPTLZ_RANGE_UPDATE_AFTER_DEC_BIT1!(range, rangeCode, rangeBound);
-            CMPTLZ_RANGE_TRY_NORMALIZE!(range, rangeCode, bufTryDec, bufLimit);
-
-            probSlot = CmptLzGetIsRepG1Prob(probsMatrix.cast()) + mkState;
-            rangeBound = (range >> CMPTLZ_PROB_LG_BIT!()) * (*probSlot);
-            if rangeCode < rangeBound {
-                CMPTLZ_RANGE_UPDATE_AFTER_DEC_BIT0!(range, rangeBound);
-            } else {
-                CMPTLZ_RANGE_UPDATE_AFTER_DEC_BIT1!(range, rangeCode, rangeBound);
-                CMPTLZ_RANGE_TRY_NORMALIZE!(range, rangeCode, bufTryDec, bufLimit);
-
-                probSlot = CmptLzGetIsRepG2Prob(probsMatrix.cast()) + mkState;
-                rangeBound = (range >> CMPTLZ_PROB_LG_BIT!()) * (*probSlot);
-                if rangeCode < rangeBound {
-                    CMPTLZ_RANGE_UPDATE_AFTER_DEC_BIT0!(range, rangeBound);
-                } else {
-                    CMPTLZ_RANGE_UPDATE_AFTER_DEC_BIT1!(range, rangeCode, rangeBound);
-                }
-            }
+            heap.values[index] = heap.values[parent].cast();
+            index = parent;
         }
-
-        probSlot = CmptLzGetRepLenCoderProb(probsMatrix.cast());
-        mkState = CMPTLZ_MKSTATE_NUM!();
     }
-    return CmptLzTryDecLenAndDist(decCtx.cast(), mkState.cast(), range.cast(), rangeCode.cast(), rangeBound.cast(), probSlot.cast(), bufTryDec.cast(), pbufLimit.cast());
+
+    heap.values[index] = value.cast();
+    return 1;
 }

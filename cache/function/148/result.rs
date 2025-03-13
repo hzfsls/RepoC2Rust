@@ -1,3 +1,3 @@
-pub fn CmptLzGetIsMatchProb(mut probsMatrix: Ptr<CmptLzDecProb>) -> Ptr<CmptLzDecProb> {
-    return (probsMatrix + CMPTLZ_IS_MATCH!()).cast();
+pub fn pointer_equal(mut location1: Ptr<Void>, mut location2: Ptr<Void>) -> i32 {
+    return (location1 == location2).cast::<i32>();
 }

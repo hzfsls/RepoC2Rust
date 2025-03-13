@@ -1,1 +1,1 @@
-pub type RapidlzStreamCtx = TagRapidlzStreamCtx;
+pub type SetEqualFunc = FuncPtr<fn(SetValue, SetValue) -> i32>;

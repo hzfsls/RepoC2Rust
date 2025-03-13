@@ -1,2 +1,2 @@
-macro_rules! RAPIDLZ_LOG_H { () => { } }
-pub(crate) use RAPIDLZ_LOG_H;
+macro_rules! RAPIDLZ_ERROR_PARAM_UNSUPPORTED { () => { -1 } }
+pub(crate) use RAPIDLZ_ERROR_PARAM_UNSUPPORTED;

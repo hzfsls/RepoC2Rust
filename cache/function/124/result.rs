@@ -1,9 +1,11 @@
-pub fn BzpHuffmanInitArray(mut huffman: Ptr<BzpHuffmanInfo>) {
-    let mut i: i32 = Default::default();
-    huffman.nHeap = 0;
-    huffman.nWeight = huffman.alphaSize.cast();
-
-    c_for!(let mut i: i32 = 0; i < huffman.alphaSize; i.suffix_plus_plus(); {
-        huffman.parent[i] = -1;
+pub fn BzpSelectTree(mut huffman: Ptr<BzpHuffmanGroups>) -> i32 {
+    let mut id: i32 = 0;
+    let mut nGroups: i32 = huffman.nGroups.cast();
+    c_for!(let mut k: i32 = 0; k < nGroups; k.suffix_plus_plus(); {
+        if huffman.cost[k] < huffman.cost[id] {
+            id = k.cast();
+        }
     });
+    huffman.select[huffman.nSelect.suffix_plus_plus()] = id.cast();
+    return id.cast();
 }

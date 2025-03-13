@@ -1,3 +1,3 @@
-pub fn CmptLzDecode(mut pDecIn: Ptr<CmptLzDecIn>, mut pDecOut: Ptr<CmptLzDecOut>, mut protData: Ptr<u8>, mut finMode: EnCmptLzFinMode, mut finStatus: Ptr<EnCmptLzStatus>, mut memHook: Ptr<CmptLzMemHook>) -> i32 {
+pub fn list_nth_data(mut list: Ptr<ListEntry>, mut n: u32) -> ListValue {
     unimplemented!();
 }

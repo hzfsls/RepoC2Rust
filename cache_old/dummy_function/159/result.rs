@@ -1,3 +1,3 @@
-pub fn CmptLzGetMatchLenCoderProb(mut probsMatrix: Ptr<CmptLzDecProb>) -> Ptr<CmptLzDecProb> {
+pub fn arraylist_free(mut arraylist: Ptr<ArrayList>) {
     unimplemented!();
 }

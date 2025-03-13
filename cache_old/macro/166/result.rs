@@ -1,2 +1,2 @@
-macro_rules! CMPTLZ_MATCH_LEN_INIT { () => { 274 } }
-pub(crate) use CMPTLZ_MATCH_LEN_INIT;
+macro_rules! CMPTLZ_POS_SLOT_BITS { () => { 6 } }
+pub(crate) use CMPTLZ_POS_SLOT_BITS;

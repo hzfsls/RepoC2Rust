@@ -1,3 +1,3 @@
-pub fn BzpWriteSelect(mut outData: Ptr<BzpOutComdata>, mut huffman: Ptr<BzpHuffmanGroups>) {
+pub fn BzpInDeComdataFinish(mut inData: Ptr<InDeComdata>) {
     unimplemented!();
 }

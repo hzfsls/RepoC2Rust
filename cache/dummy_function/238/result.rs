@@ -1,3 +1,3 @@
-pub fn CmptlzMatchFinder(mut mf: Ptr<CmptMfCtx>, mut pCount: Ptr<u32>, mut matches: Ptr<CmptlzMatchPair>) -> u32 {
+pub fn set_union(mut set1: Ptr<Set>, mut set2: Ptr<Set>) -> Ptr<Set> {
     unimplemented!();
 }

@@ -1,10 +1,7 @@
-pub fn BzpAlgorithmInfoFinish(mut bzpInfo: Ptr<BzpAlgorithmInfo>) {
-    if bzpInfo != NULL!() {
-        BzpBwtFinish(bzpInfo.bwt.cast());
-        BzpMtfFinish(bzpInfo.mtf.cast());
-        BzpBzpHuffmanGroupsFinish(bzpInfo.huffman.cast());
-        BzpFileFinish(bzpInfo.compressFile.cast());
-        BzpOutComDataFinish(bzpInfo.outData.cast());
-        c_free!(bzpInfo);
+pub fn BzpFlushbuf(mut outData: Ptr<BzpOutComdata>) {
+    while outData.nBuf > 0 {
+        outData.out[outData.num.suffix_plus_plus()] = (outData.buf >> BZP_BITS24!()).cast::<u8>();
+        outData.nBuf -= BZP_BITS8!();
+        outData.buf <<= BZP_BITS8!();
     }
 }

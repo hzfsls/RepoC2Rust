@@ -1,3 +1,3 @@
-pub fn vosSha256Begin(mut pstCtx: Ptr<VOS_SHA256_CTX>) {
+pub fn BzpWriteToArray(mut val: i32, mut n: i32, mut data: Ptr<BzpOutComdata>) {
     unimplemented!();
 }

@@ -1,3 +1,3 @@
-pub fn BzpWriteBlockHead(mut outData: Ptr<BzpOutComdata>, mut bwt: Ptr<BzpBwtInfo>) {
+pub fn BzpStreamFinish(mut stream: Ptr<BzpStream>) {
     unimplemented!();
 }

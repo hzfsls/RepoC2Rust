@@ -1,48 +1,42 @@
-pub fn VOS_AVL3_Insert_Or_Find(mut pstTree: Ptr<AVL3_TREE>, mut pstNode: Ptr<AVL3_NODE>, mut pstTreeInfo: Ptr<AVL3_TREE_INFO>) -> Ptr<Void> {
-    let mut pstParentNode: Ptr<AVL3_NODE> = Default::default();
+pub fn AVL3_Find_Or_Find_Next(mut pstTree: Ptr<AVL3_TREE>, mut pKey: Ptr<Void>, mut bFlag: u32, mut pstTreeInfo: Ptr<AVL3_TREE_INFO>) -> Ptr<Void> {
+    let mut pstNode: Ptr<AVL3_NODE> = Default::default();
+    let mut pFoundNode: Ptr<Void> = AVL_NULL_PTR!();
     let mut iResult: i32 = Default::default();
     let mut iKeyOffset: i32 = Default::default();
 
-    if TREE_OR_TREEINFO_IS_NULL!(pstTree, pstTreeInfo) || pstNode == AVL_NULL_PTR!() {
+    if TREE_OR_TREEINFO_IS_NULL!(pstTree, pstTreeInfo) {
         return AVL_NULL_PTR!();
     }
-
-    pstNode.sRHeight = 0;
-    pstNode.sLHeight = 0;
-
-    if pstTree.pstRoot == AVL_NULL_PTR!() {
-        pstTree.pstRoot = pstNode.cast();
-        pstTree.pstFirst = pstNode.cast();
-        pstTree.pstLast = pstNode.cast();
+    pstNode = pstTree.pstRoot.cast();
+    if pstNode == AVL_NULL_PTR!() {
         return AVL_NULL_PTR!();
     }
-
-    pstParentNode = pstTree.pstRoot.cast();
 
     iKeyOffset = GET_KEYOFFSET!(pstTreeInfo);
-    while pstParentNode != AVL_NULL_PTR!() {
-        iResult = (pstTreeInfo.pfCompare)((c_ref!(pstNode).cast::<Ptr<u8>>() + iKeyOffset).cast::<Ptr<Void>>(), (c_ref!(pstParentNode).cast::<Ptr<u8>>() + iKeyOffset).cast::<Ptr<Void>>()).cast();
+
+    loop {
+        iResult = (pstTreeInfo.pfCompare)(pKey.cast(), (pstNode.cast::<Ptr<u8>>() + iKeyOffset).cast()).cast();
         if iResult > 0 {
-            if pstParentNode.pstRight != AVL_NULL_PTR!() {
-                pstParentNode = pstParentNode.pstRight.cast();
-                continue;
+            if pstNode.pstRight == AVL_NULL_PTR!() {
+                pFoundNode = VOS_AVL3_Next(pstNode.cast(), pstTreeInfo.cast()).cast();
+                break;
             }
-            VosAvlNodeRightInsert(pstTree.cast::<Ptr<AVLBASE_TREE_S>>(), pstParentNode.cast::<Ptr<AVLBASE_NODE_S>>(), pstNode.cast::<Ptr<AVLBASE_NODE_S>>());
+            pstNode = pstNode.pstRight.cast();
         } else if iResult < 0 {
-            if pstParentNode.pstLeft != AVL_NULL_PTR!() {
-                pstParentNode = pstParentNode.pstLeft.cast();
-                continue;
+            if pstNode.pstLeft == AVL_NULL_PTR!() {
+                pFoundNode = (pstNode.cast::<Ptr<u8>>() - pstTreeInfo.usNodeOffset).cast();
+                break;
             }
-            VosAvlNodeLeftInsert(pstTree.cast::<Ptr<AVLBASE_TREE_S>>(), pstParentNode.cast::<Ptr<AVLBASE_NODE_S>>(), pstNode.cast::<Ptr<AVLBASE_NODE_S>>());
+            pstNode = pstNode.pstLeft.cast();
         } else {
-            pstNode.sRHeight = -1;
-            pstNode.sLHeight = -1;
-            return (c_ref!(pstParentNode).cast::<Ptr<u8>>() - pstTreeInfo.usNodeOffset).cast::<Ptr<Void>>();
+            if bFlag != 0 {
+                pFoundNode = VOS_AVL3_Next(pstNode.cast(), pstTreeInfo.cast()).cast();
+            } else {
+                pFoundNode = (pstNode.cast::<Ptr<u8>>() - pstTreeInfo.usNodeOffset).cast();
+            }
+            break;
         }
-        break;
     }
 
-    VosAvlBalanceTree(pstTree.cast::<Ptr<AVLBASE_TREE_S>>(), pstParentNode.cast::<Ptr<AVLBASE_NODE_S>>());
-
-    return AVL_NULL_PTR!();
+    return pFoundNode.cast();
 }

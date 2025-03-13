@@ -1,1 +1,1 @@
-pub type RapidlzLogFunc = FuncPtr<fn(Ptr<u8>, usize)>;
+pub type SetHashFunc = FuncPtr<fn(SetValue) -> u32>;

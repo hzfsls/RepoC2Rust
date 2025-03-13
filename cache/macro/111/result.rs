@@ -1,2 +1,2 @@
-macro_rules! BZP_MTF_ENCODE_H { () => { } }
-pub(crate) use BZP_MTF_ENCODE_H;
+macro_rules! ALGORITHM_LIST_H { () => { } }
+pub(crate) use ALGORITHM_LIST_H;

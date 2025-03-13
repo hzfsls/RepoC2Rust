@@ -1,2 +1,2 @@
-macro_rules! CMPTLZ_LCLP_MAX { () => { 4 } }
-pub(crate) use CMPTLZ_LCLP_MAX;
+macro_rules! CMPT_INFINITY_PRICE { () => { (1isize as u32) << 30 } }
+pub(crate) use CMPT_INFINITY_PRICE;

@@ -1,12 +1,20 @@
-pub fn BzpWriteChar(mut ch: u8, mut inData: Ptr<InDeComdata>) -> i32 {
-    let mut ret: i32 = BZP_OK!();
-    if inData.output.nBuf >= BZP_BUF_SIZE!() {
-        let mut n2: i32 = c_fwrite!(inData.output.buf.cast::<Ptr<Void>>(), c_sizeof!(u8), inData.output.nBuf, inData.output.filePtr);
-        if n2 != inData.output.nBuf {
-            ret = BZP_ERROR_IO!();
-        }
-        inData.output.nBuf = 0;
+pub fn BzpBwtDecodeInit(mut blockSize: i32) -> Ptr<BzpBwtDecodeInfo> {
+    if BZP_INVALID_BLOCK_SIZE!(blockSize) {
+        return NULL!();
     }
-    inData.output.buf[inData.output.nBuf.suffix_plus_plus()] = ch;
-    return ret;
+    let mut bwt: Ptr<BzpBwtDecodeInfo> = c_malloc!(c_sizeof!(BzpBwtDecodeInfo));
+    if bwt == NULL!() {
+        return NULL!();
+    }
+    let mut spaceSize: i32 = BZP_BASE_BLOCK_SIZE!() * blockSize;
+    bwt.block = c_malloc!(spaceSize * c_sizeof!(u8));
+    bwt.deCode = c_malloc!(spaceSize * c_sizeof!(u8));
+    bwt.sorted = c_malloc!(spaceSize * c_sizeof!(i32));
+    if bwt.block == NULL!() || bwt.sorted == NULL!() || bwt.deCode == NULL!() {
+        BzpBwtDecodeFinish(bwt.cast());
+        return NULL!();
+    }
+    bwt.nBlock = 0;
+    bwt.oriPtr = 0;
+    return bwt.cast();
 }

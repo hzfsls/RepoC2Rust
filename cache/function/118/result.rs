@@ -1,23 +1,29 @@
-pub fn BzpQuickSort(mut sortBlock: Ptr<i32>, mut idx: Ptr<i32>, mut l: i32, mut r: i32) {
-    let mut stack: BzpQSortInfo = Default::default();
-    stack.cnt = 0;
-    stack.stackL[stack.cnt] = l;
-    stack.stackR[stack.cnt] = r;
-    stack.cnt += 1;
-    while stack.cnt > 0 {
-        stack.cnt -= 1;
-        let mut tl: i32 = stack.stackL[stack.cnt];
-        let mut tr: i32 = stack.stackR[stack.cnt];
-
-        if tl >= tr {
-            continue;
-        }
-        if tr - tl < BZP_THRESHOLD_SHELL_SORT!() {
-            BzpShellSort(sortBlock.cast(), idx.cast(), tl.cast(), tr.cast());
-            continue;
-        }
-        stack.tl = tl;
-        stack.tr = tr;
-        BzpQSortSingle(sortBlock.cast(), idx.cast(), c_ref!(stack).cast());
+pub fn BzpHuffmanGroupsInit(mut blockSize: i32) -> Ptr<BzpHuffmanGroups> {
+    if BZP_INVALID_BLOCK_SIZE!(blockSize) {
+        return NULL!();
     }
+    let mut huffmanGroups: Ptr<BzpHuffmanGroups> = c_malloc!(c_sizeof!(BzpHuffmanGroups));
+    if huffmanGroups == NULL!() {
+        return NULL!();
+    }
+    huffmanGroups.select = NULL!();
+    huffmanGroups.selectMTF = NULL!();
+    let mut spaceSize: i32 = blockSize * BZP_BASE_BLOCK_SIZE!() / BZP_ELEMS_NUM_IN_ONE_GROUP!();
+    huffmanGroups.select = c_malloc!(spaceSize * c_sizeof!(i32));
+    huffmanGroups.selectMTF = c_malloc!(spaceSize * c_sizeof!(i32));
+    if huffmanGroups.select == NULL!() || huffmanGroups.selectMTF == NULL!() {
+        BzpBzpHuffmanGroupsFinish(huffmanGroups.cast());
+        return NULL!();
+    }
+    huffmanGroups.alphaSize = 0;
+    huffmanGroups.block = NULL!();
+    huffmanGroups.mtfFreq = NULL!();
+    huffmanGroups.nSelect = 0;
+    huffmanGroups.nGroups = 0;
+
+    c_for!(let mut i: i32 = 0; i < BZP_MAX_GROUPS_NUM!(); i.suffix_plus_plus(); {
+        BzpHuffmanInit(0, c_ref!(huffmanGroups.huffmanGroups[i]).cast());
+    });
+
+    return huffmanGroups.cast();
 }

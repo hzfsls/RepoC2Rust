@@ -1,3 +1,3 @@
-pub fn BzpHeapAdjustUp(mut heap: Ptr<i32>, mut weight: Ptr<i32>, mut pos: i32) {
+pub fn BzpHuffmanMain(mut huffman: Ptr<BzpHuffmanGroups>) {
     unimplemented!();
 }

@@ -1,2 +1,2 @@
-macro_rules! BZP_BLOCK_HEAD_4 { () => { 0x53 } }
-pub(crate) use BZP_BLOCK_HEAD_4;
+macro_rules! BZP_BITS15 { () => { 15 } }
+pub(crate) use BZP_BITS15;

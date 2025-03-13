@@ -1,3 +1,3 @@
-pub fn CmptLzDecMemAlloc(mut memHook: Ptr<CmptLzMemHook>, mut memHandle: i32, mut allocSize: usize) -> Ptr<Void> {
+pub fn list_free(mut list: Ptr<ListEntry>) {
     unimplemented!();
 }

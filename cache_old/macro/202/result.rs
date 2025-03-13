@@ -1,2 +1,2 @@
-macro_rules! CMPTLZ_SMALL_DICT_LG_SIZE { () => { 20 } }
-pub(crate) use CMPTLZ_SMALL_DICT_LG_SIZE;
+macro_rules! CMPTLZ_HASH_4_SIZE { () => { 1 << 20 } }
+pub(crate) use CMPTLZ_HASH_4_SIZE;

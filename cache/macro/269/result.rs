@@ -1,2 +1,2 @@
-macro_rules! RAPIDLZ_STREAM_HASH_BYTES { () => { 4 } }
-pub(crate) use RAPIDLZ_STREAM_HASH_BYTES;
+macro_rules! CMPTLZ_MF_HASH_HANDLE { () => { CMPTLZ_HANDLE_CONVERT!(CMPTLZ_MF_HASH!()) } }
+pub(crate) use CMPTLZ_MF_HASH_HANDLE;

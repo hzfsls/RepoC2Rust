@@ -1,12 +1,6 @@
-macro_rules! VOS_AVL_INIT_NODE {
-    ($NODE:expr, $SELF:expr, $KEY:expr) => {
-        $NODE.pstParent = AVL_NULL_PTR!().cast::<Ptr<AVL_NODE>>();
-        $NODE.pstLeft = AVL_NULL_PTR!().cast::<Ptr<AVL_NODE>>();
-        $NODE.pstRight = AVL_NULL_PTR!().cast::<Ptr<AVL_NODE>>();
-        $NODE.pSelf = $SELF;
-        $NODE.pKey = $KEY;
-        $NODE.sLHeight = -1;
-        $NODE.sRHeight = -1;
+macro_rules! VOS_AVL3_LAST { ($TREE:expr, $TREE_INFO:expr) => 
+    {
+        VOS_AVL3_Last(c_ref!($TREE), c_ref!($TREE_INFO))
     }
 }
-pub(crate) use VOS_AVL_INIT_NODE;
+pub(crate) use VOS_AVL3_LAST;

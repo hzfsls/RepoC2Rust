@@ -1,2 +1,2 @@
-macro_rules! SHA256_DIGEST_SIZE { () => { 32 } }
-pub(crate) use SHA256_DIGEST_SIZE;
+macro_rules! BZP_BLOCK_RESERVED_SPACE_SIZE { () => { 19 } }
+pub(crate) use BZP_BLOCK_RESERVED_SPACE_SIZE;

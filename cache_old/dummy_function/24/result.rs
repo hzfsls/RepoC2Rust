@@ -1,3 +1,3 @@
-pub fn VosAvlSwapRightMost(mut pstTree: Ptr<AVLBASE_TREE_S>, mut pstSubTree: Ptr<AVLBASE_NODE_S>, mut pstNode: Ptr<AVLBASE_NODE_S>) {
+pub fn VosAvlMoveNodeToNewPos(mut pstNode: Ptr<AVLBASE_NODE_S>, mut pstNewParent: Ptr<AVLBASE_NODE_S>, mut pstNewLeftSon: Ptr<AVLBASE_NODE_S>, mut pstNewRightSon: Ptr<AVLBASE_NODE_S>) {
     unimplemented!();
 }

@@ -1,3 +1,3 @@
-pub fn BzpWriteInputEncode(mut outData: Ptr<BzpOutComdata>, mut mtf: Ptr<BzpMtfInfo>, mut huffman: Ptr<BzpHuffmanGroups>) {
+pub fn BzpWriteChar(mut ch: u8, mut inData: Ptr<InDeComdata>) -> i32 {
     unimplemented!();
 }

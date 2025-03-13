@@ -1,3 +1,3 @@
-pub fn BzpHuffmanDecodeFinish(mut huffman: Ptr<BzpHuffmanDecode>) {
+pub fn BzpBlockSortMain(mut bwt: Ptr<BzpBwtInfo>) {
     unimplemented!();
 }

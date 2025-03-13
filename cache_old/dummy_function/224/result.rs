@@ -1,3 +1,3 @@
-pub fn CmptPriceLiteral(mut encCtx: Ptr<CmptLzEncCtx>, mut matchMode: bool, mut matchByte: u32, mut symbol: u32) -> u32 {
+pub fn queue_peek_tail(mut queue: Ptr<Queue>) -> QueueValue {
     unimplemented!();
 }

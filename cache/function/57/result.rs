@@ -1,10 +1,9 @@
-pub fn BzpWriteToArray(mut val: i32, mut n: i32, mut data: Ptr<BzpOutComdata>) {
-    while data.nBuf >= BZP_BITS8!() {
-        let tmp = data.num.suffix_plus_plus();
-        data.out[tmp] = (data.buf >> BZP_BITS24!()).cast::<u8>();
-        data.nBuf -= BZP_BITS8!();
-        data.buf <<= BZP_BITS8!();
-    }
-    data.buf |= (val << (BZP_BITS32!() - n - data.nBuf)).cast::<u32>();
-    data.nBuf += n;
+pub fn BzpResetCompress(mut bwt: Ptr<BzpBwtInfo>, mut outData: Ptr<BzpOutComdata>) {
+    outData.num = 0;
+    bwt.nBlock = 0;
+    bwt.blockCRC = BZP_INIT_BLOCK_CRC!();
+    c_memset_s!(bwt.inUse, c_sizeofval!(bwt.inUse), 0, c_sizeofval!(bwt.inUse)).cast::<Void>();
+    let mut n: i32 = outData.blockSize * BZP_BASE_BLOCK_SIZE!() * c_sizeof!(i32);
+    c_memset_s!(bwt.isStartPos, n.cast(), 0, n.cast()).cast::<Void>();
+    bwt.blockId += 1;
 }

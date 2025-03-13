@@ -1,32 +1,37 @@
-pub fn CmptLzDecByDistAndLen(mut decCtx: Ptr<CmptLzDecCtx>, mut matchDist: usize, mut matchLen: u32, mut dicPosLimit: usize) -> u32 {
-    let mut dicCopyPos: usize = Default::default();
-    let mut dicPos: usize = decCtx.dictPos.cast();
-    let mut dictBufSize: usize = decCtx.dictBufSize.cast();
-    let mut remainDicLen: u32 = (dicPosLimit - dicPos).cast();
-    let mut dict: Ptr<u8> = decCtx.dict.cast();
+pub fn list_remove_data(mut list: Ptr<Ptr<ListEntry>>, mut callback: ListEqualFunc, mut data: ListValue) -> u32 {
+    let mut entries_removed: u32 = 0;
+    let mut rover: Ptr<ListEntry> = Default::default();
+    let mut next: Ptr<ListEntry> = Default::default();
 
-    if remainDicLen == 0 {
-        return CMPT_ERROR_DATA!();
+    if list == NULL!() || callback == NULL!() {
+        return 0;
     }
 
-    let mut decDicLen: u32 = if remainDicLen < matchLen { remainDicLen } else { matchLen };
-    decCtx.processedPos += decDicLen.cast();
-    decCtx.dictPos += decDicLen.cast();
-    decCtx.remainLen = (matchLen - decDicLen).cast();
+    entries_removed = 0;
 
-    if dicPos < matchDist {
-        dicCopyPos = dictBufSize - matchDist + dicPos;
-    } else {
-        dicCopyPos = dicPos - matchDist;
-    }
+    rover = *list;
 
-    c_do!({
-        dict[dicPos] = dict[dicCopyPos].cast();
-        dicPos += 1;
-        if dicCopyPos.prefix_plus_plus() == dictBufSize {
-            dicCopyPos = 0;
+    while rover != NULL!() {
+        next = rover.next;
+
+        if callback(rover.data.cast(), data.cast()) {
+            if rover.prev == NULL!() {
+                *list = rover.next;
+            } else {
+                rover.prev.next = rover.next;
+            }
+
+            if rover.next != NULL!() {
+                rover.next.prev = rover.prev;
+            }
+
+            c_free!(rover);
+
+            entries_removed.suffix_plus_plus();
         }
-    } while decDicLen.suffix_minus_minus() != 0);
 
-    return CMPT_OK!();
+        rover = next;
+    }
+
+    return entries_removed;
 }

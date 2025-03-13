@@ -1,3 +1,3 @@
-pub fn BzpWriteValidASCII(mut outData: Ptr<BzpOutComdata>, mut bwt: Ptr<BzpBwtInfo>) {
+pub fn BzpInDeComdataInit() -> Ptr<InDeComdata> {
     unimplemented!();
 }

@@ -1,11 +1,10 @@
-pub fn CmptlzIsLE() -> i32 {
-    #[cfg(any(target_arch = "x86", target_arch = "x86_64", target_arch = "arm", target_arch = "aarch64"))]
-    {
-        return (__BYTE_ORDER__!() == __ORDER_LITTLE_ENDIAN__!()).cast();
-    }
-    #[cfg(not(any(target_arch = "x86", target_arch = "x86_64", target_arch = "arm", target_arch = "aarch64")))]
-    {
-        let mut n: i32 = 1;
-        return (*c_ref!(n).cast::<Ptr<u8>>()).cast();
-    }
+pub fn binomial_heap_free(mut heap: Ptr<BinomialHeap>) {
+    let mut i: u32 = Default::default();
+
+    c_for!(let mut i = 0; i < heap.roots_length; i.prefix_plus_plus(); {
+        binomial_tree_unref(heap.roots[i].cast());
+    });
+
+    c_free!(heap.roots.cast());
+    c_free!(heap.cast());
 }

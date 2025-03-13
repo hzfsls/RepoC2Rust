@@ -1,11 +1,36 @@
-pub fn CmptPriceCheck(mut encCtx: Ptr<CmptLzEncCtx>) {
-    if encCtx.matchPriceCount >= CMPT_PRICE_COUNT!() {
-        CmptPriceGenDistTable(encCtx.cast());
-        CmptPriceGenAlignTable(encCtx.cast());
-        CmptPriceGenLenTable(encCtx.cast(), c_ref!(encCtx.matchLenEncoder).cast());
+pub fn set_iter_next(mut iterator: Ptr<SetIterator>) -> SetValue {
+    let mut set: Ptr<Set> = Default::default();
+    let mut result: SetValue = Default::default();
+    let mut current_entry: Ptr<SetEntry> = Default::default();
+    let mut chain: u32 = Default::default();
+
+    set = iterator.set.cast();
+
+    if iterator.next_entry == NULL!() {
+        return SET_NULL!();
     }
-    if encCtx.repLenPriceCount <= 0 {
-        encCtx.repLenPriceCount = CMPT_PRICE_COUNT!();
-        CmptPriceGenLenTable(encCtx.cast(), c_ref!(encCtx.repLenEncoder).cast());
+
+    current_entry = iterator.next_entry.cast();
+    result = current_entry.data.cast();
+
+    if current_entry.next != NULL!() {
+        iterator.next_entry = current_entry.next.cast();
+    } else {
+        iterator.next_entry = NULL!();
+
+        chain = (iterator.next_chain + 1).cast();
+
+        while chain < set.table_size {
+            if set.table[chain] != NULL!() {
+                iterator.next_entry = set.table[chain].cast();
+                break;
+            }
+
+            chain.suffix_plus_plus();
+        }
+
+        iterator.next_chain = chain.cast();
     }
+
+    return result.cast();
 }

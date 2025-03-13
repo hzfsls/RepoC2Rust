@@ -1,19 +1,21 @@
-pub fn VosAvlRebalance(mut ppstSubTree: Ptr<Ptr<AVLBASE_NODE_S>>) {
-    let mut iMoment: i32 = Default::default();
+pub fn VosAvlSwapLeftMost(mut pstTree: Ptr<AVLBASE_TREE_S>, mut pstSubTree: Ptr<AVLBASE_NODE_S>, mut pstNode: Ptr<AVLBASE_NODE_S>) {
+    let mut pstSwapNode: Ptr<AVLBASE_NODE_S> = pstSubTree.cast();
+    let mut pstSwapParent: Ptr<AVLBASE_NODE_S> = Default::default();
+    let mut pstSwapRight: Ptr<AVLBASE_NODE_S> = Default::default();
 
-    iMoment = ((*ppstSubTree).sRHeight - (*ppstSubTree).sLHeight).cast();
+    FIND_LEFTMOST_NODE!(pstSwapNode);
 
-    if iMoment > 1 {
-        if (*ppstSubTree).pstRight.sLHeight > (*ppstSubTree).pstRight.sRHeight {
-            VosAvlRotateRight(c_ref!((*ppstSubTree).pstRight).cast());
-        }
-        VosAvlRotateLeft(ppstSubTree.cast());
-    } else if iMoment < -1 {
-        if (*ppstSubTree).pstLeft.sRHeight > (*ppstSubTree).pstLeft.sLHeight {
-            VosAvlRotateLeft(c_ref!((*ppstSubTree).pstLeft).cast());
-        }
-        VosAvlRotateRight(ppstSubTree.cast());
+    if (pstSwapNode.sLHeight != 0) || (pstSwapNode.sRHeight > 1) {
+        return;
     }
+
+    pstSwapParent = pstSwapNode.pstParent.cast();
+    pstSwapRight = pstSwapNode.pstRight.cast();
+
+    VosAvlUpdateSwapNode(pstTree.cast(), pstSwapNode.cast(), pstNode.cast());
+    VosAvlMoveNodeToNewPos(pstNode.cast(), pstSwapParent.cast(), AVL_NULL_PTR!(), pstSwapRight.cast());
+
+    pstNode.pstParent.pstLeft = pstNode.cast();
 
     return;
 }

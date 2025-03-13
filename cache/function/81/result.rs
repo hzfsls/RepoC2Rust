@@ -1,20 +1,48 @@
-pub fn BzpReadBits(mut nBit: i32, mut inData: Ptr<InDeComdata>) -> u32 {
-    let mut res: u32 = 0;
-
-    while inData.nBuf < nBit {
-        if inData.input.nBuf == inData.input.pos {
-            inData.input.nBuf = c_fread!(inData.input.buf, c_sizeof!(char), c_sizeofval!(inData.input.buf), inData.input.filePtr);
-            inData.input.pos = 0;
-        }
-        let tmp = inData.input.pos;
-        let mut data: i32 = (inData.input.buf[tmp]).cast::<u32>().cast();
-
-        inData.buf = (inData.buf << BZP_BITS8!()) | data.cast::<u32>();
-        inData.input.pos.suffix_plus_plus();
-        inData.nBuf += BZP_BITS8!();
+pub fn BzpDeCompressStream(mut inName: Ptr<u8>, mut outName: Ptr<u8>) -> i32 {
+    let mut ret: i32 = BZP_OK!();
+    if inName == NULL!() || outName == NULL!() {
+        return BZP_ERROR_PARAM!();
     }
-    res = inData.buf >> (inData.nBuf - nBit);
-    res = res & ((1 << nBit) - 1);
-    inData.nBuf -= nBit;
-    return res.cast();
+
+    let mut inStream: Ptr<BzpStream> = BzpStreamInit();
+    let mut outStream: Ptr<BzpStream> = BzpStreamInit();
+    if inStream == NULL!() || outStream == NULL!() {
+        BzpStreamFinish(inStream.cast());
+        BzpStreamFinish(outStream.cast());
+        return BZP_ERROR_MEMORY_OPER_FAILURE!();
+    }
+    inStream.filePtr = c_fopen!(inName, cstr!("rb"));
+    outStream.filePtr = c_fopen!(outName, cstr!("wb"));
+    if inStream.filePtr == NULL!() || outStream.filePtr == NULL!() {
+        c_free!(inStream);
+        inStream = NULL!();
+        c_free!(outStream);
+        outStream = NULL!();
+        c_remove!(outName);
+        return BZP_ERROR_IO!();
+    }
+    let mut inData: Ptr<InDeComdata> = BzpInDeComdataInit();
+    if inData == NULL!() {
+        BzpDeComStreamFinish(inData.cast(), inStream.cast(), outStream.cast());
+        c_remove!(outName);
+        return BZP_ERROR_MEMORY_OPER_FAILURE!();
+    }
+    inData.input = inStream.cast();
+    inData.output = outStream.cast();
+
+    ret = BZPDeCompressData(inData.cast()).cast();
+
+    if inData.output.nBuf > 0 {
+        let mut n2: i32 = c_fwrite!(inData.output.buf.cast::<Ptr<Void>>(), c_sizeof!(u8), inData.output.nBuf, inData.output.filePtr);
+        if n2 != inData.output.nBuf {
+            ret = BZP_ERROR_IO!();
+        }
+        inData.output.nBuf = 0;
+    }
+
+    BzpDeComStreamFinish(inData.cast(), inStream.cast(), outStream.cast());
+    if ret != BZP_OK!() {
+        c_remove!(outName);
+    }
+    return ret.cast();
 }

@@ -1,19 +1,49 @@
-pub fn BzpFileInit() -> Ptr<BzpFile> {
-    let mut compressFile: Ptr<BzpFile> = c_malloc!(c_sizeof!(BzpFile));
-    let mut inStream: Ptr<BzpStream> = BzpStreamInit();
-    let mut outStream: Ptr<BzpStream> = BzpStreamInit();
-    if compressFile == NULL!() || inStream == NULL!() || outStream == NULL!() {
-        BzpStreamFinish(inStream.cast());
-        BzpStreamFinish(outStream.cast());
-        BzpFileFinish(compressFile.cast());
-        return NULL!();
+pub fn BzpCompressOneBlock(mut bzpInfo: Ptr<BzpAlgorithmInfo>, mut outData: Ptr<BzpOutComdata>) -> i32 {
+    let mut bwt: Ptr<BzpBwtInfo> = bzpInfo.bwt.cast();
+    let mut mtf: Ptr<BzpMtfInfo> = bzpInfo.mtf.cast();
+    let mut huffman: Ptr<BzpHuffmanGroups> = bzpInfo.huffman.cast();
+    let mut ret: i32 = BZP_OK!();
+    if bwt.nBlock == 0 {
+        return BZP_OK!();
     }
-    compressFile.input = inStream.cast();
-    compressFile.output = outStream.cast();
-    compressFile.input.pos = 0;
-    compressFile.output.pos = 0;
-    compressFile.num = 0;
-    compressFile.lasChar = BZP_ASCII_SIZE!();
-    compressFile.state = BZP_INPUT_COMPRESS!();
-    return compressFile.cast();
+
+    BzpWriteFileHead(outData.cast(), bwt.blockId.cast());
+    if bwt.nBlock > 0 {
+        BzpCalculateCRC(bwt.cast());
+
+        BzpBlockSortMain(bwt.cast());
+
+        BzpMtfReSet(mtf.cast());
+
+        mtf.block = bwt.block.cast();
+        mtf.map = bwt.sortBlock.cast();
+        mtf.inUse = bwt.inUse.cast();
+        mtf.nBlock = bwt.nBlock.cast();
+
+        BzpMtfMain(mtf.cast());
+
+        ret = BzpHuffmanGroupsReset(huffman.cast(), (mtf.nUse + BZP_EXTRA_CHARS_NUM!()).cast()).cast();
+        if ret != BZP_OK!() {
+            return ret;
+        }
+
+        huffman.block = mtf.mtfV.cast();
+        huffman.mtfFreq = mtf.mtfFreq.cast();
+        huffman.nBlock = mtf.nMtf.cast();
+
+        BzpHuffmanMain(huffman.cast());
+
+        BzpWriteBlockHead(outData.cast(), bwt.cast());
+
+        BzpWriteValidASCII(outData.cast(), bwt.cast());
+
+        BzpWriteToArray(huffman.nGroups.cast(), BZP_BITS3!(), outData.cast());
+
+        BzpWriteSelect(outData.cast(), huffman.cast());
+
+        BzpWriteLen(outData.cast(), huffman.cast());
+
+        BzpWriteInputEncode(outData.cast(), mtf.cast(), huffman.cast());
+    }
+    return BZP_OK!();
 }

@@ -1,17 +1,18 @@
-pub fn VosAvlUpdateSwapNode(mut pstTree: Ptr<AVLBASE_TREE_S>, mut pstSwapNode: Ptr<AVLBASE_NODE_S>, mut pstBaseNode: Ptr<AVLBASE_NODE_S>) {
-    pstSwapNode.pstParent = pstBaseNode.pstParent.cast();
-    pstSwapNode.pstRight = pstBaseNode.pstRight.cast();
-    pstSwapNode.pstLeft = pstBaseNode.pstLeft.cast();
-    pstSwapNode.sRHeight = pstBaseNode.sRHeight.cast();
-    pstSwapNode.sLHeight = pstBaseNode.sLHeight.cast();
-    pstSwapNode.pstRight.pstParent = pstSwapNode.cast();
-    pstSwapNode.pstLeft.pstParent = pstSwapNode.cast();
+pub fn VosAvlRotateLeft(mut ppstSubTree: Ptr<Ptr<AVLBASE_NODE_S>>) {
+    let mut pstRightSon: Ptr<AVLBASE_NODE_S> = (*ppstSubTree).pstRight.cast();
 
-    if pstBaseNode.pstParent == AVL_NULL_PTR!() {
-        pstTree.pstRoot = pstSwapNode.cast();
-    } else if pstBaseNode.pstParent.pstRight == pstBaseNode {
-        pstSwapNode.pstParent.pstRight = pstSwapNode.cast();
-    } else {
-        pstSwapNode.pstParent.pstLeft = pstSwapNode.cast();
+    (*ppstSubTree).pstRight = pstRightSon.pstLeft.cast();
+    if (*ppstSubTree).pstRight != AVL_NULL_PTR!() {
+        (*ppstSubTree).pstRight.pstParent = (*ppstSubTree).cast();
     }
+
+    (*ppstSubTree).sRHeight = pstRightSon.sLHeight.cast();
+    pstRightSon.pstParent = (*ppstSubTree).pstParent.cast();
+    pstRightSon.pstLeft = (*ppstSubTree).cast();
+    pstRightSon.pstLeft.pstParent = pstRightSon.cast();
+    pstRightSon.sLHeight = (1 + VOS_V2_AVL_MAX!((*ppstSubTree).sRHeight, (*ppstSubTree).sLHeight)).cast();
+
+    *ppstSubTree = pstRightSon.cast();
+
+    return;
 }

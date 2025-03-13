@@ -1,6 +1,6 @@
-macro_rules! VOS_AVLL_FIRST {
-    ($TREE:expr) => {
-        VOS_AVL3_FIRST!($TREE.stTree.cast(), $TREE.stTreeInfo.cast())
+macro_rules! VOS_AVLL_INSERT { ($TREE:expr, $NODE:expr) => 
+    {
+        VOS_AVL3_INSERT!($TREE.stTree, $NODE, $TREE.stTreeInfo);
     }
 }
-pub(crate) use VOS_AVLL_FIRST;
+pub(crate) use VOS_AVLL_INSERT;

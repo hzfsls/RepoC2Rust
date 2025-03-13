@@ -1,2 +1,2 @@
-macro_rules! RAPIDLZ_MAX_DICT_SIZE { () => { 64 * 1024 } }
-pub(crate) use RAPIDLZ_MAX_DICT_SIZE;
+macro_rules! CMPTLZ_PROPS_SIZE { () => { 5 } }
+pub(crate) use CMPTLZ_PROPS_SIZE;

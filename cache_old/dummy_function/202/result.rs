@@ -1,3 +1,3 @@
-pub fn CmptlzDpTryCurAndShort(mut encCtx: Ptr<CmptLzEncCtx>, mut repMatchPrice: u32, mut cur: u32, mut curState: CmptlzState, mut posState: u32) {
+pub fn slist_set_data(mut listentry: Ptr<SListEntry>, mut data: SListValue) {
     unimplemented!();
 }

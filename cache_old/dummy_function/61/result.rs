@@ -1,3 +1,3 @@
-pub fn BzpCalculateCRC(mut bwt: Ptr<BzpBwtInfo>) {
+pub fn BzpStreamInit() -> Ptr<BzpStream> {
     unimplemented!();
 }

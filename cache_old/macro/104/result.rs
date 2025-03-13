@@ -1,2 +1,2 @@
-macro_rules! BZP_HUFFMAN_LEN_REDUCED { () => { 3 } }
-pub(crate) use BZP_HUFFMAN_LEN_REDUCED;
+macro_rules! ALGORITHM_SORTEDARRAY_H { () => { } }
+pub(crate) use ALGORITHM_SORTEDARRAY_H;

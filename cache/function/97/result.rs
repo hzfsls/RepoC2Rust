@@ -1,48 +1,22 @@
-pub fn BzpDeCompressStream(mut inName: Ptr<u8>, mut outName: Ptr<u8>) -> i32 {
-    let mut ret: i32 = BZP_OK!();
-    if inName == NULL!() || outName == NULL!() {
-        return BZP_ERROR_PARAM!();
+pub fn BzpShellSort(mut sortBlock: Ptr<i32>, mut idx: Ptr<i32>, mut l: i32, mut r: i32) {
+    let mut increments: Array<i32, 2> = arr![BZP_SHELL_SORT_INCREMENT1!(), BZP_SHELL_SORT_INCREMENT0!()];
+    let mut i: i32 = Default::default();
+    let mut j: i32 = Default::default();
+    if l >= r {
+        return;
     }
-
-    let mut inStream: Ptr<BzpStream> = BzpStreamInit();
-    let mut outStream: Ptr<BzpStream> = BzpStreamInit();
-    if inStream == NULL!() || outStream == NULL!() {
-        BzpStreamFinish(inStream.cast());
-        BzpStreamFinish(outStream.cast());
-        return BZP_ERROR_MEMORY_OPER_FAILURE!();
-    }
-    inStream.filePtr = c_fopen!(inName, cstr!("rb"));
-    outStream.filePtr = c_fopen!(outName, cstr!("wb"));
-    if inStream.filePtr == NULL!() || outStream.filePtr == NULL!() {
-        c_free!(inStream);
-        inStream = NULL!();
-        c_free!(outStream);
-        outStream = NULL!();
-        c_remove!(outName);
-        return BZP_ERROR_IO!();
-    }
-    let mut inData: Ptr<InDeComdata> = BzpInDeComdataInit();
-    if inData == NULL!() {
-        BzpDeComStreamFinish(inData.cast(), inStream.cast(), outStream.cast());
-        c_remove!(outName);
-        return BZP_ERROR_MEMORY_OPER_FAILURE!();
-    }
-    inData.input = inStream.cast();
-    inData.output = outStream.cast();
-
-    ret = BZPDeCompressData(inData.cast()).cast();
-
-    if inData.output.nBuf > 0 {
-        let mut n2: i32 = c_fwrite!(inData.output.buf.cast::<Ptr<Void>>(), c_sizeof!(u8), inData.output.nBuf, inData.output.filePtr);
-        if n2 != inData.output.nBuf {
-            ret = BZP_ERROR_IO!();
+    c_for!(let mut id: i32 = 0; id < BZP_SHELL_SORT_INCREMENT_NUMS!(); id.suffix_plus_plus(); {
+        let mut H: i32 = increments[id];
+        if r - l + 1 <= H {
+            continue;
         }
-        inData.output.nBuf = 0;
-    }
-
-    BzpDeComStreamFinish(inData.cast(), inStream.cast(), outStream.cast());
-    if ret != BZP_OK!() {
-        c_remove!(outName);
-    }
-    return ret.cast();
+        c_for!(i = l + H; i <= r; i.suffix_plus_plus(); {
+            let mut tmpIdx: i32 = sortBlock[i];
+            let mut tmpVal: i32 = idx[tmpIdx];
+            c_for!(j = i - H; j >= l && idx[sortBlock[j]] > tmpVal; j -= H; {
+                sortBlock[j + H] = sortBlock[j];
+            });
+            sortBlock[j + H] = tmpIdx;
+        });
+    });
 }

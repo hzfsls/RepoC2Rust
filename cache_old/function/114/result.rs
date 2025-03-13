@@ -1,5 +1,19 @@
-pub fn BzpSwap2Elem(mut sortBlock: Ptr<i32>, mut lPos: i32, mut rPos: i32) {
-    let mut value: i32 = sortBlock[lPos].cast();
-    sortBlock[lPos] = sortBlock[rPos].cast();
-    sortBlock[rPos] = value.cast();
+pub fn BzpGetCodeLen(mut huffman: Ptr<BzpHuffmanInfo>) -> i32 {
+    let mut maxlen: i32 = 0;
+
+    BzpBuildHuffmanTree(huffman.cast());
+    let mut i: i32 = 0;
+    maxlen = 0;
+    c_for!(i = 0; i < huffman.alphaSize; i.suffix_plus_plus(); {
+        let mut x: i32 = i.cast();
+        let mut tlen: i32 = 0;
+        while huffman.parent[x] >= 0 {
+            x = huffman.parent[x].cast();
+            tlen += 1;
+        }
+        huffman.len[i] = tlen.cast();
+        maxlen = BZP_MAX_FUN!(maxlen, tlen);
+    });
+
+    return maxlen.cast();
 }

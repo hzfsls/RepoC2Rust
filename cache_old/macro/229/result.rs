@@ -1,2 +1,2 @@
-macro_rules! CMPTLZ_PROB_INIT { () => { 1024 } }
-pub(crate) use CMPTLZ_PROB_INIT;
+macro_rules! CMPT_DOUBLE { () => { 2 } }
+pub(crate) use CMPT_DOUBLE;

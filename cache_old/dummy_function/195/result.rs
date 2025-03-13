@@ -1,3 +1,3 @@
-pub fn CmptLzDecDirectProcess(mut decCtx: Ptr<CmptLzDecCtx>, mut dicPosLimit: usize, mut bufLimit: Ptr<u8>) -> i32 {
+pub fn list_iter_has_more(mut iter: Ptr<ListIterator>) -> i32 {
     unimplemented!();
 }

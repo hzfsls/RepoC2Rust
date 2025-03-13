@@ -1,5 +1,22 @@
-pub fn CmptPriceGenAlignTable(mut encCtx: Ptr<CmptLzEncCtx>) {
-    c_for!(let mut i: u32 = 0; i < (1 << CMPTLZ_ALIGN_BITS!()); i.suffix_plus_plus(); {
-        encCtx.priceAlignTable[i] = CmptPriceSymbolReverse(encCtx.cast(), encCtx.probAlign.cast(), CMPTLZ_ALIGN_BITS!(), i.cast()).cast();
-    });
+pub fn queue_pop_tail(mut queue: Ptr<Queue>) -> QueueValue {
+    let mut entry: Ptr<QueueEntry> = Default::default();
+    let mut result: QueueValue = Default::default();
+
+    if queue_is_empty(queue.cast()) {
+        return QUEUE_NULL!();
+    }
+
+    entry = queue.tail.cast();
+    queue.tail = entry.prev.cast();
+    result = entry.data.cast();
+
+    if queue.tail == NULL!() {
+        queue.head = NULL!();
+    } else {
+        queue.tail.next = NULL!();
+    }
+
+    c_free!(entry.cast());
+
+    return result.cast();
 }

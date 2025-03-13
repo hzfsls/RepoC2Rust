@@ -1,3 +1,3 @@
-pub fn RapidlzStoreMatchLen(mut matchLen: u32, mut token: Ptr<u8>, mut curDest: Ptr<u8>) -> usize {
+pub fn avl_tree_node_key(mut node: Ptr<AVLTreeNode>) -> AVLTreeKey {
     unimplemented!();
 }

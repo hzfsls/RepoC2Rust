@@ -1,2 +1,2 @@
-macro_rules! CMPTLZ_HASH_4_SIZE { () => { 1 << 20 } }
-pub(crate) use CMPTLZ_HASH_4_SIZE;
+macro_rules! CMPTLZ_LP_MAX { () => { 4 } }
+pub(crate) use CMPTLZ_LP_MAX;

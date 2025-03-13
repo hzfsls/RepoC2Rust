@@ -1,3 +1,3 @@
-pub fn CmptPriceSet(mut encCtx: Ptr<CmptLzEncCtx>, mut probs: Ptr<CmptlzProb>, mut startPrice: u32, mut prices: Ptr<u32>) {
+pub fn queue_is_empty(mut queue: Ptr<Queue>) -> i32 {
     unimplemented!();
 }

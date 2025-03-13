@@ -1,2 +1,2 @@
-macro_rules! BZP_NGROUPS_NUM_3 { () => { 5 } }
-pub(crate) use BZP_NGROUPS_NUM_3;
+macro_rules! BZP_BLOCK_HEAD_2 { () => { 0x59 } }
+pub(crate) use BZP_BLOCK_HEAD_2;

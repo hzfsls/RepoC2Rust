@@ -1,2 +1,2 @@
-macro_rules! V_AVL_BASE_H { () => { } }
-pub(crate) use V_AVL_BASE_H;
+macro_rules! VOS_PACKEND_ZERO { () => { 1 } }
+pub(crate) use VOS_PACKEND_ZERO;

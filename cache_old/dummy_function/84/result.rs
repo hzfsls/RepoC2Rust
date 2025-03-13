@@ -1,3 +1,3 @@
-pub fn BzpCheckFileHead(mut inData: Ptr<InDeComdata>) -> i32 {
+pub fn BzpBwtDecodeFinish(mut bwt: Ptr<BzpBwtDecodeInfo>) {
     unimplemented!();
 }

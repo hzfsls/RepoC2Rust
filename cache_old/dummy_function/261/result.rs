@@ -1,3 +1,3 @@
-pub fn CmptlzParamNormalize(mut props: Ptr<CmptlzEncParam>) {
+pub fn avl_tree_free(mut tree: Ptr<AVLTree>) {
     unimplemented!();
 }

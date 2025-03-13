@@ -1,3 +1,3 @@
-pub fn BzpCompressOneBlock(mut bzpInfo: Ptr<BzpAlgorithmInfo>, mut outData: Ptr<BzpOutComdata>) -> i32 {
+pub fn BzpReadUInt24(mut inData: Ptr<InDeComdata>) -> u32 {
     unimplemented!();
 }

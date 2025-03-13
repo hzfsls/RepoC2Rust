@@ -1,8 +1,9 @@
 #[repr(C)]
-#[derive(Default, Clone, Copy)]
-pub struct CmptLzMemHook {
-    pub CmptLzAlloc: FuncPtr<fn(i32, usize) -> VoidPtr>,
-    pub CmptLzFree: FuncPtr<fn(i32, VoidPtr)>,
+#[derive(Default)]
+pub struct _BinaryHeap {
+    pub heap_type: BinaryHeapType,
+    pub values: Ptr<BinaryHeapValue>,
+    pub num_values: u32,
+    pub alloced_size: u32,
+    pub compare_func: BinaryHeapCompareFunc,
 }
-
-pub type CmptLzMemHook = _CmptLzMemHook;

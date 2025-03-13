@@ -1,2 +1,2 @@
-macro_rules! BZP_HUFFMAN_ENCODE_H { () => { } }
-pub(crate) use BZP_HUFFMAN_ENCODE_H;
+macro_rules! LIST_NULL { () => { NULL!() } }
+pub(crate) use LIST_NULL;

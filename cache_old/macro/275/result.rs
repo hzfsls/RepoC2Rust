@@ -1,2 +1,2 @@
-macro_rules! RAPIDLZ_ENC_NOT_OK { () => { 0 } }
-pub(crate) use RAPIDLZ_ENC_NOT_OK;
+macro_rules! MD5_DIGEST_LEN { () => { 16 } }
+pub(crate) use MD5_DIGEST_LEN;

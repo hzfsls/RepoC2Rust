@@ -1,3 +1,3 @@
-pub fn BzpQuickSort(mut sortBlock: Ptr<i32>, mut idx: Ptr<i32>, mut l: i32, mut r: i32) {
+pub fn BzpHuffmanGroupsInit(mut blockSize: i32) -> Ptr<BzpHuffmanGroups> {
     unimplemented!();
 }

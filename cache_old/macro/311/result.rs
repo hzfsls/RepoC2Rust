@@ -1,2 +1,2 @@
-macro_rules! RAPIDLZ_LAST_LITERALS { () => { 6 } }
-pub(crate) use RAPIDLZ_LAST_LITERALS;
+macro_rules! RAPIDLZ_STEP_FORWARD_BASE { () => { 6 } }
+pub(crate) use RAPIDLZ_STEP_FORWARD_BASE;

@@ -1,10 +1,14 @@
-pub fn BzpUpdateflag(mut bwt: Ptr<BzpBwtInfo>, mut l: i32, mut r: i32) {
-    let mut tmpst: i32 = -1;
-    c_for!(let mut i: i32 = l; i <= r; i.suffix_plus_plus(); {
-        let mut tmpnow: i32 = bwt.idx[bwt.sortBlock[i]].cast();
-        if tmpst != tmpnow {
-            bwt.isStartPos[i] = 1;
-            tmpst = tmpnow;
+pub fn BzpBzpHuffmanGroupsFinish(mut huffman: Ptr<BzpHuffmanGroups>) {
+    if huffman != NULL!() {
+        if huffman.select != NULL!() {
+            c_free!(huffman.select);
+            huffman.select = NULL!();
         }
-    });
+        if huffman.selectMTF != NULL!() {
+            c_free!(huffman.selectMTF);
+            huffman.selectMTF = NULL!();
+        }
+        c_free!(huffman);
+        huffman = NULL!();
+    }
 }

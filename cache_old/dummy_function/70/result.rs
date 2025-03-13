@@ -1,3 +1,3 @@
-pub fn BzpBuffToStream(mut bzpf: Ptr<BzpFile>, mut outData: Ptr<BzpOutComdata>) -> i32 {
+pub fn BzpReadUInt32(mut inData: Ptr<InDeComdata>) -> u32 {
     unimplemented!();
 }

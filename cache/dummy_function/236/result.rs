@@ -1,3 +1,3 @@
-pub fn CmptlzBt4Finder(mut mf: Ptr<CmptMfCtx>, mut matches: Ptr<CmptlzMatchPair>) -> u32 {
+pub fn set_num_entries(mut set: Ptr<Set>) -> u32 {
     unimplemented!();
 }

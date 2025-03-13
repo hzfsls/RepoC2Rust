@@ -1,6 +1,16 @@
-macro_rules! BZP_UPDATE_CRC { ($crcVar:expr, $cha:expr) => 
-    {
-        $crcVar = ($crcVar << 8) ^ ((*g_bzpCRC32Table.lock())[((($crcVar >> 24) as u8) ^ ($cha as u8))] as u32);
+macro_rules! CMPTLZ_DIST_BIT_DEC {
+    ($probDist:expr, $probSlot:expr, $range:expr, $rangeCode:expr, $rangeBound:expr, $decDist:expr, $decBit:expr) => {
+        {
+            $probDist = $probSlot + $decDist;
+            $rangeBound = ($range >> CMPTLZ_PROB_LG_BIT) * (*$probDist);
+            if $rangeCode < $rangeBound {
+                CMPTLZ_RANGE_UPDATE_0!($probDist, $range, $rangeBound);
+                $decDist += $decBit;
+            } else {
+                CMPTLZ_RANGE_UPDATE_1!($probDist, $range, $rangeCode, $rangeBound);
+                $decDist += $decBit * 2;
+            }
+        }
     }
 }
-pub(crate) use BZP_UPDATE_CRC;
+pub(crate) use CMPTLZ_DIST_BIT_DEC;

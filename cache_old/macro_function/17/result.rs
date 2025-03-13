@@ -1,6 +1,6 @@
-macro_rules! VOS_AVL3_DELETE {
-    ($TREE:expr, $NODE:expr) => {
-        VOS_AVL3_Delete(c_ref!($TREE), c_ref!($NODE))
+macro_rules! VOS_AVLL_FIND_NEXT {
+    ($TREE:expr, $KEY:expr) => {
+        VOS_AVL3_FIND_NEXT!($TREE.stTree, $KEY, $TREE.stTreeInfo)
     }
 }
-pub(crate) use VOS_AVL3_DELETE;
+pub(crate) use VOS_AVLL_FIND_NEXT;

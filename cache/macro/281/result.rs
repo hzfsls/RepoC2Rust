@@ -1,2 +1,2 @@
-macro_rules! LOG_BUF_SIZE { () => { 1024 } }
-pub(crate) use LOG_BUF_SIZE;
+macro_rules! RAPIDLZ_LAST_LITERALS { () => { 5 } }
+pub(crate) use RAPIDLZ_LAST_LITERALS;

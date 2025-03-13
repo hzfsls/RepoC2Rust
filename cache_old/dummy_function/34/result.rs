@@ -1,3 +1,3 @@
-pub fn VOS_MD5PadBuff(mut context: Ptr<MD5_CTX>) -> bool {
+pub fn BzpAlgorithmInfoInit(mut blockSize: i32) -> Ptr<BzpAlgorithmInfo> {
     unimplemented!();
 }

@@ -1,10 +1,10 @@
-pub fn BzpHuffmanDecodeFinish(mut huffman: Ptr<BzpHuffmanDecode>) {
-    if huffman != NULL!() {
-        if huffman.select != NULL!() {
-            c_free!(huffman.select);
-            huffman.select = NULL!();
+pub fn BzpBlockSortMain(mut bwt: Ptr<BzpBwtInfo>) {
+    BzpBinaryLiftingSort(bwt.cast());
+
+    c_for!(let mut i: i32 = 0; i < bwt.nBlock; i.suffix_plus_plus(); {
+        if bwt.sortBlock[i] == 0 {
+            bwt.oriPtr = i.cast();
+            break;
         }
-        c_free!(huffman);
-        huffman = NULL!();
-    }
+    });
 }

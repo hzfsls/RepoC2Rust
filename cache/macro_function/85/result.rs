@@ -1,11 +1,15 @@
-macro_rules! CMPTLZ_RANGE_NORMALIZE { ($range:expr, $rangeCode:expr, $bufToDec:expr) =>
+macro_rules! CMPT_HASH_MASK_CALC { ($hashMask:expr) =>
     {
-        if $range < CMPTLZ_RANGE_DOWN_LIMIT!()
+        $hashMask |= $hashMask >> 1;
+        $hashMask |= $hashMask >> 2;
+        $hashMask |= $hashMask >> 4;
+        $hashMask |= $hashMask >> 8;
+        $hashMask >>= 1;
+        $hashMask |= 0xFFFF;
+        if $hashMask > (1 << 24)
         {
-            $range <<= CMPTLZ_ONE_BYTE_WIDTH!();
-            $rangeCode <<= CMPTLZ_ONE_BYTE_WIDTH!();
-            $rangeCode |= $bufToDec.plus_plus();
+            $hashMask >>= 1;
         }
     }
 }
-pub(crate) use CMPTLZ_RANGE_NORMALIZE;
+pub(crate) use CMPT_HASH_MASK_CALC;

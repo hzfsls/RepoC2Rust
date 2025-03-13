@@ -1,22 +1,13 @@
-pub fn VOS_AVL_Find(mut pstTree: Ptr<AVL_TREE>, mut pKey: Ptr<Void>) -> Ptr<Void> {
-    let mut pstNode: Ptr<AVL_NODE> = Default::default();
-    let mut iResult: i32 = Default::default();
+pub fn VOS_AVL_Delete(mut pstTree: Ptr<AVL_TREE>, mut pstNode: Ptr<AVL_NODE>) {
+    let mut pstBaseNode: Ptr<AVLBASE_NODE_S> = Default::default();
+    let mut pstBaseTree: Ptr<AVLBASE_TREE_S> = Default::default();
 
-    if pstTree == AVL_NULL_PTR!() {
-        return AVL_NULL_PTR!();
-    }
-    pstNode = pstTree.pstRoot.cast();
-
-    while pstNode != AVL_NULL_PTR!() {
-        iResult = (pstTree.pfnCompare)(pKey.cast(), pstNode.pKey.cast()).cast();
-        if iResult > 0 {
-            pstNode = pstNode.pstRight.cast();
-        } else if iResult < 0 {
-            pstNode = pstNode.pstLeft.cast();
-        } else {
-            break;
-        }
+    if pstTree == AVL_NULL_PTR!() || pstNode == AVL_NULL_PTR!() || !VOS_AVL_IN_TREE!(*pstNode) {
+        return;
     }
 
-    return if pstNode != AVL_NULL_PTR!() { pstNode.pSelf.cast() } else { AVL_NULL_PTR!() };
+    pstBaseNode = pstNode.cast::<Ptr<AVLBASE_NODE_S>>();
+    pstBaseTree = c_ref!(pstTree.pstRoot).cast::<Ptr<Void>>().cast::<Ptr<AVLBASE_TREE_S>>();
+    VosAvlDelete(pstBaseNode.cast(), pstBaseTree.cast());
+    return;
 }

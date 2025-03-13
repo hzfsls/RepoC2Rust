@@ -1,8 +1,7 @@
 #[repr(C)]
 #[derive(Default, Clone, Copy)]
-pub struct _CmptLzMemHook {
-    pub CmptLzAlloc: FuncPtr<fn(i32, usize) -> VoidPtr>,
-    pub CmptLzFree: FuncPtr<fn(i32, VoidPtr)>,
+pub struct _QueueEntry {
+    pub data: QueueValue,
+    pub prev: Ptr<QueueEntry>,
+    pub next: Ptr<QueueEntry>,
 }
-
-pub type CmptLzMemHook = _CmptLzMemHook;

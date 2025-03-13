@@ -1,15 +1,7 @@
-macro_rules! CMPTLZ_SINGLE_BIT_TRY_DEC {
-    ($range:expr, $rangeCode:expr, $rangeBound:expr, $decSym:expr, $probSym:expr) => {
-        {
-            $rangeBound = ($range >> CMPTLZ_PROB_LG_BIT!()) * (*$probSym);
-            if $rangeCode < $rangeBound {
-                CMPTLZ_RANGE_UPDATE_AFTER_DEC_BIT0!($range, $rangeBound);
-                $decSym = $decSym << 1;
-            } else {
-                CMPTLZ_RANGE_UPDATE_AFTER_DEC_BIT1!($range, $rangeCode, $rangeBound);
-                $decSym = ($decSym << 1) + 1;
-            }
-        }
+macro_rules! CMPT_RC_BIT_1_PROCESS {
+    ($rcCtx:expr, $prob:expr, $newBound:expr, $range:expr, $bit0Prob:expr, $shiftRes:expr) => {
+        CMPT_RC_BIT_1!($rcCtx, $prob, $newBound, $range, $bit0Prob);
+        CMPT_RC_NORMALIZE!($rcCtx, $range, $shiftRes);
     }
 }
-pub(crate) use CMPTLZ_SINGLE_BIT_TRY_DEC;
+pub(crate) use CMPT_RC_BIT_1_PROCESS;

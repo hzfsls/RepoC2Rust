@@ -1,3 +1,3 @@
-pub fn CmptMemCmpLenSafe(mut buf1: Ptr<u8>, mut buf2: Ptr<u8>, mut len: u32, mut limit: u32) -> u32 {
-    return CmptMemCmpByOneByte(buf1.cast(), buf2.cast(), len.cast(), limit.cast()).cast();
+pub fn hash_table_iter_has_more(mut iterator: Ptr<HashTableIterator>) -> i32 {
+    return (iterator.next_entry != NULL!()).cast::<i32>();
 }

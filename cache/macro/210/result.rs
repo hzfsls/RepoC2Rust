@@ -1,2 +1,2 @@
-macro_rules! CMPT_EMPTY_HASH_VALUE { () => { 0 } }
-pub(crate) use CMPT_EMPTY_HASH_VALUE;
+macro_rules! CMPTLZ_MATCH_LEN_MIN { () => { 2 } }
+pub(crate) use CMPTLZ_MATCH_LEN_MIN;

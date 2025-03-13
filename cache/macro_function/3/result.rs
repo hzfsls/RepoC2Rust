@@ -1,6 +1,2 @@
-macro_rules! VOS_AVLL_INSERT_OR_FIND {
-    ($TREE:expr, $NODE:expr) => {
-        VOS_AVL3_INSERT_OR_FIND!($TREE.stTree.cast(), $NODE.cast(), $TREE.stTreeInfo.cast())
-    }
-}
-pub(crate) use VOS_AVLL_INSERT_OR_FIND;
+macro_rules! TREE_OR_TREEINFO_IS_NULL { ($pstTree:expr, $pstTreeInfo:expr) => { ($pstTree == AVL_NULL_PTR!()) || ($pstTreeInfo == AVL_NULL_PTR!()) } }
+pub(crate) use TREE_OR_TREEINFO_IS_NULL;

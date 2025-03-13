@@ -1,3 +1,3 @@
-pub fn RapidlzCompress(mut src: Ptr<Void>, mut dst: Ptr<Void>, mut srcSize: usize, mut dstSize: usize, mut acceleration: i32) -> usize {
+pub fn trie_insert_rollback(mut trie: Ptr<Trie>, mut key: Ptr<u8>) {
     unimplemented!();
 }

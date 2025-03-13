@@ -1,1 +1,7 @@
-pub type CmptlzLogFunc = FuncPtr<fn(Ptr<u8>, usize)>;
+#[repr(C)]
+#[derive(Default, Clone, Copy)]
+pub struct _ListEntry {
+    pub data: ListValue,
+    pub prev: Ptr<ListEntry>,
+    pub next: Ptr<ListEntry>,
+}

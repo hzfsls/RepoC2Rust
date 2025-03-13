@@ -1,2 +1,2 @@
-macro_rules! CMPTLZ_LIT_CTX_MAX { () => { 9 } }
-pub(crate) use CMPTLZ_LIT_CTX_MAX;
+macro_rules! CMPT_RC_MIN_RANGE { () => { 1 << 24 } }
+pub(crate) use CMPT_RC_MIN_RANGE;

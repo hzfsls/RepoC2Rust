@@ -1,19 +1,15 @@
-pub fn RapidlzCopy32Byte(mut dst: Ptr<Void>, mut src: Ptr<Void>) {
-    #[cfg(ARM_NEON)]
-    {
-        vst1q_u8!(dst.cast::<Ptr<u8>>(), vld1q_u8!(src.cast::<Ptr<u8>>()));
-        vst1q_u8!(dst.cast::<Ptr<u8>>() + 16, vld1q_u8!(src.cast::<Ptr<u8>>() + 16));
+pub fn rb_tree_insert_case4(mut tree: Ptr<RBTree>, mut node: Ptr<RBTreeNode>) {
+    let mut next_node: Ptr<RBTreeNode> = Default::default();
+    let mut side: RBTreeNodeSide = Default::default();
+
+    side = rb_tree_node_side(node.cast());
+
+    if side != rb_tree_node_side(node.parent.cast()) {
+        next_node = node.parent.cast();
+        rb_tree_rotate(tree.cast(), node.parent.cast(), (1 - side).cast());
+    } else {
+        next_node = node.cast();
     }
-    #[cfg(X86_SSE2)]
-    {
-        _mm_storeu_si128!(dst.cast::<Ptr<__m128i>>(), _mm_loadu_si128!(src.cast::<Ptr<__m128i>>()));
-        _mm_storeu_si128!(dst.cast::<Ptr<__m128i>>() + 1, _mm_loadu_si128!(src.cast::<Ptr<__m128i>>() + 1));
-    }
-    #[cfg(not(any(ARM_NEON, X86_SSE2)))]
-    {
-        RAPIDLZ_WRITE64BIT!(dst, RAPIDLZ_READ64BIT!(src));
-        RAPIDLZ_WRITE64BIT!(dst.cast::<Ptr<u8>>() + 8, RAPIDLZ_READ64BIT!(src.cast::<Ptr<u8>>() + 8));
-        RAPIDLZ_WRITE64BIT!(dst.cast::<Ptr<u8>>() + 16, RAPIDLZ_READ64BIT!(src.cast::<Ptr<u8>>() + 16));
-        RAPIDLZ_WRITE64BIT!(dst.cast::<Ptr<u8>>() + 24, RAPIDLZ_READ64BIT!(src.cast::<Ptr<u8>>() + 24));
-    }
+
+    rb_tree_insert_case5(tree.cast(), next_node.cast());
 }

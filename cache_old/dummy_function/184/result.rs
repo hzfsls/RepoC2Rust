@@ -1,3 +1,3 @@
-pub fn CmptLzDecFree(mut decCtx: Ptr<CmptLzDecCtx>, mut memHook: Ptr<CmptLzMemHook>) -> i32 {
+pub fn list_next(mut listentry: Ptr<ListEntry>) -> Ptr<ListEntry> {
     unimplemented!();
 }

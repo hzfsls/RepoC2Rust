@@ -1,9 +1,3 @@
-#[repr(C)]
-#[derive(Default, Clone, Copy)]
-pub struct BzpBwtDecodeInfo {
-    pub sorted: Ptr<i32>,
-    pub block: Ptr<u8>,
-    pub deCode: Ptr<u8>,
-    pub nBlock: i32,
-    pub oriPtr: i32,
-}
+pub type BZP_ERROR_STREAM_NO = i32;
+macro_rules! BZP_ERROR_STREAM_COMPRESS_FAILUIRE { () => { 10 } }
+pub(crate) use BZP_ERROR_STREAM_COMPRESS_FAILUIRE;

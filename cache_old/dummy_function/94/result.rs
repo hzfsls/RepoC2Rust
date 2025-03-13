@@ -1,3 +1,3 @@
-pub fn BzpReadFileHead(mut inData: Ptr<InDeComdata>) -> i32 {
+pub fn BzpMtfMain(mut mtf: Ptr<BzpMtfInfo>) {
     unimplemented!();
 }

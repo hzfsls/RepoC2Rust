@@ -1,3 +1,3 @@
-pub fn BzpNumEncode(mut mtf: Ptr<BzpMtfInfo>, mut num: i32) {
+pub fn BzpHeapAdjustUp(mut heap: Ptr<i32>, mut weight: Ptr<i32>, mut pos: i32) {
     unimplemented!();
 }

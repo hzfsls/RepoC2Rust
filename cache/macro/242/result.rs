@@ -1,2 +1,2 @@
-macro_rules! CMPT_LEN_MID_BITS { () => { 3 } }
-pub(crate) use CMPT_LEN_MID_BITS;
+macro_rules! CMPT_ONE_BLOCK_MAX_SIZE { () => { 1 << 17 } }
+pub(crate) use CMPT_ONE_BLOCK_MAX_SIZE;

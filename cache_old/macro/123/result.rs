@@ -1,2 +1,2 @@
-macro_rules! CMPT_ENC_ERROR_WRITE { () => { CMPTLZ_ERROR_CONVERT!(CMPTLZ_ENC_ERROR_WRITE!()) } }
-pub(crate) use CMPT_ENC_ERROR_WRITE;
+macro_rules! ALGORITHM_RB_TREE_H { () => { } }
+pub(crate) use ALGORITHM_RB_TREE_H;

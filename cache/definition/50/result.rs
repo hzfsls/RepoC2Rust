@@ -1,1 +1,1 @@
-pub type CmptlzProb = u16;
+pub type SetIterator = _SetIterator;

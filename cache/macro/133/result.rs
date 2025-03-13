@@ -1,2 +1,2 @@
-macro_rules! CMPTLZ_MF_HASH_HANDLE { () => { CMPTLZ_HANDLE_CONVERT!(CMPTLZ_MF_HASH!()) } }
-pub(crate) use CMPTLZ_MF_HASH_HANDLE;
+macro_rules! ALWAYS_INLINE { () => { inline } }
+pub(crate) use ALWAYS_INLINE;

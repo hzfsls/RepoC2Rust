@@ -1,2 +1,2 @@
-macro_rules! CMPT_ENC_MF_INIT_FAIL { () => { CMPTLZ_ERROR_CONVERT!(CMPTLZ_ENC_MF_INIT_FAIL!()) } }
-pub(crate) use CMPT_ENC_MF_INIT_FAIL;
+macro_rules! ALGORITHM_HASH_STRING_H { () => { } }
+pub(crate) use ALGORITHM_HASH_STRING_H;

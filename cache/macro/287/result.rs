@@ -1,2 +1,2 @@
-macro_rules! X86_SSE2 { () => { } }
-pub(crate) use X86_SSE2;
+macro_rules! RAPIDLZ_STREAM_ACCELERAT_MIN { () => { 1 } }
+pub(crate) use RAPIDLZ_STREAM_ACCELERAT_MIN;

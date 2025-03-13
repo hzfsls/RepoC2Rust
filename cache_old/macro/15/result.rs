@@ -1,2 +1,2 @@
-macro_rules! MD5_BUFFER_SIZE { () => { 64 } }
-pub(crate) use MD5_BUFFER_SIZE;
+macro_rules! BZP_OUTPUT_COMPRESS { () => { 1 } }
+pub(crate) use BZP_OUTPUT_COMPRESS;

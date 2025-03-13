@@ -1,2 +1,2 @@
-macro_rules! CMPTLZ_HASH_3_MASK { () => { (CMPTLZ_HASH_3_SIZE!() - 1) } }
-pub(crate) use CMPTLZ_HASH_3_MASK;
+macro_rules! CMPTLZ_NUM_PB_STATES_MAX { () => { 1 << CMPTLZ_PB_MAX!() } }
+pub(crate) use CMPTLZ_NUM_PB_STATES_MAX;

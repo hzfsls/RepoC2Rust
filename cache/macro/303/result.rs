@@ -1,2 +1,2 @@
-macro_rules! RAPIDLZ_FOUR_BYTE { () => { 4 } }
-pub(crate) use RAPIDLZ_FOUR_BYTE;
+macro_rules! RAPIDLZ_INNER_H { () => { } }
+pub(crate) use RAPIDLZ_INNER_H;

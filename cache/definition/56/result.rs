@@ -1,8 +1,3 @@
-#[repr(C)]
-#[derive(Default)]
-pub struct CmptLenEncoder {
-    pub low: Array<CmptlzProb, 256>,
-    pub high: Array<CmptlzProb, { 1 << CMPT_LEN_HIGH_BITS!() }>,
-    pub prices: Array<Array<u32, { (1 << CMPT_LEN_HIGH_BITS!()) + (1 << CMPT_LEN_MID_BITS!()) + (1 << CMPT_LEN_LOW_BITS!()) }>, { CMPTLZ_NUM_PB_STATES_MAX!() }>,
-    pub tableSize: u32,
-}
+pub const hash_table_primes: Array<u32, 24> = arr![
+    193, 389, 769, 1543, 3079, 6151, 12289, 24593, 49157, 98317, 196613, 393241, 786433, 1572869, 3145739, 6291469, 12582917, 25165843, 50331653, 100663319, 201326611, 402653189, 805306457, 1610612741
+];

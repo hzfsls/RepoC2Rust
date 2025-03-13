@@ -1,4 +1,8 @@
-pub fn VOS_V_AVLBaseInit(mut pscKey: Ptr<u8>) -> u32 {
-    pscKey.cast::<Void>();
-    return 0;
+pub fn VosAvlNodeLeftInsert(mut pstTree: Ptr<AVLBASE_TREE_S>, mut pstParentNode: Ptr<AVLBASE_NODE_S>, mut pstNode: Ptr<AVLBASE_NODE_S>) {
+    pstNode.pstParent = pstParentNode.cast();
+    pstParentNode.pstLeft = pstNode.cast();
+    pstParentNode.sLHeight = 1;
+    if pstParentNode == pstTree.pstFirst {
+        pstTree.pstFirst = pstNode.cast();
+    }
 }

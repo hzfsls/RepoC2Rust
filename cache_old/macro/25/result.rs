@@ -1,2 +1,2 @@
-macro_rules! SHIFTS_PER_BYTE { () => { 3 } }
-pub(crate) use SHIFTS_PER_BYTE;
+macro_rules! BZP_SHELL_SORT_INCREMENT_NUMS { () => { 2 } }
+pub(crate) use BZP_SHELL_SORT_INCREMENT_NUMS;

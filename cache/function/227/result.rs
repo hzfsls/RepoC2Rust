@@ -1,3 +1,11 @@
-pub fn CmptPriceLen(mut lenEncoder: Ptr<CmptLenEncoder>, mut len: u32, mut posState: u32) -> u32 {
-    return lenEncoder.prices[posState][len - CMPTLZ_MATCH_LEN_MIN!()].cast();
+pub fn set_allocate_table(mut set: Ptr<Set>) -> i32 {
+    if set.prime_index < set_num_primes!() {
+        set.table_size = set_primes[set.prime_index].cast();
+    } else {
+        set.table_size = (set.entries * 10).cast();
+    }
+
+    set.table = c_calloc!(set.table_size, c_sizeof!(Ptr<SetEntry>));
+
+    return (set.table != NULL!()).cast::<i32>();
 }

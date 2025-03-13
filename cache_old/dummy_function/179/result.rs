@@ -1,3 +1,3 @@
-pub fn CmptLzDecMemFree(mut memHook: Ptr<CmptLzMemHook>, mut memHandle: i32, mut freeAddress: Ptr<Void>) {
+pub fn list_prepend(mut list: Ptr<Ptr<ListEntry>>, mut data: ListValue) -> Ptr<ListEntry> {
     unimplemented!();
 }

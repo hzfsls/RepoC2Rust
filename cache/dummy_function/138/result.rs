@@ -1,3 +1,3 @@
-pub fn BzpInitLenArray(mut huffman: Ptr<BzpHuffmanGroups>) {
+pub fn binomial_tree_ref(mut tree: Ptr<BinomialTree>) {
     unimplemented!();
 }

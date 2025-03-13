@@ -1,15 +1,11 @@
 #[repr(C)]
 #[derive(Default)]
-pub struct InDeComdata {
-    pub input: Ptr<BzpStream>,
-    pub output: Ptr<BzpStream>,
-    pub lasChar: i32,
-    pub num: i32,
-    pub buf: u32,
-    pub nBuf: i32,
-    pub blockSize: i32,
-    pub blockCRC: u32,
-    pub list: Array<i32, { BZP_ASCII_SIZE!() }>,
+pub struct BzpQSortInfo {
+    pub stackL: Array<i32, { BZP_MAX_STACK_SIZE!() }>,
+    pub stackR: Array<i32, { BZP_MAX_STACK_SIZE!() }>,
+    pub cnt: i32,
+    pub tl: i32,
+    pub tr: i32,
 }
 
-pub type InDeComdata = _InDeComdata;
+pub type BzpQSortInfo = _BzpQSortInfo;

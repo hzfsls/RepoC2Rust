@@ -1,2 +1,2 @@
-macro_rules! CMPT_DOUBLE { () => { 2 } }
-pub(crate) use CMPT_DOUBLE;
+macro_rules! CMPT_MF_MATCH_3_BYTES { () => { 3 } }
+pub(crate) use CMPT_MF_MATCH_3_BYTES;

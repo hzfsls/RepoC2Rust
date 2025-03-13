@@ -1,2 +1,2 @@
-macro_rules! BZP_MTF_ENCODE0 { () => { 0 } }
-pub(crate) use BZP_MTF_ENCODE0;
+macro_rules! BZP_NGROUPS_NUM_3 { () => { 5 } }
+pub(crate) use BZP_NGROUPS_NUM_3;

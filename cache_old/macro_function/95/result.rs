@@ -1,10 +1,2 @@
-macro_rules! CMPT_RC_BREAK_CHECK { ($rcCtx:expr, $buf:expr, $res:expr) =>
-    {
-        if $buf == ($rcCtx.bufBase + CMPTLZ_RC_BUFFER_SIZE)
-        {
-            $res = CmptRcFlush64Kb($rcCtx);
-            CMPTLZ_RETURN_IF_NOT_OK!($res);
-        }
-    }
-}
-pub(crate) use CMPT_RC_BREAK_CHECK;
+macro_rules! NOT_EQUAL_2_BYTES { ($a:expr, $b:expr) => { $a[0] != $b[0] || $a[1] != $b[1] } }
+pub(crate) use NOT_EQUAL_2_BYTES;

@@ -1,20 +1,18 @@
-pub fn BzpSelectMidVal(mut sortBlock: Ptr<i32>, mut idx: Ptr<i32>, mut l: i32, mut r: i32) -> i32 {
-    let mut mid: i32 = (l + r) >> 1;
-    let mut vl: i32 = idx[sortBlock[l]].cast();
-    let mut vmid: i32 = idx[sortBlock[mid]].cast();
-    let mut vr: i32 = idx[sortBlock[r]].cast();
-    if vl > vr {
-        let mut tmp: i32 = l;
-        l = r;
-        r = tmp;
-        vl = idx[sortBlock[l]].cast();
-        vr = idx[sortBlock[r]].cast();
-    }
-    if vmid <= vl {
-        return vl.cast();
-    } else if vmid <= vr {
-        return vmid.cast();
-    } else {
-        return vr.cast();
-    }
+pub fn BzpGetHuffmanTable(mut huffman: Ptr<BzpHuffmanInfo>) {
+    let mut vec: i32 = 0;
+    let mut mi: i32 = huffman.len[0].cast();
+    let mut mx: i32 = huffman.len[0].cast();
+    c_for!(let mut i: i32 = 0; i < huffman.alphaSize; i.suffix_plus_plus(); {
+        mi = BZP_MIN_FUN!(mi, huffman.len[i]).cast();
+        mx = BZP_MAX_FUN!(mx, huffman.len[i]).cast();
+    });
+    c_for!(let mut i: i32 = mi; i <= mx; i.suffix_plus_plus(); {
+        c_for!(let mut j: i32 = 0; j < huffman.alphaSize; j.suffix_plus_plus(); {
+            if huffman.len[j] == i {
+                huffman.table[j] = vec.cast();
+                vec += 1;
+            }
+        });
+        vec <<= 1;
+    });
 }

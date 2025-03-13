@@ -1,3 +1,3 @@
-pub fn RapidlzVersionGet() -> Ptr<u8> {
+pub fn rb_tree_node_value(mut node: Ptr<RBTreeNode>) -> RBTreeValue {
     unimplemented!();
 }

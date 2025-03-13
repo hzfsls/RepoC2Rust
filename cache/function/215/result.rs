@@ -1,38 +1,14 @@
-pub fn CmptlzEncodeIO(mut encCtx: Ptr<CmptLzEncCtx>, mut dest: Ptr<u8>, mut destLen: Ptr<usize>, mut src: Ptr<u8>, mut srcLen: usize, mut alloc: Ptr<CmptLzMemHook>) -> i32 {
-    let mut res: i32;
-
-    res = CmptMfPrepare(encCtx.cast(), src.cast(), srcLen.cast(), alloc.cast()).cast();
-    if res != 0 {
-        CMPTLZ_LOG!(res, cstr!("CmptMfPrepare Fail!"));
-        CmptlzFreeAll(encCtx.cast(), alloc.cast());
-        return res;
+pub fn slist_iter_next(mut iter: Ptr<SListIterator>) -> SListValue {
+    if iter.current == NULL!() || iter.current != *iter.prev_next {
+        iter.current = *iter.prev_next;
+    } else {
+        iter.prev_next = c_ref!(iter.current.next).cast();
+        iter.current = iter.current.next;
     }
 
-    res = CmptRcPrepare(encCtx.cast(), dest.cast(), destLen.cast(), alloc.cast()).cast();
-    if res != 0 {
-        CMPTLZ_LOG!(res, cstr!("CmptRcPrepare Fail!"));
-        CmptlzFreeAll(encCtx.cast(), alloc.cast());
-        return res;
+    if iter.current == NULL!() {
+        return SLIST_NULL!();
+    } else {
+        return iter.current.data;
     }
-
-    CmptlzEncPrepare(encCtx.cast());
-
-    res = CmptEncodeAll(encCtx.cast()).cast();
-
-    if res != 0 {
-        CmptlzFreeAll(encCtx.cast(), alloc.cast());
-        CMPTLZ_LOG!(res, cstr!("CmptEncode Process Fail!"));
-        return res;
-    }
-
-    *destLen -= encCtx.rcCtx.outBufLeft.cast();
-
-    if encCtx.nowpos64 != srcLen {
-        CMPTLZ_LOG!(res, cstr!("CmptEncode FileSize Fail!"));
-        CmptlzFreeAll(encCtx.cast(), alloc.cast());
-        return CMPT_ENC_ERROR_FILESIZE!();
-    }
-
-    CmptlzFreeAll(encCtx.cast(), alloc.cast());
-    return res.cast();
 }

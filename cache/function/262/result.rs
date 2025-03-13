@@ -1,18 +1,7 @@
-pub fn CmptlzSetParam(mut encCtx: Ptr<CmptLzEncCtx>, mut props: Ptr<CmptlzEncParam>) {
-    let mut param: CmptlzEncParam = *props;
-
-    CmptlzParamNormalize(c_ref!(param).cast());
-
-    encCtx.dicSize = param.dictSize.cast();
-    encCtx.numFastBytes = param.fastBytes.cast();
-    encCtx.litCtx = param.litCtx.cast();
-    encCtx.litPos = param.litPos.cast();
-    encCtx.posBits = param.posBits.cast();
-    let mut i: u32 = 7;
-    c_for!(; i < 32; i.suffix_plus_plus(); {
-        if encCtx.dicSize <= (1 << i).cast() {
-            break;
-        }
-    });
-    encCtx.distTableSize = (i * 2).cast();
+pub fn avl_tree_subtree_height(mut node: Ptr<AVLTreeNode>) -> i32 {
+    if node == NULL!() {
+        return 0;
+    } else {
+        return node.height.cast();
+    }
 }

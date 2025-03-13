@@ -87,8 +87,8 @@ def update_dummy_functions(files: list[RustFile]):
         dummy_function_cache.update(f.c_code, f.dummy_code)
 
 if __name__ == "__main__":
-    for project_name in ["bzp"]:
-        files = preprocess(os.path.join(project_dir, project_name), ["include", "src"],
+    for project_name in ["avl", "c-algorithms"]:
+        files = preprocess(os.path.join(project_dir, project_name), ["src", "include"],
             macros = {"ALWAYS_INLINE": "inline", "ALWAYS_NO_INLINE": "", "STATIC": "static", "HIDDEN": "", "CMPTLZ_HIDDEN":"", "TARGET_ATTRIBUTE_AUTO":"",
                 "RAPIDLZ_ALWAYS_INLINE": "inline", "CSTL_STATIC": "static", "DT_EXPORT": ""},
             replacements = {
@@ -107,6 +107,9 @@ if __name__ == "__main__":
                 declarations_location[func] = f
             for global_var in metadata[f].global_variables:
                 declarations_location[global_var] = f
+            for type in metadata[f].types:
+                if type != "":
+                    declarations_location[type] = f
         os.makedirs(os.path.join(c_metadata_dir, project_name), exist_ok=True)
         print(f"Project `{project_name}` resolve succeeded!")
         with open(os.path.join(c_metadata_dir, project_name, "files.json"), "w") as f:
@@ -137,6 +140,12 @@ if __name__ == "__main__":
             print(f"{project_name} build fail!")
             print(error_msg)
             exit(0)
+
+        # update_macros(proj.metadata.get_all("macro"))
+        # update_macro_functions(proj.metadata.get_all("macro_function"))
+        # update_definitions(proj.metadata.get_all("definition"))
+        # update_dummy_functions(proj.metadata.get_all("function"))
+        # update_functions(proj.metadata.get_all("function"))
 
         update_macros(proj.metadata.get_all("macro"))
         proj = RustProject(project_name, metadata)
@@ -174,7 +183,7 @@ if __name__ == "__main__":
             print(error_msg)
             exit(0)
 
-        
+        print(len(proj.metadata.get_all("function")))
         update_dummy_functions(proj.metadata.get_all("function"))
         proj = RustProject(project_name, metadata)
         print(f"Create rust project `{project_name}` with updated dummy function at {proj.dir_path}")
@@ -187,12 +196,12 @@ if __name__ == "__main__":
             print(error_msg)
             exit(0)
 
+        proj = RustProject(project_name, metadata)
         functions = proj.metadata.get_all("function")
         for function in functions:
             update_functions([function])
             proj = RustProject(project_name, metadata, "full")
             print(f"Create rust project `{project_name}` with updated function at {proj.dir_path}")
-
             success, error_msg = proj.build_project()
             if success:
                 print(f"{project_name} build succeed!")

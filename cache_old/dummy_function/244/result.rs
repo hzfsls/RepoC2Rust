@@ -1,3 +1,3 @@
-pub fn CmptEncodeAll(mut encCtx: Ptr<CmptLzEncCtx>) -> i32 {
+pub fn hash_table_allocate_table(mut hash_table: Ptr<HashTable>) -> i32 {
     unimplemented!();
 }

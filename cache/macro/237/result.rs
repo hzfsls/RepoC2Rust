@@ -1,2 +1,2 @@
-macro_rules! CMPT_PRICE_BITS_MOVING_NUM { () => { 4 } }
-pub(crate) use CMPT_PRICE_BITS_MOVING_NUM;
+macro_rules! CMPT_MF_HASH_TABLE_SIZE { () => { 256 } }
+pub(crate) use CMPT_MF_HASH_TABLE_SIZE;

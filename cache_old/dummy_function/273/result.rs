@@ -1,3 +1,3 @@
-pub fn RapidlzHash4PutPos(mut pos: u32, mut hashValue: u32, mut hashTable: Ptr<u32>) {
+pub fn avl_tree_lookup_node(mut tree: Ptr<AVLTree>, mut key: AVLTreeKey) -> Ptr<AVLTreeNode> {
     unimplemented!();
 }

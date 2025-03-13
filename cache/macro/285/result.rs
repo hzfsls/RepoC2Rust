@@ -1,10 +1,2 @@
-macro_rules! RAPIDLZFILENAME {
-    () => {
-        if strrchr!(__FILE__!(), b'/').as_bool() {
-            strrchr!(__FILE__!(), b'/') + 1
-        } else {
-            __FILE__!()
-        }
-    }
-}
-pub(crate) use RAPIDLZFILENAME;
+macro_rules! RAPIDLZ_DICT_HASH_MOVE_BYTES { () => { 3 } }
+pub(crate) use RAPIDLZ_DICT_HASH_MOVE_BYTES;

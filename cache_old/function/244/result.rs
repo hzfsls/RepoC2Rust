@@ -1,40 +1,15 @@
-pub fn CmptEncodeAll(mut encCtx: Ptr<CmptLzEncCtx>) -> i32 {
-    let mut rc: Ptr<CmptRcCtx> = encCtx.rcCtx.cast();
-    let mut mf: Ptr<CmptMfCtx> = encCtx.mfCtx.cast();
+pub fn hash_table_allocate_table(mut hash_table: Ptr<HashTable>) -> i32 {
+    let mut new_table_size: u32;
 
-    if mf.srcLen == 0 {
-        return CmptlzFlush(encCtx.cast());
+    if hash_table.prime_index < hash_table_num_primes!() {
+        new_table_size = hash_table_primes[hash_table.prime_index].cast();
+    } else {
+        new_table_size = (hash_table.entries * 10).cast();
     }
 
-    if encCtx.nowpos64 == 0 {
-        let mut range: u32;
-        let mut bit0Prob: u32;
-        let mut newBound: u32;
-        range = rc.range.cast();
-        let mut probs: Ptr<CmptlzProb> = c_ref!(encCtx.isMatch[encCtx.state][0]).cast();
-        CMPT_RC_GET_NEWBOUND!(probs, bit0Prob, range, newBound);
-        let mut shiftRes: i32 = CMPT_OK!();
-        CMPT_RC_BIT_0_PROCESS!(rc, probs, newBound, range, bit0Prob, shiftRes);
-        CMPTLZ_RETURN_IF_NOT_OK!(shiftRes);
-        rc.range = range.cast();
-        let mut curByte: u8 = (*mf.srcStart).cast();
-        let mut litProb: Ptr<CmptlzProb> = c_ref!(encCtx.litMarcov.literal[0][0]).cast();
-        shiftRes = CmptRcLitProcess(rc.cast(), litProb.cast(), curByte.cast()).cast();
-        CMPTLZ_RETURN_IF_NOT_OK!(shiftRes);
-        mf.mfStart += 1;
-        encCtx.nowpos64 += 1;
-        mf.readPos += 1;
-        if mf.srcLen == 1 {
-            return CmptlzFlush(encCtx.cast());
-        }
-    }
+    hash_table.table_size = new_table_size.cast();
 
-    let mut res: i32;
-    loop {
-        res = CmptEncodeOneBlock(encCtx.cast()).cast();
-        if res != 0 || encCtx.encNeedFinish {
-            break;
-        }
-    }
-    return res.cast();
+    hash_table.table = c_calloc!(hash_table.table_size, c_sizeof!(Ptr<HashTableEntry>));
+
+    return (hash_table.table != NULL!()).cast::<i32>();
 }

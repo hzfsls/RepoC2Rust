@@ -1,2 +1,2 @@
-macro_rules! CMPT_RC_MIN_RANGE { () => { 1 << 24 } }
-pub(crate) use CMPT_RC_MIN_RANGE;
+macro_rules! CMPTLZ_NUM_REPS { () => { 4 } }
+pub(crate) use CMPTLZ_NUM_REPS;

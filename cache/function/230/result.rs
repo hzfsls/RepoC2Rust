@@ -1,12 +1,21 @@
-pub fn CmptPriceDistWithLen(mut encCtx: Ptr<CmptLzEncCtx>, mut dist: u32, mut len: u32, mut posState: u32) -> u32 {
-    let mut distState: u32 = CMPT_GET_DIST_STATE!(len);
-    let mut price: u32 = Default::default();
-    if dist < 128 {
-        price = encCtx.priceDistTable[distState][dist].cast();
-    } else {
-        let mut distSlot: u32 = PosSloter(dist).cast();
-        price = (encCtx.priceDistSlotTable[distState][distSlot] + encCtx.priceAlignTable[dist & ((1 << CMPTLZ_ALIGN_BITS!()) - 1)]).cast();
-    }
-    price += CmptPriceLen(c_ref!(encCtx.matchLenEncoder).cast(), len.cast(), posState.cast()).cast();
-    return price.cast();
+pub fn set_free(mut set: Ptr<Set>) {
+    let mut rover: Ptr<SetEntry> = Default::default();
+    let mut next: Ptr<SetEntry> = Default::default();
+    let mut i: u32 = Default::default();
+
+    c_for!(let mut i: u32 = 0; i < set.table_size; i.prefix_plus_plus(); {
+        rover = set.table[i].cast();
+
+        while rover != NULL!() {
+            next = rover.next.cast();
+
+            set_free_entry(set.cast(), rover.cast());
+
+            rover = next.cast();
+        }
+    });
+
+    c_free!(set.table.cast());
+
+    c_free!(set.cast());
 }

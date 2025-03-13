@@ -1,2 +1,2 @@
-macro_rules! CMPT_MF_MATCH_3_BYTES { () => { 3 } }
-pub(crate) use CMPT_MF_MATCH_3_BYTES;
+macro_rules! CMPTLZ_MODULE { () => { 0x0A00 + 0x0D } }
+pub(crate) use CMPTLZ_MODULE;

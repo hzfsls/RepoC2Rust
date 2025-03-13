@@ -1,8 +1,7 @@
-macro_rules! VOS_ROUND {
-    ($a:expr, $b:expr, $c:expr, $d:expr, $e:expr, $f:expr, $g:expr, $h:expr, $i:expr, $k:expr, $W:expr) => {
-        $h += (VOS_ROTR32!($e, 6) ^ VOS_ROTR32!($e, 11) ^ VOS_ROTR32!($e, 25)) + ($g ^ ($e & ($f ^ $g))) + $k + $W[$i];
-        $d += $h;
-        $h += (VOS_ROTR32!($a, 2) ^ VOS_ROTR32!($a, 13) ^ VOS_ROTR32!($a, 22)) + (($a & ($b | $c)) | ($b & $c));
+macro_rules! CMPTLZ_IS_THE_BIT_0 {
+    ($probSlot:expr, $range:expr, $rangeCode:expr, $rangeBound:expr) => {
+        $rangeBound = ($range >> CMPTLZ_PROB_LG_BIT!()) * (*$probSlot);
+        if $rangeCode < $rangeBound
     }
 }
-pub(crate) use VOS_ROUND;
+pub(crate) use CMPTLZ_IS_THE_BIT_0;

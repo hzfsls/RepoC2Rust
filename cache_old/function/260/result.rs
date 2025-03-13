@@ -1,7 +1,10 @@
-pub fn PosSloter(mut dist: u32) -> u32 {
-    if dist <= 4 {
-        return dist;
+pub fn avl_tree_free_subtree(mut tree: Ptr<AVLTree>, mut node: Ptr<AVLTreeNode>) {
+    if node == NULL!() {
+        return;
     }
-    let mut helper: u32 = PosSlotHelper(dist).cast();
-    return (helper + helper + ((dist >> (helper - 1)) & 1)).cast();
+
+    avl_tree_free_subtree(tree.cast(), node.children[AVL_TREE_NODE_LEFT!()].cast());
+    avl_tree_free_subtree(tree.cast(), node.children[AVL_TREE_NODE_RIGHT!()].cast());
+
+    c_free!(node);
 }

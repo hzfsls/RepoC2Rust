@@ -1,2 +1,2 @@
-macro_rules! RAPIDLZ_SIXTEEN_BYTE { () => { 16 } }
-pub(crate) use RAPIDLZ_SIXTEEN_BYTE;
+macro_rules! ARM_NEON { () => { } }
+pub(crate) use ARM_NEON;

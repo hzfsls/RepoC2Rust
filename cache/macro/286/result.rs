@@ -1,2 +1,2 @@
-macro_rules! RAPIDLZ_INNER_H { () => { } }
-pub(crate) use RAPIDLZ_INNER_H;
+macro_rules! RAPIDLZ_STREAM_HASH_BYTES { () => { 4 } }
+pub(crate) use RAPIDLZ_STREAM_HASH_BYTES;

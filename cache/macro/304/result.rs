@@ -1,2 +1,2 @@
-macro_rules! RAPIDLZ_EIGHT_BYTE { () => { 8 } }
-pub(crate) use RAPIDLZ_EIGHT_BYTE;
+macro_rules! X86_SSE2 { () => { } }
+pub(crate) use X86_SSE2;

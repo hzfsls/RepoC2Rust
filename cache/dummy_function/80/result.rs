@@ -1,3 +1,3 @@
-pub fn BzpInDeComdataFinish(mut inData: Ptr<InDeComdata>) {
+pub fn BzpDeComStreamFinish(mut inData: Ptr<InDeComdata>, mut inStream: Ptr<BzpStream>, mut outStream: Ptr<BzpStream>) {
     unimplemented!();
 }

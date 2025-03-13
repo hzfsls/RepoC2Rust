@@ -1,2 +1,2 @@
-macro_rules! BZP_BITS2 { () => { 2 } }
-pub(crate) use BZP_BITS2;
+macro_rules! BZP_CHARS_PER_GROUP_ASCII { () => { 16 } }
+pub(crate) use BZP_CHARS_PER_GROUP_ASCII;

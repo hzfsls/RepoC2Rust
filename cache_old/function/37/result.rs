@@ -1,24 +1,19 @@
-pub fn VOS_MD5FinalEx(mut digest: Ptr<u8>, mut bufLen: u32, mut context: Ptr<MD5_CTX>) {
-    let mut needAnotherBuff: bool = false;
-
-    if digest == NULL!() || context == NULL!() || bufLen < MD5_DIGEST_LEN!() {
-        return;
+pub fn BzpFileInit() -> Ptr<BzpFile> {
+    let mut compressFile: Ptr<BzpFile> = c_malloc!(c_sizeof!(BzpFile));
+    let mut inStream: Ptr<BzpStream> = BzpStreamInit();
+    let mut outStream: Ptr<BzpStream> = BzpStreamInit();
+    if compressFile == NULL!() || inStream == NULL!() || outStream == NULL!() {
+        BzpStreamFinish(inStream.cast());
+        BzpStreamFinish(outStream.cast());
+        BzpFileFinish(compressFile.cast());
+        return NULL!();
     }
-
-    needAnotherBuff = VOS_MD5PadBuff(context.cast()).cast();
-    VOS_MD5CalcDigestOfBuff(context.cast());
-
-    if needAnotherBuff {
-        context.uiPos = 0;
-        while context.uiPos < MD5_TEXT_IN_BUFFER_MAX!() {
-            context.aucBuffer[context.uiPos] = 0;
-            context.uiPos.suffix_plus_plus();
-        }
-        MD5_RECORD_MESSAGE_LEN!(context);
-        VOS_MD5CalcDigestOfBuff(context.cast());
-    }
-
-    MD5_COMPOSE_DIGEST!(digest, context.aulState);
-
-    c_memset_s!(context, c_sizeofval!(context), 0, c_sizeofval!(context)).cast::<Void>();
+    compressFile.input = inStream.cast();
+    compressFile.output = outStream.cast();
+    compressFile.input.pos = 0;
+    compressFile.output.pos = 0;
+    compressFile.num = 0;
+    compressFile.lasChar = BZP_ASCII_SIZE!();
+    compressFile.state = BZP_INPUT_COMPRESS!();
+    return compressFile.cast();
 }

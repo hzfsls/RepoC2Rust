@@ -1,3 +1,3 @@
-pub fn CmptRcPosSlotProcess(mut encCtx: Ptr<CmptLzEncCtx>, mut posSlot: u32, mut len: u32) -> i32 {
+pub fn hash_table_lookup(mut hash_table: Ptr<HashTable>, mut key: HashTableKey) -> HashTableValue {
     unimplemented!();
 }

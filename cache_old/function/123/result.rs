@@ -1,6 +1,9 @@
-pub fn BzpHuffmanInit(mut alphaSize: i32, mut huffman: Ptr<BzpHuffmanInfo>) {
-    c_memset_s!(huffman.len, c_sizeofval!(huffman.len), 0, c_sizeofval!(huffman.len)).cast::<Void>();
-    huffman.nHeap = 0;
-    huffman.nWeight = 0;
-    huffman.alphaSize = alphaSize.cast();
+pub fn BzpCalculateCost(mut huffman: Ptr<BzpHuffmanGroups>, mut st: i32, mut ed: i32) {
+    c_memset_s!(huffman.cost, c_sizeofval!(huffman.cost), 0, c_sizeofval!(huffman.cost)).cast::<Void>();
+    let mut nGroups: i32 = huffman.nGroups.cast();
+    c_for!(let mut k: i32 = st; k <= ed; k.suffix_plus_plus(); {
+        c_for!(let mut t: i32 = 0; t < nGroups; t.suffix_plus_plus(); {
+            huffman.cost[t] += huffman.huffmanGroups[t].len[huffman.block[k]].cast();
+        });
+    });
 }

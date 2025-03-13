@@ -1,2 +1,2 @@
-macro_rules! CMPTLZ_ENC_CCTX_HANDLE { () => { CMPTLZ_HANDLE_CONVERT!(CMPTLZ_ENC_CCTX!()) } }
-pub(crate) use CMPTLZ_ENC_CCTX_HANDLE;
+macro_rules! ALWAYS_NO_INLINE { () => { #[inline(never)] } }
+pub(crate) use ALWAYS_NO_INLINE;

@@ -1,32 +1,35 @@
-pub fn CmptlzEncShortRep(mut encCtx: Ptr<CmptLzEncCtx>, mut nowpos32: u32) -> i32 {
-    let mut shiftRes: i32 = CMPT_OK!();
-    let mut posState: u32 = nowpos32 & encCtx.pbMask;
-    let mut range: u32;
-    let mut bit0Prob: u32;
-    let mut newBound: u32;
-    range = encCtx.rcCtx.range;
-    let mut probs: Ptr<CmptlzProb> = c_ref!(encCtx.isMatch[encCtx.state][posState]).cast();
-    CMPT_RC_GET_NEWBOUND!(probs, bit0Prob, range, newBound);
-    CMPT_RC_BIT_1_PROCESS!(encCtx.rcCtx, probs, newBound, range, bit0Prob, shiftRes);
-    CMPTLZ_RETURN_IF_NOT_OK!(shiftRes);
+pub fn avl_tree_node_balance(mut tree: Ptr<AVLTree>, mut node: Ptr<AVLTreeNode>) -> Ptr<AVLTreeNode> {
+    let mut left_subtree: Ptr<AVLTreeNode> = Default::default();
+    let mut right_subtree: Ptr<AVLTreeNode> = Default::default();
+    let mut child: Ptr<AVLTreeNode> = Default::default();
+    let mut diff: i32 = Default::default();
 
-    probs = c_ref!(encCtx.isRep[encCtx.state]).cast();
-    CMPT_RC_GET_NEWBOUND!(probs, bit0Prob, range, newBound);
-    CMPT_RC_BIT_1_PROCESS!(encCtx.rcCtx, probs, newBound, range, bit0Prob, shiftRes);
-    CMPTLZ_RETURN_IF_NOT_OK!(shiftRes);
+    left_subtree = node.children[AVL_TREE_NODE_LEFT!()].cast();
+    right_subtree = node.children[AVL_TREE_NODE_RIGHT!()].cast();
 
-    probs = c_ref!(encCtx.isRepG0[encCtx.state]).cast();
-    CMPT_RC_GET_NEWBOUND!(probs, bit0Prob, range, newBound);
-    CMPT_RC_BIT_0_PROCESS!(encCtx.rcCtx, probs, newBound, range, bit0Prob, shiftRes);
-    CMPTLZ_RETURN_IF_NOT_OK!(shiftRes);
+    diff = (avl_tree_subtree_height(right_subtree.cast()) - avl_tree_subtree_height(left_subtree.cast());
 
-    probs = c_ref!(encCtx.isRep0Long[encCtx.state][posState]).cast();
-    CMPT_RC_GET_NEWBOUND!(probs, bit0Prob, range, newBound);
-    CMPT_RC_BIT_0_PROCESS!(encCtx.rcCtx, probs, newBound, range, bit0Prob, shiftRes);
-    CMPTLZ_RETURN_IF_NOT_OK!(shiftRes);
-    encCtx.rcCtx.range = range;
+    if diff >= 2 {
+        child = right_subtree.cast();
 
-    let mut state: CmptlzState = encCtx.state;
-    encCtx.state = CMPT_STATE_UPDATE_WHEN_SHORTREP!(state);
-    return CMPT_OK!();
+        if avl_tree_subtree_height(child.children[AVL_TREE_NODE_RIGHT!()].cast()) <
+            avl_tree_subtree_height(child.children[AVL_TREE_NODE_LEFT!()].cast()) {
+            avl_tree_rotate(tree.cast(), right_subtree.cast(), AVL_TREE_NODE_RIGHT!().cast());
+        }
+
+        node = avl_tree_rotate(tree.cast(), node.cast(), AVL_TREE_NODE_LEFT!().cast());
+    } else if diff <= -2 {
+        child = node.children[AVL_TREE_NODE_LEFT!()].cast();
+
+        if avl_tree_subtree_height(child.children[AVL_TREE_NODE_LEFT!()].cast()) <
+            avl_tree_subtree_height(child.children[AVL_TREE_NODE_RIGHT!()].cast()) {
+            avl_tree_rotate(tree.cast(), left_subtree.cast(), AVL_TREE_NODE_LEFT!().cast());
+        }
+
+        node = avl_tree_rotate(tree.cast(), node.cast(), AVL_TREE_NODE_RIGHT!().cast());
+    }
+
+    avl_tree_update_height(node.cast());
+
+    return node.cast();
 }

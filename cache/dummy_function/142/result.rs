@@ -1,3 +1,3 @@
-pub fn CmptlzLogWrite(mut errorCode: usize, mut funcName: Ptr<u8>, mut line: u16, mut fmt: Ptr<u8>, mut alist: VaList) {
+pub fn binomial_heap_merge(mut heap: Ptr<BinomialHeap>, mut other: Ptr<BinomialHeap>) -> i32 {
     unimplemented!();
 }

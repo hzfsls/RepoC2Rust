@@ -1,2 +1,2 @@
-macro_rules! CMPT_DIST_LIMIT_1 { () => { 4 } }
-pub(crate) use CMPT_DIST_LIMIT_1;
+macro_rules! CMPT_LEN_MID_BITS { () => { 3 } }
+pub(crate) use CMPT_LEN_MID_BITS;

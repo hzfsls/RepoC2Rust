@@ -1,22 +1,22 @@
-pub fn BzpShellSort(mut sortBlock: Ptr<i32>, mut idx: Ptr<i32>, mut l: i32, mut r: i32) {
-    let mut increments: Array<i32, 2> = arr![BZP_SHELL_SORT_INCREMENT1!(), BZP_SHELL_SORT_INCREMENT0!()];
-    let mut i: i32 = Default::default();
-    let mut j: i32 = Default::default();
-    if l >= r {
-        return;
+pub fn BzpBuildHuffmanTree(mut huffman: Ptr<BzpHuffmanInfo>) {
+    BzpHuffmanInitArray(huffman.cast());
+    BzpHeapInit(huffman.cast());
+    let mut idx1: i32 = Default::default();
+    let mut idx2: i32 = Default::default();
+    while huffman.nHeap > 1 {
+        idx1 = huffman.heap[1].cast();
+        huffman.heap[1] = huffman.heap[huffman.nHeap.suffix_minus_minus()].cast();
+        BzpHeapAdjustDown(huffman.heap.cast(), huffman.weight.cast(), huffman.nHeap.cast());
+        idx2 = huffman.heap[1].cast();
+        huffman.heap[1] = huffman.heap[huffman.nHeap.suffix_minus_minus()].cast();
+        BzpHeapAdjustDown(huffman.heap.cast(), huffman.weight.cast(), huffman.nHeap.cast());
+        huffman.weight[huffman.nWeight] = BzpHuffmanWeightAdd(huffman.weight[idx1].cast(), huffman.weight[idx2].cast()).cast();
+        huffman.parent[idx1] = huffman.nWeight.cast();
+        huffman.parent[idx2] = huffman.nWeight.cast();
+        huffman.parent[huffman.nWeight] = -1;
+        huffman.nHeap.prefix_plus_plus();
+        huffman.heap[huffman.nHeap] = huffman.nWeight.cast();
+        huffman.nWeight.prefix_plus_plus();
+        BzpHeapAdjustUp(huffman.heap.cast(), huffman.weight.cast(), huffman.nHeap.cast());
     }
-    c_for!(let mut id: i32 = 0; id < BZP_SHELL_SORT_INCREMENT_NUMS!(); id.suffix_plus_plus(); {
-        let mut H: i32 = increments[id];
-        if r - l + 1 <= H {
-            continue;
-        }
-        c_for!(i = l + H; i <= r; i.suffix_plus_plus(); {
-            let mut tmpIdx: i32 = sortBlock[i];
-            let mut tmpVal: i32 = idx[tmpIdx];
-            c_for!(j = i - H; j >= l && idx[sortBlock[j]] > tmpVal; j -= H; {
-                sortBlock[j + H] = sortBlock[j];
-            });
-            sortBlock[j + H] = tmpIdx;
-        });
-    });
 }

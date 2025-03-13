@@ -1,2 +1,2 @@
-macro_rules! CMPTLZ_RANGE_CODE_SIZE { () => { 5 } }
-pub(crate) use CMPTLZ_RANGE_CODE_SIZE;
+macro_rules! CMPTLZ_LOW_LEN_BIT { () => { 3 } }
+pub(crate) use CMPTLZ_LOW_LEN_BIT;

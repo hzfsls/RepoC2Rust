@@ -1,2 +1,2 @@
-macro_rules! VOS_AVL_FIND { ($TREE:expr, $KEY:expr) => { VOS_AVL_Find(c_ref!($TREE), $KEY) } }
-pub(crate) use VOS_AVL_FIND;
+macro_rules! VOS_AVL3_MAX { ($X:expr, $Y:expr) => { if $X > $Y { $X } else { $Y } } }
+pub(crate) use VOS_AVL3_MAX;

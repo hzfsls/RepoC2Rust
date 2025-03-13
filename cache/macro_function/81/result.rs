@@ -1,7 +1,8 @@
-macro_rules! CMPTLZ_RANGE_UPDATE_AFTER_DEC_BIT1 { ($range:expr, $rangeCode:expr, $rangeBound:expr) =>
+macro_rules! CMPT_RC_BIT_1 { ($rcCtx:expr, $prob:expr, $newBound:expr, $range:expr, $bit0Prob:expr) =>
     {
-        $range -= $rangeBound;
-        $rangeCode -= $rangeBound;
+        $range -= $newBound;
+        (*$rcCtx.lock()).low += $newBound;
+        *$prob = ($bit0Prob - ($bit0Prob >> 5)) as CmptlzProb;
     }
 }
-pub(crate) use CMPTLZ_RANGE_UPDATE_AFTER_DEC_BIT1;
+pub(crate) use CMPT_RC_BIT_1;

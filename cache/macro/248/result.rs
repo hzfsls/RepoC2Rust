@@ -1,2 +1,2 @@
-macro_rules! CMPT_MF_HASH_TABLE_SIZE { () => { 256 } }
-pub(crate) use CMPT_MF_HASH_TABLE_SIZE;
+macro_rules! CMPTLZ_MAX_DICTSIZE { () => { 128 * 1024 * 1024 } }
+pub(crate) use CMPTLZ_MAX_DICTSIZE;

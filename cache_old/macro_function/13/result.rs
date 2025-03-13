@@ -1,8 +1,2 @@
-macro_rules! VOS_AVL3_INIT_TREE {
-    ($TREE:expr, $TREE_INFO:expr) => {
-        $TREE.pstFirst = AVL_NULL_PTR!().cast::<Ptr<AVL3_NODE>>();
-        $TREE.pstLast = AVL_NULL_PTR!().cast::<Ptr<AVL3_NODE>>();
-        $TREE.pstRoot = AVL_NULL_PTR!().cast::<Ptr<AVL3_NODE>>();
-    }
-}
-pub(crate) use VOS_AVL3_INIT_TREE;
+macro_rules! VOS_AVLL_PREV { ($TREE:expr, $NODE:expr) => { VOS_AVL3_PREV!($NODE, $TREE.stTreeInfo) } }
+pub(crate) use VOS_AVLL_PREV;

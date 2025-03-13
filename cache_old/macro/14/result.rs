@@ -1,2 +1,2 @@
-macro_rules! MD5_INPUT_LEN_MAX { () => { 0xffffffffffffffff } }
-pub(crate) use MD5_INPUT_LEN_MAX;
+macro_rules! BZP_INPUT_COMPRESS { () => { 0 } }
+pub(crate) use BZP_INPUT_COMPRESS;

@@ -1,2 +1,2 @@
-macro_rules! CMPT_ERROR_UNSUPPORTED { () => { CMPTLZ_ERROR_CONVERT!(CMPTLZ_ERROR_UNSUPPORTED!()) } }
-pub(crate) use CMPT_ERROR_UNSUPPORTED;
+macro_rules! BINOMIAL_HEAP_NULL { () => { NULL!() } }
+pub(crate) use BINOMIAL_HEAP_NULL;

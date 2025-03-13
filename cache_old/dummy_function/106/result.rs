@@ -1,3 +1,3 @@
-pub fn BzpMtfInit(mut blockSize: i32) -> Ptr<BzpMtfInfo> {
+pub fn BzpBwtFinish(mut bwt: Ptr<BzpBwtInfo>) {
     unimplemented!();
 }

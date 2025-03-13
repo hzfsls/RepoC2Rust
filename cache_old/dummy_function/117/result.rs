@@ -1,3 +1,3 @@
-pub fn BzpQSortSingle(mut sortBlock: Ptr<i32>, mut idx: Ptr<i32>, mut stack: Ptr<BzpQSortInfo>) {
+pub fn BzpHuffmanGroupsReset(mut huffman: Ptr<BzpHuffmanGroups>, mut alphaSize: i32) -> i32 {
     unimplemented!();
 }

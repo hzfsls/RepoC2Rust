@@ -1,2 +1,2 @@
-macro_rules! RAPIDLZ_ERROR_PARAM_UNSUPPORTED { () => { -1 } }
-pub(crate) use RAPIDLZ_ERROR_PARAM_UNSUPPORTED;
+macro_rules! CMPTLZ_PROB_HANDLE { () => { CMPTLZ_HANDLE_CONVERT!(CMPTLZ_PROB_MEM!()) } }
+pub(crate) use CMPTLZ_PROB_HANDLE;

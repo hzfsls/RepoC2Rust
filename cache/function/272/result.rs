@@ -1,3 +1,13 @@
-pub fn RapidlzHash4GetPos(mut hashValue: u32, mut hashTable: Ptr<u32>) -> u32 {
-    return hashTable[hashValue].cast();
+pub fn avl_tree_remove(mut tree: Ptr<AVLTree>, mut key: AVLTreeKey) -> i32 {
+    let mut node: Ptr<AVLTreeNode> = Default::default();
+
+    node = avl_tree_lookup_node(tree.cast(), key.cast());
+
+    if node == NULL!() {
+        return 0;
+    }
+
+    avl_tree_remove_node(tree.cast(), node.cast());
+
+    return 1;
 }

@@ -1,36 +1,30 @@
-pub fn VosAvlDelete(mut pstBaseNode: Ptr<AVLBASE_NODE_S>, mut pstBaseTree: Ptr<AVLBASE_TREE_S>) {
+pub fn VosAvlDeleteCheck(mut pstTree: Ptr<AVLBASE_TREE_S>, mut pstNode: Ptr<AVLBASE_NODE_S>) -> Ptr<AVLBASE_NODE_S> {
     let mut pstReplaceNode: Ptr<AVLBASE_NODE_S> = Default::default();
-    let mut pstParentNode: Ptr<AVLBASE_NODE_S> = Default::default();
-    let mut sNewHeight: i16 = 0;
 
-    pstReplaceNode = VosAvlDeleteCheck(pstBaseTree.cast(), pstBaseNode.cast());
+    if pstNode.pstLeft == AVL_NULL_PTR!() && pstNode.pstRight == AVL_NULL_PTR!() {
+        pstReplaceNode = AVL_NULL_PTR!();
 
-    pstParentNode = pstBaseNode.pstParent.cast();
-
-    pstBaseNode.pstParent = AVL_NULL_PTR!();
-    pstBaseNode.pstRight = AVL_NULL_PTR!();
-    pstBaseNode.pstLeft = AVL_NULL_PTR!();
-    pstBaseNode.sRHeight = -1;
-    pstBaseNode.sLHeight = -1;
-
-    if pstReplaceNode != AVL_NULL_PTR!() {
-        pstReplaceNode.pstParent = pstParentNode.cast();
-        sNewHeight = (1 + VOS_V2_AVL_MAX!(pstReplaceNode.sLHeight, pstReplaceNode.sRHeight)).cast();
-    }
-
-    if pstParentNode != AVL_NULL_PTR!() {
-        if pstParentNode.pstRight == pstBaseNode {
-            pstParentNode.pstRight = pstReplaceNode.cast();
-            pstParentNode.sRHeight = sNewHeight.cast();
-        } else {
-            pstParentNode.pstLeft = pstReplaceNode.cast();
-            pstParentNode.sLHeight = sNewHeight.cast();
+        if pstTree.pstFirst == pstNode {
+            pstTree.pstFirst = pstNode.pstParent.cast();
         }
 
-        VosAvlBalanceTree(pstBaseTree.cast(), pstParentNode.cast());
-    } else {
-        pstBaseTree.pstRoot = pstReplaceNode.cast();
-    }
+        if pstTree.pstLast == pstNode {
+            pstTree.pstLast = pstNode.pstParent.cast();
+        }
+    } else if pstNode.pstLeft == AVL_NULL_PTR!() {
+        pstReplaceNode = pstNode.pstRight.cast();
 
-    return;
+        if pstTree.pstFirst == pstNode {
+            pstTree.pstFirst = pstReplaceNode.cast();
+        }
+    } else if pstNode.pstRight == AVL_NULL_PTR!() {
+        pstReplaceNode = pstNode.pstLeft.cast();
+
+        if pstTree.pstLast == pstNode {
+            pstTree.pstLast = pstReplaceNode.cast();
+        }
+    } else {
+        pstReplaceNode = VosAvlSearchReplaceNode(pstTree.cast(), pstNode.cast()).cast();
+    }
+    return pstReplaceNode.cast();
 }

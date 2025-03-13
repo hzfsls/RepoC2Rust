@@ -1,3 +1,3 @@
-pub fn CmptlzFreeAll(mut encCtx: Ptr<CmptLzEncCtx>, mut alloc: Ptr<CmptLzMemHook>) {
+pub fn slist_iter_has_more(mut iter: Ptr<SListIterator>) -> i32 {
     unimplemented!();
 }

@@ -1,6 +1,6 @@
-macro_rules! VOS_AVL_INSERT_OR_FIND {
-    ($TREE:expr, $NODE:expr) => {
-        VOS_AVL_Insert_Or_Find(c_ref!($TREE), c_ref!($NODE))
+macro_rules! VOS_AVL3_FIND_NEXT {
+    ($TREE:expr, $KEY:expr, $TREE_INFO:expr) => {
+        AVL3_Find_Or_Find_Next(c_ref!($TREE), $KEY, AVL_TRUE!(), c_ref!($TREE_INFO))
     }
 }
-pub(crate) use VOS_AVL_INSERT_OR_FIND;
+pub(crate) use VOS_AVL3_FIND_NEXT;

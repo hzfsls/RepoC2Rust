@@ -1,2 +1,2 @@
-macro_rules! CMPTLZ_DIST_STATE_TOTAL { () => { 4 } }
-pub(crate) use CMPTLZ_DIST_STATE_TOTAL;
+macro_rules! CMPT_LEN_BOUND { () => { 8 } }
+pub(crate) use CMPT_LEN_BOUND;

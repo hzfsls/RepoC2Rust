@@ -1,6 +1,7 @@
-macro_rules! BZP_INVALID_BLOCK_SIZE { ($blockSize:expr) => 
-    { 
-        $blockSize < BZP_BLOCK_SIZE_LEVEL_LOWER_LIMIT!() || $blockSize > BZP_BLOCK_SIZE_LEVEL_UPPER_LIMIT!() 
-    } 
+macro_rules! CMPTLZ_RANGE_UPDATE_0 { ($prob:expr, $range:expr, $rangeBound:expr) =>
+    {
+        $range = $rangeBound;
+        *$prob = (*$prob + ((CMPTLZ_PROB_LG!() - *$prob) >> CMPTLZ_RANGE_CODE_SIZE!()) as CmptLzDecProb;
+    }
 }
-pub(crate) use BZP_INVALID_BLOCK_SIZE;
+pub(crate) use CMPTLZ_RANGE_UPDATE_0;

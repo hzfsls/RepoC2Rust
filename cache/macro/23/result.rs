@@ -1,2 +1,2 @@
-macro_rules! SHA256_ERROR { () => { (!0isize) as u32 } }
-pub(crate) use SHA256_ERROR;
+macro_rules! BZP_MAX_STACK_SIZE { () => { 100 } }
+pub(crate) use BZP_MAX_STACK_SIZE;

@@ -1,9 +1,9 @@
 #[repr(C)]
-#[derive(Default, Clone, Copy)]
-pub struct BzpAlgorithmInfo {
-    pub bwt: Ptr<BzpBwtInfo>,
-    pub huffman: Ptr<BzpHuffmanGroups>,
-    pub mtf: Ptr<BzpMtfInfo>,
-    pub compressFile: Ptr<BzpFile>,
-    pub outData: Ptr<BzpOutComdata>,
+#[derive(Default)]
+pub struct _BinaryHeap {
+    pub heap_type: BinaryHeapType,
+    pub values: Ptr<BinaryHeapValue>,
+    pub num_values: u32,
+    pub alloced_size: u32,
+    pub compare_func: BinaryHeapCompareFunc,
 }

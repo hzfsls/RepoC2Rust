@@ -1,29 +1,23 @@
-pub fn RapidlzStoreSequence(mut dst: Ptr<u8>, mut srcAnchor: Ptr<u8>, mut literalLength: u32, mut matchLength: u32, mut offset: u16) -> Ptr<u8> {
-    let mut dstCurr: Ptr<u8> = dst.cast();
-    let mut token: Ptr<u8> = dstCurr.cast();
-    dstCurr += 1;
+pub fn trie_free(mut trie: Ptr<Trie>) {
+    let mut free_list: Ptr<TrieNode> = NULL!();
+    let mut node: Ptr<TrieNode> = Default::default();
+    let mut i: i32 = Default::default();
 
-    if literalLength >= RAPIDLZ_MAX_4BIT_VALUE!() {
-        *token = (RAPIDLZ_MAX_4BIT_VALUE!() << 4).cast();
-        let mut optionalLen: u32 = literalLength - RAPIDLZ_MAX_4BIT_VALUE!();
-        c_for!(; optionalLen >= RAPIDLZ_MAX_BYTE_VALUE!(); optionalLen -= RAPIDLZ_MAX_BYTE_VALUE!(); {
-            *dstCurr = RAPIDLZ_MAX_BYTE_VALUE!().cast();
-            dstCurr += 1;
-        });
-        *dstCurr = optionalLen.cast();
-        dstCurr += 1;
-        RapidlzCopy16Byte(dstCurr.cast(), srcAnchor.cast());
-        if literalLength > 16 {
-            RapidlzWildCopy16((srcAnchor + 16).cast(), (dstCurr + 16).cast(), (dstCurr + literalLength).cast());
-        }
-        dstCurr += literalLength;
-    } else if literalLength > 0 {
-        *token = (literalLength << 4).cast();
-        RapidlzCopy16Byte(dstCurr.cast(), srcAnchor.cast());
-        dstCurr += literalLength;
-    } else {
-        *token = 0;
+    if trie.root_node != NULL!() {
+        trie_free_list_push(c_ref!(free_list).cast(), trie.root_node.cast());
     }
 
-    return RapidlzStoreOffMatch(dstCurr.cast(), token.cast(), matchLength.cast(), offset.cast());
+    while free_list != NULL!() {
+        node = trie_free_list_pop(c_ref!(free_list).cast());
+
+        c_for!(let mut i: i32 = 0; i < 256; i.prefix_plus_plus(); {
+            if node.next[i] != NULL!() {
+                trie_free_list_push(c_ref!(free_list).cast(), node.next[i].cast());
+            }
+        });
+
+        c_free!(node);
+    }
+
+    c_free!(trie);
 }

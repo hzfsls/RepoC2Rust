@@ -1,6 +1,9 @@
-macro_rules! CMPTLZ_WRITE32BIT { ($ptr:expr, $val:expr) => 
+macro_rules! CMPT_RC_NORMALIZE { ($rcCtx:expr, $range:expr, $shiftRes:expr) =>
     {
-        $ptr.cast::<Ptr<CmptlzUnalignU32>>().v = $val;
+        if $range < CMPT_RC_MIN_RANGE!() {
+            $range <<= 8;
+            $shiftRes = CmptRcShiftLow($rcCtx);
+        }
     }
 }
-pub(crate) use CMPTLZ_WRITE32BIT;
+pub(crate) use CMPT_RC_NORMALIZE;

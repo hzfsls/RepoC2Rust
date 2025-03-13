@@ -1,2 +1,2 @@
-macro_rules! CMPTLZ_INNER_H { () => { } }
-pub(crate) use CMPTLZ_INNER_H;
+macro_rules! CMPTLZ_PB_BITS_MAX { () => { 4 } }
+pub(crate) use CMPTLZ_PB_BITS_MAX;

@@ -1,3 +1,3 @@
-pub fn RapidlzLoadDict(mut strmCtx: Ptr<RapidlzStreamCtx>, mut dictionary: Ptr<u8>, mut dictSize: i32) -> i32 {
+pub fn avl_tree_num_entries(mut tree: Ptr<AVLTree>) -> u32 {
     unimplemented!();
 }

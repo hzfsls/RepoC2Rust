@@ -1,2 +1,2 @@
-macro_rules! CMPTLZ_LOW_POSSLOT { () => { 4 } }
-pub(crate) use CMPTLZ_LOW_POSSLOT;
+macro_rules! CMPTLZ_ALIGN { () => { CMPTLZ_IS_MATCH!() + (CMPTLZ_PB_STATE_NUM_ALIGN!() << CMPTLZ_PB_BITS_MAX!()) } }
+pub(crate) use CMPTLZ_ALIGN;

@@ -1,3 +1,3 @@
-pub fn CmptLzGetNumProbs(mut decProt: Ptr<CmptLzDecProt>) -> u32 {
+pub fn arraylist_append(mut arraylist: Ptr<ArrayList>, mut data: ArrayListValue) -> i32 {
     unimplemented!();
 }

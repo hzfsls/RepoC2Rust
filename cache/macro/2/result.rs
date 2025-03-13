@@ -1,2 +1,2 @@
-macro_rules! AVL_NULL_PTR { () => { NULL!() } }
-pub(crate) use AVL_NULL_PTR;
+macro_rules! V_AVL3_INNER_H { () => { } }
+pub(crate) use V_AVL3_INNER_H;

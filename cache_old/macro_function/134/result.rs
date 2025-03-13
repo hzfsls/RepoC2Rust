@@ -1,6 +1,9 @@
-macro_rules! RAPIDLZ_DICT_FAST_COPY_AVAIL {
-    ($curSrc:expr, $len:expr, $srcEndFast:expr, $curDest:expr, $destEndFast:expr) => {
-        ($curSrc + $len <= $srcEndFast) && ($curDest + $len <= $destEndFast)
-    }
+macro_rules! RAPIDLZ_LOG {
+    ($error_code:expr, $fmt:expr) => {
+        RapidlzLogWrite($error_code as usize, RAPIDLZFILENAME!().cast(), __LINE__!().cast(), $fmt.cast(), &[]);
+    };
+    ($error_code:expr, $fmt:expr, $($args:expr),*) => {
+        RapidlzLogWrite($error_code as usize, RAPIDLZFILENAME!().cast(), __LINE__!().cast(), $fmt.cast(), &[$(&$args), *]);
+    };
 }
-pub(crate) use RAPIDLZ_DICT_FAST_COPY_AVAIL;
+pub(crate) use RAPIDLZ_LOG;

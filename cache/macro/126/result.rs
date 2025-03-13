@@ -1,2 +1,2 @@
-macro_rules! CMPTLZ_PROPS_SIZE { () => { 5 } }
-pub(crate) use CMPTLZ_PROPS_SIZE;
+macro_rules! TRIE_NULL { () => { NULL!() } }
+pub(crate) use TRIE_NULL;

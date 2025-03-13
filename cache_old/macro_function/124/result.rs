@@ -1,6 +1,9 @@
-macro_rules! CMPT_LIT_PROB_GET {
-    ($encCtx:expr, $litProb:expr, $pos:expr, $prevByte:expr) => {
-        $litProb + (3 as u32) * (((($pos << 8) + $prevByte) & (*$encCtx.lock()).lpMask) << (*$encCtx.lock()).litMarcov.lcBits
+macro_rules! RAPIDLZ_RETURN_IF_NOT_EOK {
+    ($condition:expr, $errCode:expr) => {
+        if $condition != EOK {
+            RAPIDLZ_LOG!($errCode, cstr!(" "));
+            return $errCode;
+        }
     }
 }
-pub(crate) use CMPT_LIT_PROB_GET;
+pub(crate) use RAPIDLZ_RETURN_IF_NOT_EOK;

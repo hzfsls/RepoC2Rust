@@ -1,21 +1,18 @@
-pub fn VOS_MD5PadBuff(mut context: Ptr<MD5_CTX>) -> bool {
-    let mut needAnotherBuff: bool = (context.uiPos >= MD5_TEXT_IN_BUFFER_MAX!()).as_bool();
-    let tmp = context.uiPos;
-    context.aucBuffer[tmp] = 0x80;
-    context.uiPos.suffix_plus_plus();
-    if needAnotherBuff {
-        c_for!(; context.uiPos < MD5_BUFFER_SIZE!(); context.uiPos.suffix_plus_plus(); {
-            let tmp = context.uiPos;
-            context.aucBuffer[tmp] = 0;
-        });
-    } else {
-        c_for!(; context.uiPos < MD5_TEXT_IN_BUFFER_MAX!(); context.uiPos.suffix_plus_plus(); {
-            let tmp = context.uiPos;
-            context.aucBuffer[tmp] = 0;
-        });
-
-        MD5_RECORD_MESSAGE_LEN!(context);
+pub fn BzpAlgorithmInfoInit(mut blockSize: i32) -> Ptr<BzpAlgorithmInfo> {
+    let mut bzpInfo: Ptr<BzpAlgorithmInfo> = c_malloc!(c_sizeof!(BzpAlgorithmInfo));
+    if bzpInfo == NULL!() {
+        return NULL!();
     }
+    bzpInfo.bwt = BzpBlockSortInit(blockSize.cast());
+    bzpInfo.mtf = BzpMtfInit(blockSize.cast());
+    bzpInfo.huffman = BzpHuffmanGroupsInit(blockSize.cast());
+    bzpInfo.outData = BzpOutComDataInit(blockSize.cast());
+    bzpInfo.compressFile = BzpFileInit();
 
-    return needAnotherBuff.cast();
+    if bzpInfo.bwt == NULL!() || bzpInfo.outData == NULL!() || bzpInfo.compressFile == NULL!() || bzpInfo.mtf == NULL!() ||
+        bzpInfo.huffman == NULL!() {
+        BzpAlgorithmInfoFinish(bzpInfo.cast());
+        return NULL!();
+    }
+    return bzpInfo.cast();
 }

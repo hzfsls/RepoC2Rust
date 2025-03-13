@@ -1,29 +1,33 @@
-pub fn BzpDeHuffmanSelect(mut inData: Ptr<InDeComdata>, mut huffman: Ptr<BzpHuffmanDecode>) -> i32 {
-    let mut ch: u8 = Default::default();
-    let mut selectmtf: Array<i32, { BZP_HUFFMAN_MAX_SIZE_SELECT!() }> = Default::default();
-    c_for!(let mut i: i32 = 0; i < huffman.nSelect; i.suffix_plus_plus(); {
-        let mut j: i32 = -1;
-        c_do!({
-            ch = BzpReadBits(BZP_BIT!(), inData.cast()).cast();
-            j.suffix_plus_plus();
-        } while ch != 0);
-        if j >= huffman.nGroups {
-            return BZP_ERROR_DATA!();
-        }
-        selectmtf[i] = j.cast();
+pub fn BzpGetOneTable(mut huffman: Ptr<BzpHuffmanDecode>, mut t: i32) {
+    let mut vec: i32 = 0;
+    let mut cnt: i32 = 0;
+    let mut mi: i32 = huffman.len[t][0];
+    let mut mx: i32 = huffman.len[t][0];
+    c_for!(let mut i: i32 = 0; i < huffman.alphaSize; i.suffix_plus_plus(); {
+        mi = BZP_MIN_FUN!(mi, huffman.len[t][i]);
+        mx = BZP_MAX_FUN!(mx, huffman.len[t][i]);
     });
-    let mut listSelect: Array<i32, { BZP_MAX_GROUPS_NUM!() }> = Default::default();
-    c_for!(let mut i: i32 = 0; i < BZP_MAX_GROUPS_NUM!(); i.suffix_plus_plus(); {
-        listSelect[i] = i.cast();
-    });
-    c_for!(let mut i: i32 = 0; i < huffman.nSelect; i.suffix_plus_plus(); {
-        let mut pos: i32 = selectmtf[i].cast();
-        let mut tmpv: i32 = listSelect[pos].cast();
-        c_for!(let mut j: i32 = pos; j > 0; j.suffix_minus_minus(); {
-            listSelect[j] = listSelect[j - 1].cast();
+    huffman.minLens[t] = mi;
+    c_for!(let mut i: i32 = mi; i <= mx; i.suffix_plus_plus(); {
+        c_for!(let mut j: i32 = 0; j < huffman.alphaSize; j.suffix_plus_plus(); {
+            if huffman.len[t][j] == i {
+                huffman.perm[t][cnt] = j;
+                cnt += 1;
+            }
         });
-        listSelect[0] = tmpv.cast();
-        huffman.select[i] = tmpv.cast();
     });
-    return BZP_OK!();
+    c_for!(let mut i: i32 = 0; i < huffman.alphaSize; i.suffix_plus_plus(); {
+        huffman.base[t][huffman.len[t][i] + 1] += 1;
+    });
+    c_for!(let mut i: i32 = 1; i <= mx + 1; i.suffix_plus_plus(); {
+        huffman.base[t][i] += huffman.base[t][i - 1];
+    });
+    c_for!(let mut i: i32 = mi; i <= mx; i.suffix_plus_plus(); {
+        vec += (huffman.base[t][i + 1] - huffman.base[t][i]);
+        huffman.limit[t][i] = vec - 1;
+        vec <<= 1;
+    });
+    c_for!(let mut i: i32 = mi + 1; i <= mx; i.suffix_plus_plus(); {
+        huffman.base[t][i] = ((huffman.limit[t][i - 1] + 1) << 1) - huffman.base[t][i];
+    });
 }

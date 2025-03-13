@@ -1,6 +1,10 @@
-macro_rules! RAPIDLZ_WRITE64BIT { ($ptr:expr, $val:expr) => 
+macro_rules! RAPIDLZ_EXPAND_FORWARD { ($srcBegin:expr, $matchBegin:expr, $srcCurr:expr, $srcAnchor:expr) =>
     {
-        $ptr.cast::<Ptr<RapidlzUnalignU64>>().v = $val;
+        while $srcBegin < $matchBegin && $srcCurr > $srcAnchor && RAPIDLZ_UNLIKELY!($matchBegin[-1] == $srcCurr[-1])
+        {
+            $matchBegin.minus_minus();
+            $srcCurr.minus_minus();
+        }
     }
 }
-pub(crate) use RAPIDLZ_WRITE64BIT;
+pub(crate) use RAPIDLZ_EXPAND_FORWARD;

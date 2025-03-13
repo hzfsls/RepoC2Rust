@@ -1,2 +1,2 @@
-macro_rules! CMPTLZ_LARGE_DIST_LOW_BITS { () => { 4 } }
-pub(crate) use CMPTLZ_LARGE_DIST_LOW_BITS;
+macro_rules! CMPTLZ_ISREPG1 { () => { CMPTLZ_ISREPG0!() + CMPTLZ_MKSTATE_NUM!() } }
+pub(crate) use CMPTLZ_ISREPG1;

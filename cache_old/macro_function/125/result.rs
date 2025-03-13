@@ -1,9 +1,7 @@
-macro_rules! RAPIDLZ_RETURN_IF_NOT_TRUE {
-    ($condition:expr, $errCode:expr) => {
-        if !$condition {
-            RAPIDLZ_LOG!($errCode, cstr!(" "));
-            return $errCode;
-        }
+macro_rules! RAPIDLZ_POSITION_UPDATE { ($curSrc:expr, $curDest:expr, $len:expr) =>
+    {
+        $curDest += $len;
+        $curSrc += $len;
     }
 }
-pub(crate) use RAPIDLZ_RETURN_IF_NOT_TRUE;
+pub(crate) use RAPIDLZ_POSITION_UPDATE;

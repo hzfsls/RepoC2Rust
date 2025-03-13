@@ -1,18 +1,36 @@
-#[repr(C)]
-#[derive(Default)]
-pub struct BzpHuffmanDecode {
-    pub select: Ptr<i32>,
-    pub len: Array<Array<i32, { BZP_MAX_ALPHA_SIZE!() }>, { BZP_MAX_GROUPS_NUM!() }>,
-    pub perm: Array<Array<i32, { BZP_MAX_ALPHA_SIZE!() }>, { BZP_MAX_GROUPS_NUM!() }>,
-    pub limit: Array<Array<i32, { BZP_MAX_ALPHA_SIZE!() }>, { BZP_MAX_GROUPS_NUM!() }>,
-    pub base: Array<Array<i32, { BZP_MAX_ALPHA_SIZE!() }>, { BZP_MAX_GROUPS_NUM!() }>,
-    pub minLens: Array<i32, { BZP_MAX_GROUPS_NUM!() }>,
-    pub nGroups: i32,
-    pub nSelect: i32,
-    pub alphaSize: i32,
-    pub deCodeNum: i32,
-    pub selectCnt: i32,
-    pub nBlock: i32,
-}
+pub type BZP_ERROR_BASE_NO = i32;
 
-pub type BzpHuffmanDecode = _BzpHuffmanDecode;
+macro_rules! BZP_ERROR_MEMORY_OPER_FAILURE {
+    () => {
+        1
+    };
+}
+pub(crate) use BZP_ERROR_MEMORY_OPER_FAILURE;
+
+macro_rules! BZP_ERROR_PARAM {
+    () => {
+        2
+    };
+}
+pub(crate) use BZP_ERROR_PARAM;
+
+macro_rules! BZP_ERROR_IO {
+    () => {
+        3
+    };
+}
+pub(crate) use BZP_ERROR_IO;
+
+macro_rules! BZP_ERROR_DATA {
+    () => {
+        4
+    };
+}
+pub(crate) use BZP_ERROR_DATA;
+
+macro_rules! BZP_ERROR_DATA_MAGIC {
+    () => {
+        5
+    };
+}
+pub(crate) use BZP_ERROR_DATA_MAGIC;

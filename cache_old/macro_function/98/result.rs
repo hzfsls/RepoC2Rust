@@ -1,7 +1,12 @@
-macro_rules! CMPT_RC_GET_NEWBOUND {
-    ($prob:expr, $bit0Prob:expr, $range:expr, $newBound:expr) => {
-        $bit0Prob = *$prob;
-        $newBound = ($range >> 11) * $bit0Prob;
+macro_rules! CMPT_STATE_UPDATE_WHEN_LIT { ($state:expr) => 
+    {
+        $state = if $state <= SHORTREP_LIT_LIT {
+            LIT_LIT
+        } else if $state <= LIT_SHORTREP {
+            $state - 3
+        } else {
+            $state - 6
+        }
     }
 }
-pub(crate) use CMPT_RC_GET_NEWBOUND;
+pub(crate) use CMPT_STATE_UPDATE_WHEN_LIT;

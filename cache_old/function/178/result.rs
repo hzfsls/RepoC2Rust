@@ -1,3 +1,11 @@
-pub fn CmptLzDecMemAlloc(mut memHook: Ptr<CmptLzMemHook>, mut memHandle: i32, mut allocSize: usize) -> Ptr<Void> {
-    return memHook.CmptLzAlloc(memHandle.cast(), allocSize.cast());
+pub fn list_free(mut list: Ptr<ListEntry>) {
+    let mut entry: Ptr<ListEntry> = list.cast();
+
+    while entry != NULL!() {
+        let mut next: Ptr<ListEntry> = entry.next.cast();
+
+        c_free!(entry);
+
+        entry = next.cast();
+    }
 }

@@ -1,3 +1,3 @@
-pub fn CmptLzGetIsRepProb(mut probsMatrix: Ptr<CmptLzDecProb>) -> Ptr<CmptLzDecProb> {
+pub fn pointer_compare(mut location1: Ptr<Void>, mut location2: Ptr<Void>) -> i32 {
     unimplemented!();
 }

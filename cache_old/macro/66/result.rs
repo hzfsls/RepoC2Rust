@@ -1,2 +1,2 @@
-macro_rules! BZP_STREAM_UTILS_H { () => { } }
-pub(crate) use BZP_STREAM_UTILS_H;
+macro_rules! BZP_FILE_END_4 { () => { 0x50 } }
+pub(crate) use BZP_FILE_END_4;

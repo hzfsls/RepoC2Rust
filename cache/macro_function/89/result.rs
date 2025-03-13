@@ -1,15 +1,10 @@
-macro_rules! CMPTLZ_NORMAL_BIT_DEC {
-    ($probLit:expr, $range:expr, $rangeCode:expr, $rangeBound:expr, $decSym:expr) => {
-        {
-            $rangeBound = ($range >> CMPTLZ_PROB_LG_BIT!()) * (*$probLit);
-            if $rangeCode < $rangeBound {
-                CMPTLZ_RANGE_UPDATE_0!($probLit, $range, $rangeBound);
-                $decSym = $decSym << 1;
-            } else {
-                CMPTLZ_RANGE_UPDATE_1!($probLit, $range, $rangeCode, $rangeBound);
-                $decSym = ($decSym << 1) + 1;
-            }
+macro_rules! CMPT_HASH_FIND_3_BYTES {
+    ($mf:expr, $delta2:expr, $delta3:expr, $longestLen:expr, $matchesCount:expr, $cur:expr, $matches:expr) => {
+        if $delta2 != $delta3 && $delta3 < (*$mf.lock()).cycleSize && *($cur - $delta3) == *$cur {
+            $longestLen = CMPT_MF_MATCH_3_BYTES!();
+            $matches[$matchesCount.plus_plus()].dist = $delta3 - 1;
+            $delta2 = $delta3;
         }
     }
 }
-pub(crate) use CMPTLZ_NORMAL_BIT_DEC;
+pub(crate) use CMPT_HASH_FIND_3_BYTES;

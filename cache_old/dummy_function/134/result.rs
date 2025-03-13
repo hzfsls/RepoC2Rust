@@ -1,3 +1,3 @@
-pub fn BzpHuffmanGroupsInit(mut blockSize: i32) -> Ptr<BzpHuffmanGroups> {
+pub fn sortedarray_insert(mut sortedarray: Ptr<SortedArray>, mut data: SortedArrayValue) -> i32 {
     unimplemented!();
 }

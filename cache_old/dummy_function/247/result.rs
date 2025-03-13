@@ -1,3 +1,3 @@
-pub fn CmptRcShiftLow(mut rcCtx: Ptr<CmptRcCtx>) -> i32 {
+pub fn hash_table_free(mut hash_table: Ptr<HashTable>) {
     unimplemented!();
 }

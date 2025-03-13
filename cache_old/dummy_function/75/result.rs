@@ -1,3 +1,3 @@
-pub fn BzpCompressEnd(mut bzpInfo: Ptr<BzpAlgorithmInfo>) {
+pub fn BzpGetDictionaryList(mut inData: Ptr<InDeComdata>) -> i32 {
     unimplemented!();
 }

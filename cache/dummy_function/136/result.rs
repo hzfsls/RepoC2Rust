@@ -1,3 +1,3 @@
-pub fn BzpGetHuffmanGroups(mut nBlock: i32) -> i32 {
+pub fn sortedarray_clear(mut sortedarray: Ptr<SortedArray>) {
     unimplemented!();
 }

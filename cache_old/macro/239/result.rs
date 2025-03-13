@@ -1,2 +1,2 @@
-macro_rules! CMPT_PRICE_COUNT { () => { 64 } }
-pub(crate) use CMPT_PRICE_COUNT;
+macro_rules! CMPT_MF_MATCH_2_BYTES { () => { 2 } }
+pub(crate) use CMPT_MF_MATCH_2_BYTES;

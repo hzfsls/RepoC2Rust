@@ -1,9 +1,17 @@
-macro_rules! RAPIDLZ_SAFE_LIT_COPY {
-    ($curSrc:expr, $leftSrcSize:expr, $curDest:expr, $destEnd:expr, $litLen:expr) => {
-        if RAPIDLZ_UNLIKELY!($litLen > $leftSrcSize || memmove_s($curDest, $destEnd - $curDest, $curSrc, $litLen) != EOK) {
-            RAPIDLZ_LOG!(RAPIDLZ_DST_SIZE_SMALL, cstr!("litLen:%u dstEnd - dst:%zu\n"), $litLen, $leftSrcSize);
-            return RAPIDLZ_ERROR_OUTPUT;
+macro_rules! RAPIDLZ_FAST_SAFE_COPY_BY_BYTES {
+    ($curDest:expr, $matchSrc:expr, $len:expr) => {
+        while $len > 2 {
+            *$curDest.plus_plus() = *$matchSrc.plus_plus();
+            *$curDest.plus_plus() = *$matchSrc.plus_plus();
+            *$curDest.plus_plus() = *$matchSrc.plus_plus();
+            $len -= 3;
+        }
+        if $len > 0 {
+            *$curDest.plus_plus() = *$matchSrc.plus_plus();
+            if $len > 1 {
+                *$curDest.plus_plus() = *$matchSrc.plus_plus();
+            }
         }
     }
 }
-pub(crate) use RAPIDLZ_SAFE_LIT_COPY;
+pub(crate) use RAPIDLZ_FAST_SAFE_COPY_BY_BYTES;

@@ -120,20 +120,24 @@ static MyFunction g_MyCustomFunc = NULL;
 
 Source:
 ```c
-static int[] g_MyCustomArray = {1, 2, 3, 4, 5};
+int[] g_MyCustomArray = {1, 2, 3, 4, 5};
+const int[] myCustomArray = {1, 2, 3, 4, 5};
 ```
 
 Translation:
 ```rust
 pub static g_MyCustomArray: Global<Array<i32, 5>> = global!(arr![1, 2, 3, 4, 5]);
-
+pub const myCustomArray: Array<i32, 5>> = arr![1, 2, 3, 4, 5];
+```
 Source:
 ```c
-const int[] A10 = {3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+static int[] g_A10 = {3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+static const int[] A10 = {3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
 ```
 
 Translation:
 ```
+pub static g_A10: Global<Array<i32, 10>> = global!(arr![3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
 pub const A10: Array<i32, 10> = arr![3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 ```
 
@@ -157,7 +161,7 @@ pub struct MySimpleStruct {
 }
 ```
 
-Otherwise, if it has array type inside, do not derive Clone and Copy Trait.
+If a struct is defined with `typedef struct A { ... } A1;`, add an additional `pub type A1 = A;` in Rust Translation. 
 
 Source:
 ```c
@@ -188,76 +192,29 @@ pub struct _MyComplexStruct {
 
 pub type MY_Com_Struct = _MyComplexStruct;
 ```
+
+Otherwise, if it has array type inside, do not derive Clone and Copy Trait. Also, if a struct is defined with `struct A {...};`, do not add `pub type` declaration.
+
+Source:
+```c
+struct _MySimpleStruct {
+    int arr[2];
+    unsigned int length;
+    MySimpleStruct* ss; 
+};
+```
+
+Translation:
+```rust
+#[repr(C)]
+#[derive(Default)]
+pub struct _MySimpleStruct {
+    pub arr: Array<i32, 2>,
+    pub length: u32,
+    pub ss: MySimpleStruct,
+}
+```
 """
-
-# Source:
-# ```c
-# #define PTR_PLUSPLUS(dst) (dst)++
-# ```
-
-# Translation:
-# ```rust
-# macro_rules! PTR_PLUSPLUS { ($dst:expr) => { $dst.plus_plus() } }
-# pub(crate) use PTR_PLUSPLUS;
-# ```
-
-# Source:
-# ```c
-# #define PTR_SUB(dst, src) ((dst) - (src))
-# ```
-
-# Translation:
-# ```rust
-# macro_rules! PTR_SUB { ($dst:expr, $src:expr) => { $dst - $src } }
-# pub(crate) use PTR_SUB;
-# ```
-
-# Source:
-# ```c
-# #define PTR_COMPLEX(ptr1, var, ptr2, var2)      \
-#     do                                          \
-#     {                                           \
-#         *(ptr1)++ = (int32_t)(var);             \
-#         (ptr2) = (uint16_t *)((ptr1) + 8);      \
-#         (var2) = (ptr2) - (ptr1)                \
-#         (ptr1) = &(ptr)[(var2) * 2];            \
-#     } while (0)
-# ```
-
-# Translation:
-# ```rust
-# macro_rules! PTR_COMPLEX { ($ptr1:expr, $var:expr, $ptr2:expr, $var2:expr) => {
-#     *$ptr1.plus_plus() = $var.cast::<i32>();
-#     $ptr2 = ($ptr1 + 8).cast::<Ptr<u16>>();
-#     $var2 = $ptr2 - $ptr1;
-#     $ptr1 = c_ref!(($ptr)[($var2 * 2)]);
-# }}
-# ```
-
-
-
-# Source:
-# ```c
-# #define MY_VARGS_M(error_code, fmt, args...)                                                                           \
-#     do                                                                                                                 \
-#     {                                                                                                                  \
-#         MyVargsFunc(error_code, fmt, ##args);                                                                           \
-#     } while (0)
-# ```
-
-# Translation:
-# ```rust
-# // when translate a variadic macro, you need to use the following pattern
-# macro_rules! MY_VARGS_M {
-#     ($error_code:expr, $fmt:expr) => {
-#         MyVargsFunc($error_code, $fmt, &[]);
-#     }
-#     ($error_code:expr, $fmt:expr, $($args:expr),*) => {
-#         MyVargsFunc($error_code, $fmt, &[$(&$args), *]);
-#     }
-# }
-# ```
-# """
 
 def definition_prompt(c_code):
     return definition_text + f"Now translate the following Definition:\n```c\n{c_code.strip()}\n```"

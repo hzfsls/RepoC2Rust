@@ -1,9 +1,6 @@
 #[repr(C)]
-#[derive(Default)]
-pub struct BzpQSortInfo {
-    pub stackL: Array<i32, { BZP_MAX_STACK_SIZE!() }>,
-    pub stackR: Array<i32, { BZP_MAX_STACK_SIZE!() }>,
-    pub cnt: i32,
-    pub tl: i32,
-    pub tr: i32,
+#[derive(Default, Clone, Copy)]
+pub struct _SListIterator {
+    pub prev_next: Ptr<Ptr<SListEntry>>,
+    pub current: Ptr<SListEntry>,
 }

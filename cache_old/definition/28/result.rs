@@ -1,15 +1,9 @@
 #[repr(C)]
-#[derive(Default)]
-pub struct BzpBwtInfo {
-    pub sortBlock: Ptr<i32>,
-    pub idx: Ptr<i32>,
-    pub isStartPos: Ptr<i32>,
-    pub block: Ptr<u8>,
-    pub blockCRC: u32,
-    pub combinedCRC: u32,
-    pub nBlockMax: i32,
-    pub blockId: i32,
-    pub nBlock: i32,
-    pub oriPtr: i32,
-    pub inUse: Array<bool, { BZP_ASCII_SIZE!() }>,
+#[derive(Default, Clone, Copy)]
+pub struct _SortedArray {
+    pub data: Ptr<SortedArrayValue>,
+    pub length: u32,
+    pub _alloced: u32,
+    pub equ_func: SortedArrayEqualFunc,
+    pub cmp_func: SortedArrayCompareFunc,
 }

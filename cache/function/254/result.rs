@@ -1,7 +1,15 @@
-pub fn CmptMemCmpByOneByte(mut buf1: Ptr<u8>, mut buf2: Ptr<u8>, mut len: u32, mut limit: u32) -> u32 {
-    let mut lenIn: u32 = len.cast();
-    while lenIn < limit && buf1[lenIn] == buf2[lenIn] {
-        lenIn += 1;
-    }
-    return lenIn.cast();
+pub fn hash_table_iterate(mut hash_table: Ptr<HashTable>, mut iterator: Ptr<HashTableIterator>) {
+    let mut chain: u32 = Default::default();
+
+    iterator.hash_table = hash_table.cast();
+
+    iterator.next_entry = NULL!();
+
+    c_for!(chain = 0; chain < hash_table.table_size; chain.prefix_plus_plus(); {
+        if hash_table.table[chain] != NULL!() {
+            iterator.next_entry = hash_table.table[chain].cast();
+            iterator.next_chain = chain.cast();
+            break;
+        }
+    });
 }

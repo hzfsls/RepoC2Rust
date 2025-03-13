@@ -1,3 +1,3 @@
-pub fn RapidlzWildCopy32(mut srcPtr: Ptr<u8>, mut dstPtr: Ptr<u8>, mut dstEnd: Ptr<u8>) {
+pub fn rb_tree_remove_node(mut tree: Ptr<RBTree>, mut node: Ptr<RBTreeNode>) {
     unimplemented!();
 }

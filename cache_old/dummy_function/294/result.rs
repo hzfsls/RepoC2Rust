@@ -1,3 +1,3 @@
-pub fn RapidlzCountTailZero64(mut x: u64) -> u8 {
+pub fn rb_tree_free(mut tree: Ptr<RBTree>) {
     unimplemented!();
 }

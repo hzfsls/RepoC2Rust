@@ -1,18 +1,16 @@
-pub fn BzpHeapAdjustDown(mut heap: Ptr<i32>, mut weight: Ptr<i32>, mut nHeap: i32) {
-    let mut pos: i32 = 1;
-    let mut chpos: i32 = pos << 1;
-    let mut tmpid: i32 = heap[pos].cast();
-    let mut tmpv: i32 = weight[tmpid].cast();
-    while chpos <= nHeap {
-        if (chpos | 1) <= nHeap && weight[heap[chpos]] > weight[heap[chpos | 1]] {
-            chpos |= 1;
+pub fn sortedarray_first_index(mut sortedarray: Ptr<SortedArray>, mut data: SortedArrayValue, mut left: u32, mut right: u32) -> u32 {
+    let mut index: u32 = left.cast();
+
+    while left < right {
+        index = (left + right) / 2;
+
+        let mut order: i32 = (sortedarray.cmp_func)(data.cast(), sortedarray.data[index].cast()).cast();
+        if order > 0 {
+            left = index + 1;
+        } else {
+            right = index;
         }
-        if tmpv < weight[heap[chpos]] {
-            break;
-        }
-        heap[pos] = heap[chpos].cast();
-        pos = chpos.cast();
-        chpos = pos << 1;
     }
-    heap[pos] = tmpid.cast();
+
+    return index.cast();
 }

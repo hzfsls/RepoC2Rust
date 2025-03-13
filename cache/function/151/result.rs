@@ -1,3 +1,4 @@
-pub fn CmptLzGetIsRepG1Prob(mut probsMatrix: Ptr<CmptLzDecProb>) -> Ptr<CmptLzDecProb> {
-    return (probsMatrix + CMPTLZ_ISREPG1!()).cast();
+pub fn bloom_filter_free(mut bloomfilter: Ptr<BloomFilter>) {
+    c_free!(bloomfilter.table);
+    c_free!(bloomfilter);
 }

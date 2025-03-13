@@ -1,2 +1,2 @@
-macro_rules! CMPTLZ_HIDDEN { () => { #[visibility(hidden)] } }
-pub(crate) use CMPTLZ_HIDDEN;
+macro_rules! CMPTLZ_ONE_BYTE_WIDTH { () => { 8 } }
+pub(crate) use CMPTLZ_ONE_BYTE_WIDTH;

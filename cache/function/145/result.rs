@@ -1,10 +1,32 @@
-pub fn CmptlzSwap32(mut val: u32) -> u32 {
-    #[cfg(all(target_arch = "x86_64", target_feature = "bswap"))]
-    {
-        return val.swap_bytes();
+pub fn binomial_heap_insert(mut heap: Ptr<BinomialHeap>, mut value: BinomialHeapValue) -> i32 {
+    let mut fake_heap: BinomialHeap = Default::default();
+    let mut new_tree: Ptr<BinomialTree> = Default::default();
+    let mut result: i32 = Default::default();
+
+    new_tree = c_malloc!(c_sizeof!(BinomialTree));
+
+    if new_tree == NULL!() {
+        return 0;
     }
-    #[cfg(not(all(target_arch = "x86_64", target_feature = "bswap")))]
-    {
-        return ((0xff000000 & (val << 24)) | (0x000000ff & (val >> 24)) | (0x00ff0000 & (val << 8)) | (0x0000ff00 & (val >> 8))).cast();
+
+    new_tree.value = value.cast();
+    new_tree.order = 0;
+    new_tree.refcount = 1;
+    new_tree.subtrees = NULL!();
+
+    fake_heap.heap_type = heap.heap_type.cast();
+    fake_heap.compare_func = heap.compare_func.cast();
+    fake_heap.num_values = 1;
+    fake_heap.roots = c_ref!(new_tree).cast();
+    fake_heap.roots_length = 1;
+
+    result = binomial_heap_merge(heap.cast(), c_ref!(fake_heap).cast()).cast();
+
+    if result != 0 {
+        heap.num_values.prefix_plus_plus();
     }
+
+    binomial_tree_unref(new_tree.cast());
+
+    return result.cast();
 }

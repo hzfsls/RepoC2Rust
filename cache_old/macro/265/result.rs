@@ -1,2 +1,2 @@
-macro_rules! RAPIDLZ_DEC_NOT_OK { () => { 0 } }
-pub(crate) use RAPIDLZ_DEC_NOT_OK;
+macro_rules! CMPTLZ_DICT_HANDLE { () => { CMPTLZ_HANDLE_CONVERT!(CMPTLZ_DICT_MEM!()) } }
+pub(crate) use CMPTLZ_DICT_HANDLE;

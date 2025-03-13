@@ -1,3 +1,3 @@
-pub fn PosSloter(mut dist: u32) -> u32 {
+pub fn avl_tree_free_subtree(mut tree: Ptr<AVLTree>, mut node: Ptr<AVLTreeNode>) {
     unimplemented!();
 }

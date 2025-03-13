@@ -1,21 +1,21 @@
-pub fn CmptRcPosSlotProcess(mut encCtx: Ptr<CmptLzEncCtx>, mut posSlot: u32, mut len: u32) -> i32 {
-    let mut shiftRes: i32 = CMPT_OK!();
-    let mut range: u32 = encCtx.rcCtx.range.cast();
-    let mut sym: u32 = posSlot + (1 << 6);
-    let mut bit0Prob: u32 = Default::default();
-    let mut newBound: u32 = Default::default();
-    let mut bit: u32 = Default::default();
-    let mut probs: Ptr<CmptlzProb> = encCtx.probDistSlot[GET_LEN_TO_POS_STATE!(len)].cast();
-    loop {
-        let mut posSlotProbTableIndex: Ptr<CmptlzProb> = (probs + (sym >> CMPTLZ_DIST_SLOT_BITS!())).cast();
-        bit = (sym >> (CMPTLZ_DIST_SLOT_BITS!() - 1)) & 1;
-        sym <<= 1;
-        CMPT_RC_BIT_PROCESS!(encCtx.rcCtx, posSlotProbTableIndex, bit, bit0Prob, range, newBound, shiftRes);
-        CMPTLZ_RETURN_IF_NOT_OK!(shiftRes);
-        if sym >= (1 << (CMPTLZ_DIST_SLOT_BITS!() * 2)) {
-            break;
+pub fn hash_table_lookup(mut hash_table: Ptr<HashTable>, mut key: HashTableKey) -> HashTableValue {
+    let mut rover: Ptr<HashTableEntry> = Default::default();
+    let mut pair: Ptr<HashTablePair> = Default::default();
+    let mut index: u32 = Default::default();
+
+    index = (hash_table.hash_func(key) % hash_table.table_size).cast();
+
+    rover = hash_table.table[index].cast();
+
+    while rover != NULL!() {
+        pair = c_ref!(rover.pair).cast();
+
+        if hash_table.equal_func(key, pair.key) != 0 {
+            return pair.value.cast();
         }
+
+        rover = rover.next.cast();
     }
-    encCtx.rcCtx.range = range.cast();
-    return CMPT_OK!();
+
+    return HASH_TABLE_NULL!();
 }

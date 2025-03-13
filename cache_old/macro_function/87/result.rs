@@ -1,7 +1,8 @@
-macro_rules! CMPTLZ_RANGE_UPDATE_0 { ($prob:expr, $range:expr, $rangeBound:expr) =>
+macro_rules! CMPT_HASH_UPDATE { ($mf:expr, $hash2Value:expr, $hash3Value:expr, $hashValue:expr, $pos:expr) =>
     {
-        $range = $rangeBound;
-        *$prob = (*$prob + ((CMPTLZ_PROB_LG!() - *$prob) >> CMPTLZ_RANGE_CODE_SIZE!()) as CmptLzDecProb;
+        (*$mf.lock()).hash[$hash2Value] = $pos;
+        (*$mf.lock()).hash[CMPTLZ_FIX_3_HASH!() + $hash3Value] = $pos;
+        (*$mf.lock()).hash[CMPTLZ_FIX_4_HASH!() + $hashValue] = $pos;
     }
 }
-pub(crate) use CMPTLZ_RANGE_UPDATE_0;
+pub(crate) use CMPT_HASH_UPDATE;

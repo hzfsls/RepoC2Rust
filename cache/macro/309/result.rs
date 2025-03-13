@@ -1,2 +1,2 @@
-macro_rules! RAPIDLZ_ACCELERATION_MAX { () => { 10 } }
-pub(crate) use RAPIDLZ_ACCELERATION_MAX;
+macro_rules! RAPIDLZ_HASH_TYPE_4 { () => { 4 } }
+pub(crate) use RAPIDLZ_HASH_TYPE_4;

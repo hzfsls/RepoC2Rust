@@ -1,3 +1,3 @@
-pub fn VosAvlRotateRight(mut ppstSubTree: Ptr<Ptr<AVLBASE_NODE_S>>) {
+pub fn VOS_V_AVLBaseFini() -> u32 {
     unimplemented!();
 }

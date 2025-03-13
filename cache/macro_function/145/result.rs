@@ -1,13 +1,10 @@
-macro_rules! RAPIDLZ_READ_OPTIONAL_LENGTH {
-    ($len:expr, $srcCurr:expr, $srcEnd:expr, $temp:expr) => {
-        if RAPIDLZ_LIKELY!($srcCurr < $srcEnd) {
-            $temp = *$srcCurr.plus_plus();
-            $len += $temp;
-        }
-        while ($temp == RAPIDLZ_MAX_BYTE_VALUE!() && $srcCurr < $srcEnd) {
-            $temp = *$srcCurr.plus_plus();
-            $len += $temp;
-        }
-    }
+macro_rules! RAPIDLZ_COMPRESSBOUND { ($size:expr) => 
+    { 
+        if ($size as u32) > RAPIDLZ_MAX_INPUT_SIZE { 
+            0 
+        } else { 
+            $size + ($size / 255) + 16 
+        } 
+    } 
 }
-pub(crate) use RAPIDLZ_READ_OPTIONAL_LENGTH;
+pub(crate) use RAPIDLZ_COMPRESSBOUND;

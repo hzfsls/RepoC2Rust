@@ -1,3 +1,3 @@
-pub fn BzpUpdateflag(mut bwt: Ptr<BzpBwtInfo>, mut l: i32, mut r: i32) {
+pub fn BzpBzpHuffmanGroupsFinish(mut huffman: Ptr<BzpHuffmanGroups>) {
     unimplemented!();
 }

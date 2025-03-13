@@ -1,2 +1,2 @@
-macro_rules! CMPTLZ_REQUIRED_INPUT_MAX { () => { 20 } }
-pub(crate) use CMPTLZ_REQUIRED_INPUT_MAX;
+macro_rules! CMPTLZ_DEF_H { () => { } }
+pub(crate) use CMPTLZ_DEF_H;

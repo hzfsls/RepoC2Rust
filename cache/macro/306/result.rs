@@ -1,2 +1,2 @@
-macro_rules! RAPIDLZ_COPY_PROTECT_SIZE { () => { 16 } }
-pub(crate) use RAPIDLZ_COPY_PROTECT_SIZE;
+macro_rules! RAPIDLZ_MAX_BYTE_VALUE { () => { 255 } }
+pub(crate) use RAPIDLZ_MAX_BYTE_VALUE;

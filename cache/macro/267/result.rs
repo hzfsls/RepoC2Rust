@@ -1,2 +1,2 @@
-macro_rules! RAPIDLZ_ERROR_OUTPUT { () => { (-((curSrc as isize - src as isize) - 1)) as i32 } }
-pub(crate) use RAPIDLZ_ERROR_OUTPUT;
+macro_rules! CMPTLZ_ENC_CCTX_HANDLE { () => { CMPTLZ_HANDLE_CONVERT!(CMPTLZ_ENC_CCTX!()) } }
+pub(crate) use CMPTLZ_ENC_CCTX_HANDLE;

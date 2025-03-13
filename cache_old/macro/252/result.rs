@@ -1,2 +1,2 @@
-macro_rules! CMPT_DP_OPTMAX { () => { 1 << 11 } }
-pub(crate) use CMPT_DP_OPTMAX;
+macro_rules! CMPT_OK { () => { 0 } }
+pub(crate) use CMPT_OK;

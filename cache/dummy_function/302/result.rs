@@ -1,3 +1,3 @@
-pub fn RapidlzWildCopy16(mut srcPtr: Ptr<u8>, mut dstPtr: Ptr<u8>, mut dstEnd: Ptr<u8>) {
+pub fn rb_tree_lookup(mut tree: Ptr<RBTree>, mut key: RBTreeKey) -> RBTreeValue {
     unimplemented!();
 }

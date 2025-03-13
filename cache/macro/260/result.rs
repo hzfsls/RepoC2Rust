@@ -1,2 +1,2 @@
-macro_rules! CMPTLZ_ENC_SYMBOL_H { () => { } }
-pub(crate) use CMPTLZ_ENC_SYMBOL_H;
+macro_rules! CMPT_ENC_ERROR_WRITE { () => { CMPTLZ_ERROR_CONVERT!(CMPTLZ_ENC_ERROR_WRITE!()) } }
+pub(crate) use CMPT_ENC_ERROR_WRITE;

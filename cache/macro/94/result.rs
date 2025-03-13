@@ -1,2 +1,2 @@
-macro_rules! BZP_RLC_NUM_1 { () => { 1 } }
-pub(crate) use BZP_RLC_NUM_1;
+macro_rules! BZP_MTF_ENCODE_H { () => { } }
+pub(crate) use BZP_MTF_ENCODE_H;

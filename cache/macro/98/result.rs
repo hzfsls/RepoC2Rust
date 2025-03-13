@@ -1,2 +1,2 @@
-macro_rules! BZP_RLC_NUM_LOWER_LIMIT { () => { 1 } }
-pub(crate) use BZP_RLC_NUM_LOWER_LIMIT;
+macro_rules! ALGORITHM_COMPARE_INT_H { () => { } }
+pub(crate) use ALGORITHM_COMPARE_INT_H;

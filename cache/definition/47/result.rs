@@ -1,1 +1,1 @@
-pub static g_cmptlzLogFunc: Global<CmptlzLogFunc> = global!(NULL!());
+pub type SetEqualFunc = FuncPtr<fn(SetValue, SetValue) -> i32>;

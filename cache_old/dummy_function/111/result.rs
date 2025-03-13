@@ -1,3 +1,3 @@
-pub fn BzpMtfFinish(mut mtf: Ptr<BzpMtfInfo>) {
+pub fn BzpHeapInit(mut huffman: Ptr<BzpHuffmanInfo>) {
     unimplemented!();
 }

@@ -1,11 +1,5 @@
-#[repr(C)]
-#[derive(Default, Clone, Copy)]
-pub struct _CmptlzOpt {
-    pub state: CmptlzState,
-    pub price: u32,
-    pub posPrev: u32,
-    pub backPrev: u32,
-    pub backs: Array<u32, { CMPTLZ_NUM_REPS!() }>,
-}
-
-pub type CmptlzOpt = _CmptlzOpt;
+pub type BinaryHeapType = i32;
+macro_rules! BINARY_HEAP_TYPE_MIN { () => { 0 } }
+pub(crate) use BINARY_HEAP_TYPE_MIN;
+macro_rules! BINARY_HEAP_TYPE_MAX { () => { 1 } }
+pub(crate) use BINARY_HEAP_TYPE_MAX;

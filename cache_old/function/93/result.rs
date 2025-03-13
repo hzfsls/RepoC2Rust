@@ -1,29 +1,15 @@
-pub fn BZPReadFileEnd(mut inData: Ptr<InDeComdata>, mut caltotalCRC: u32) -> i32 {
-    let mut ch: u8 = BzpReadBits(BZP_BITS8!(), inData.cast()).cast();
-    if ch != BZP_FILE_END_1!() {
-        return BZP_ERROR_DATA!();
-    }
-    ch = BzpReadBits(BZP_BITS8!(), inData.cast()).cast();
-    if ch != BZP_FILE_END_2!() {
-        return BZP_ERROR_DATA!();
-    }
-    ch = BzpReadBits(BZP_BITS8!(), inData.cast()).cast();
-    if ch != BZP_FILE_END_3!() {
-        return BZP_ERROR_DATA!();
-    }
-    ch = BzpReadBits(BZP_BITS8!(), inData.cast()).cast();
-    if ch != BZP_FILE_END_4!() {
-        return BZP_ERROR_DATA!();
-    }
-    ch = BzpReadBits(BZP_BITS8!(), inData.cast()).cast();
-    if ch != BZP_FILE_END_5!() {
-        return BZP_ERROR_DATA!();
-    }
+pub fn BzpNumEncode(mut mtf: Ptr<BzpMtfInfo>, mut num: i32) {
+    num <<= 1;
 
-    let mut storedcombinedcrc: u32 = BzpReadUInt32(inData.cast()).cast();
-
-    if caltotalCRC != storedcombinedcrc {
-        return BZP_ERROR_DATA!();
-    }
-    return BZP_OK!();
+    c_do!({
+        num >>= 1;
+        num -= 1;
+        if num & 1 != 0 {
+            mtf.mtfV[mtf.nMtf.suffix_plus_plus()] = BZP_MTF_ENCODE1!();
+            mtf.mtfFreq[BZP_MTF_ENCODE1!()] += 1;
+        } else {
+            mtf.mtfV[mtf.nMtf.suffix_plus_plus()] = BZP_MTF_ENCODE0!();
+            mtf.mtfFreq[BZP_MTF_ENCODE0!()] += 1;
+        }
+    } while num >= BZP_MTF_ENCODE_BASE!());
 }

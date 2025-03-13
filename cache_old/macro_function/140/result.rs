@@ -1,2 +1,2 @@
-macro_rules! RAPIDLZ_READ32BIT { ($ptr:expr) => { (($ptr.cast::<Ptr<RapidlzUnalignU32>>()).v) } }
-pub(crate) use RAPIDLZ_READ32BIT;
+macro_rules! RAPIDLZ_WRITE64BIT { ($ptr:expr, $val:expr) => { ($ptr.cast::<Ptr<RapidlzUnalignU64>>()).v = $val } }
+pub(crate) use RAPIDLZ_WRITE64BIT;

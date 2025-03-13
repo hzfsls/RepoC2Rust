@@ -1,9 +1,16 @@
-pub fn BzpHeapInit(mut huffman: Ptr<BzpHuffmanInfo>) {
-    let mut i: i32 = 0;
-    c_for!(i = 0; i < huffman.alphaSize; i.suffix_plus_plus(); {
-        huffman.nHeap += 1;
-        let tmp = huffman.nHeap;
-        huffman.heap[tmp] = i.cast();
-        BzpHeapAdjustUp(huffman.heap.cast(), huffman.weight.cast(), huffman.nHeap.cast());
-    });
+pub fn sortedarray_last_index(mut sortedarray: Ptr<SortedArray>, mut data: SortedArrayValue, mut left: u32, mut right: u32) -> u32 {
+    let mut index: u32 = right;
+
+    while left < right {
+        index = (left + right) / 2;
+
+        let mut order: i32 = (sortedarray.cmp_func)(data.cast(), sortedarray.data[index].cast()).cast();
+        if order <= 0 {
+            left = index + 1;
+        } else {
+            right = index;
+        }
+    }
+
+    return index.cast();
 }

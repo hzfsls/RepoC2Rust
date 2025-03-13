@@ -1,2 +1,2 @@
-macro_rules! CMPTLZ_PROB_HANDLE { () => { CMPTLZ_HANDLE_CONVERT!(CMPTLZ_PROB_MEM!()) } }
-pub(crate) use CMPTLZ_PROB_HANDLE;
+macro_rules! ALWAYS_NO_INLINE { () => { #[inline(never)] } }
+pub(crate) use ALWAYS_NO_INLINE;

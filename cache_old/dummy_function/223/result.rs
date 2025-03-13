@@ -1,3 +1,3 @@
-pub fn CmptPriceGenAlignTable(mut encCtx: Ptr<CmptLzEncCtx>) {
+pub fn queue_pop_tail(mut queue: Ptr<Queue>) -> QueueValue {
     unimplemented!();
 }

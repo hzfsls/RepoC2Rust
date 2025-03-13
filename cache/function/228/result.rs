@@ -1,3 +1,6 @@
-pub fn CmptPriceShortRep(mut encCtx: Ptr<CmptLzEncCtx>, mut state: CmptlzState, mut posState: u32) -> u32 {
-    return CmptPriceBit0(encCtx.cast(), encCtx.isRepG0[state].cast()).cast() + CmptPriceBit0(encCtx.cast(), encCtx.isRep0Long[state][posState].cast()).cast();
+pub fn set_free_entry(mut set: Ptr<Set>, mut entry: Ptr<SetEntry>) {
+    if set.free_func != NULL!() {
+        (set.free_func)(entry.data.cast());
+    }
+    c_free!(entry);
 }

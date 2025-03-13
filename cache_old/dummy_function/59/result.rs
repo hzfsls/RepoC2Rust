@@ -1,3 +1,3 @@
-pub fn BzpFileEOF(mut f: FilePtr) -> bool {
+pub fn BzpCompressEnd(mut bzpInfo: Ptr<BzpAlgorithmInfo>) {
     unimplemented!();
 }

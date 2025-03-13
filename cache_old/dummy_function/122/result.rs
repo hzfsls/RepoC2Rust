@@ -1,3 +1,3 @@
-pub fn BzpBwtFinish(mut bwt: Ptr<BzpBwtInfo>) {
+pub fn BzpInitLenArray(mut huffman: Ptr<BzpHuffmanGroups>) {
     unimplemented!();
 }

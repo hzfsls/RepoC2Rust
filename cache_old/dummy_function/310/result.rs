@@ -1,3 +1,3 @@
-pub fn RapidlzGetPosOnTable(mut hashValue: u32, mut hashTable: Ptr<u8>, mut hashType: u8) -> u32 {
+pub fn rb_tree_to_array(mut tree: Ptr<RBTree>) -> Ptr<RBTreeValue> {
     unimplemented!();
 }

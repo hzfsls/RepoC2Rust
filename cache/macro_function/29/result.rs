@@ -1,6 +1,2 @@
-macro_rules! VOS_AVL_INSERT { ($TREE:expr, $NODE:expr) => 
-    {
-        VOS_AVL_Insert_Or_Find(c_ref!($TREE), c_ref!($NODE)) == AVL_NULL_PTR!()
-    }
-}
-pub(crate) use VOS_AVL_INSERT;
+macro_rules! VOS_AVL3_IN_TREE { ($NODE:expr) => { ($NODE.sLHeight != -1) && ($NODE.sRHeight != -1) } }
+pub(crate) use VOS_AVL3_IN_TREE;

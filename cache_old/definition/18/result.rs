@@ -1,5 +1,10 @@
-pub type BZP_ERROR_NO = i32;
-macro_rules! BZP_ERROR_BASE_NO { () => { 0 } }
-pub(crate) use BZP_ERROR_BASE_NO;
-macro_rules! BZP_ERROR_STREAM_NO { () => { 1 } }
-pub(crate) use BZP_ERROR_STREAM_NO;
+#[repr(C)]
+#[derive(Default)]
+pub struct BzpStream {
+    pub filePtr: FilePtr,
+    pub nBuf: i32,
+    pub pos: i32,
+    pub buf: Array<u8, { BZP_BUF_SIZE!() }>,
+}
+
+pub type BzpStream = _BzpStream;

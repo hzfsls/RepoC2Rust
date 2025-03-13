@@ -1,2 +1,2 @@
-macro_rules! ALWAYS_INLINE { () => { #[inline(always)] } }
-pub(crate) use ALWAYS_INLINE;
+macro_rules! CMPTLZ_INNER_H { () => { } }
+pub(crate) use CMPTLZ_INNER_H;

@@ -1,1 +1,1 @@
-pub type CmptLzDecProb = u16;
+pub type Queue = _Queue;

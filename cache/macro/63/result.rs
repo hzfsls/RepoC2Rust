@@ -1,2 +1,2 @@
-macro_rules! BZP_HUFFMAN_LEN_UPPER_LIMIT { () => { 20 } }
-pub(crate) use BZP_HUFFMAN_LEN_UPPER_LIMIT;
+macro_rules! BZP_FILE_END_1 { () => { 0x72 } }
+pub(crate) use BZP_FILE_END_1;

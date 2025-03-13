@@ -1,6 +1,6 @@
-macro_rules! CMPT_LIT_SUBCODER {
-    ($probs:expr, $litCtx:expr, $lpMask:expr, $pos:expr, $prevByte:expr) => {
-        $probs[((($pos) & ($lpMask)) << ($litCtx)) + ((($prevByte) as u32) >> (8U - ($litCtx)))]
+macro_rules! CMPT_LIT_PROB_GET {
+    ($encCtx:expr, $litProb:expr, $pos:expr, $prevByte:expr) => {
+        $litProb + (3 as u32) * (((($pos << 8) + $prevByte) & (*$encCtx.lock()).lpMask) << (*$encCtx.lock()).litMarcov.lcBits
     }
 }
-pub(crate) use CMPT_LIT_SUBCODER;
+pub(crate) use CMPT_LIT_PROB_GET;

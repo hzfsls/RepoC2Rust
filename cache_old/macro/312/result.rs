@@ -1,2 +1,2 @@
-macro_rules! RAPIDLZ_MIN_COMPRESS_SIZE { () => { 16 } }
-pub(crate) use RAPIDLZ_MIN_COMPRESS_SIZE;
+macro_rules! RAPIDLZ_MAX_OFFSET { () => { 65535 } }
+pub(crate) use RAPIDLZ_MAX_OFFSET;

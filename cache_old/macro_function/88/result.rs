@@ -1,8 +1,11 @@
-macro_rules! CMPTLZ_RANGE_UPDATE_1 { ($prob:expr, $range:expr, $rangeCode:expr, $rangeBound:expr) =>
-    {
-        $range -= $rangeBound;
-        $rangeCode -= $rangeBound;
-        *$prob = (*$prob - (*$prob >> CMPTLZ_RANGE_CODE_SIZE!())) as CmptLzDecProb;
+macro_rules! CMPT_HASH_FIND_2_BYTES {
+    ($mf:expr, $delta2:expr, $longestLen:expr, $matchesCount:expr, $cur:expr, $matches:expr) => {
+        if $delta2 < (*$mf.lock()).cycleSize && *($cur - $delta2) == *$cur {
+            $longestLen = CMPT_MF_MATCH_2_BYTES!();
+            $matches[0].len = CMPT_MF_MATCH_2_BYTES!();
+            $matches[0].dist = $delta2 - 1;
+            $matchesCount = 1;
+        }
     }
 }
-pub(crate) use CMPTLZ_RANGE_UPDATE_1;
+pub(crate) use CMPT_HASH_FIND_2_BYTES;

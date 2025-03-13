@@ -1,3 +1,3 @@
-pub fn RapidlzWriteLE16(mut addr: Ptr<Void>, mut val: u16) {
+pub fn rb_tree_insert_case3(mut tree: Ptr<RBTree>, mut node: Ptr<RBTreeNode>) {
     unimplemented!();
 }

@@ -1,2 +1,2 @@
-macro_rules! CMPTLZ_FIX_4_HASH { () => { CMPTLZ_HASH_2_SIZE!() + CMPTLZ_HASH_3_SIZE!() } }
-pub(crate) use CMPTLZ_FIX_4_HASH;
+macro_rules! CMPTLZ_PROB_MAX_NUM { () => { 2048 } }
+pub(crate) use CMPTLZ_PROB_MAX_NUM;

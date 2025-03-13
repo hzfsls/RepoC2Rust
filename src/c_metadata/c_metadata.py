@@ -19,7 +19,7 @@ def get_metadata(files: dict[str, str]) -> dict[str, CFileMetadata]:
 
 def has_identifier(node: Node):
     chind_cnt = node.child_count
-    if node.type == "identifier":
+    if node.type == "identifier" or node.type == "type_identifier":
         return True, node.text.decode("utf-8")
     if chind_cnt == 0:
         return False, None
@@ -72,16 +72,84 @@ def has_extern(node: Node):
     return False
 
 
+def get_name_and_class_from_types_specifier(node: Node):
+    chind_cnt = node.child_count
+    assert chind_cnt >= 2, node.text.decode("utf-8").strip()
+    if node.type == "struct_specifier":
+        assert node.child(0).type == "struct", node.text.decode("utf-8").strip()
+        assert node.child(1).type == "type_identifier" or node.child(1).type == "field_declaration_list", node.text.decode("utf-8").strip()
+        if node.child(1).type == "type_identifier":            
+            if chind_cnt >= 3:
+                assert node.child(2).type == "field_declaration_list", node.text.decode("utf-8").strip()
+                return "type", node.child(1).text.decode("utf-8").strip()
+            else:
+                return "declaration", node.child(1).text.decode("utf-8").strip()
+        else:
+            return "type", ""
+    elif node.type == "union_specifier":
+        assert node.child(0).type == "union", node.text.decode("utf-8").strip()
+        assert node.child(1).type == "type_identifier" or node.child(1).type == "field_declaration_list", node.text.decode("utf-8").strip() 
+        if node.child(1).type == "type_identifier":            
+            if chind_cnt >= 3:
+                assert node.child(2).type == "field_declaration_list", node.text.decode("utf-8").strip()
+                return "type", node.child(1).text.decode("utf-8").strip()
+            else:
+                return "declaration", node.child(1).text.decode("utf-8").strip()
+        else:
+            return "type", ""
+    elif node.type == "enum_specifier":
+        assert node.child(0).type == "enum", node.text.decode("utf-8").strip()
+        assert node.child(1).type == "type_identifier" or node.child(1).type == "enumerator_list", node.text.decode("utf-8").strip()
+        if node.child(1).type == "type_identifier":            
+            if chind_cnt >= 3:
+                assert node.child(2).type == "enumerator_list", node.text.decode("utf-8").strip()
+                return "type", node.child(1).text.decode("utf-8").strip()
+            else:
+                return "declaration", node.child(1).text.decode("utf-8").strip()
+        else:
+            return "type", ""
+    else:
+        raise ValueError(node.text.decode("utf-8").strip())
+
+def expand_node_tree_to_seq(node: Node):
+    seq = []
+    child_cnt = node.child_count
+    if child_cnt == 0:
+        return [node]
+    else:
+        for i in range(child_cnt):
+            seq.extend(expand_node_tree_to_seq(node.child(i)))
+        return seq
+
+def resolve_typedef(node: Node):
+    chind_cnt = node.child_count
+    assert node.child(0).type == "typedef" and node.child(1).type in ["type_identifier", "primitive_type", "sized_type_specifier", "struct_specifier", "union_specifier", "enum_specifier", "primitive_type"], node.text.decode("utf-8").strip()
+    flag, func_name = has_function_declarator(node)
+    if flag:
+        return None, ""
+    else:
+        seq = expand_node_tree_to_seq(node)
+        assert seq[-1].type == ";", node.text.decode("utf-8").strip()
+        assert seq[-2].type == "type_identifier", node.text.decode("utf-8").strip()
+        decl_name = None
+        if node.child(1).type == "type_identifier":
+            decl_name = node.child(1).text.decode("utf-8").strip()
+        elif node.child(1).type in ["struct_specifier", "union_specifier", "enum_specifier"]:
+            _, decl_name = get_name_and_class_from_types_specifier(node.child(1))
+        real_name = seq[-2].text.decode("utf-8").strip()
+        return decl_name, real_name
+
+
 
 class CFileMetadata:
     def __init__(self, name: str):
         self.name = name
         self.includes = []
-        self.types = []
+        self.types = {"":[], }
         self.macros = []
         self.macro_functions = []
         self.global_variables = {}
-        self.declarations = {}
+        self.declarations = set()
         self.functions = {}
 
     def __str__(self):
@@ -92,9 +160,9 @@ class CFileMetadata:
             "includes": [x for x in self.includes],
             "macros": [x for x in self.macros],
             "macro_functions": [x for x in self.macro_functions],
-            "types":  [x for x in self.types],
+            "types":  self.types,
             "global_variables": self.global_variables,
-            "declarations": self.declarations,
+            "declarations": list(self.declarations),
             "functions": self.functions
         }
     
@@ -114,10 +182,25 @@ class CFileMetadata:
             self.macro_functions.append(snippet)
         elif node.type == "preproc_include":
             self.includes.append(snippet)
-        elif node.type in ["type_definition", "enum_specifier", "struct_specifier", "union_specifier"]: 
-            if not snippet.endswith(";"):
-                snippet += ";"
-            self.types.append(snippet)
+        elif node.type == "type_definition":
+            decl_name, name = resolve_typedef(node)
+            if name == "":
+                self.types[name].append(snippet)
+            else:
+                self.types[name] = snippet
+            if decl_name is not None and decl_name != "":
+                self.declarations.add(decl_name)
+        elif node.type in ["enum_specifier", "struct_specifier", "union_specifier"]:
+            clas, name = get_name_and_class_from_types_specifier(node)
+            if clas == "type":
+                if not snippet.endswith(";"):
+                    snippet += ";"
+                if name == "":
+                    self.types[name].append(snippet)
+                else:
+                    self.types[name] = snippet
+            else:
+                self.declarations.add(name)
         elif node.type == "function_definition":
             res, name = has_function_declarator(node)
             assert res, "B"
@@ -129,7 +212,7 @@ class CFileMetadata:
                 if flag:
                     flag, name = has_identifier(node)
                     assert flag == True, snippet
-                    self.declarations[name] = snippet
+                    self.declarations.add(name)
                 else:
                     flag, name = has_init_declarator(node)
                     assert flag == True, snippet
@@ -138,7 +221,7 @@ class CFileMetadata:
                     else:
                         print(f"Warning: `{snippet}` is neither an extern declaration or global variable initialization.")
             else:
-                self.declarations[name] = snippet
+                self.declarations.add(name)
 
         else:
             chind_cnt = node.child_count
@@ -148,47 +231,6 @@ class CFileMetadata:
                 for i in range(chind_cnt):
                     self.parse_node(node.child(i))
     
-#     def recreate_code(self) -> str:
-#         code = ""
-#         for include in self.includes:
-#             code += str(include) + "\n"
-#         code += """
-# #ifdef __cplusplus
-# extern "C" {
-# #endif
-# """     
-#         for macro in self.macros:
-#             code += str(macro) + "\n"
-#         for macro_function in self.macro_functions:
-#             code += str(macro_function) + "\n"
-#         for type in self.types:
-#             code += str(type) + "\n"
-#         for definition in self.definitions:
-#             code += str(definition) + "\n"
-#         for function in self.functions:
-#             code += str(function) + "\n"
-#         code += """
-# #ifdef __cplusplus
-# }
-# #endif
-# """
-#         is_header = self.name.endswith(".h")
-#         if is_header:
-#             file_name = self.name.split("/")[-1].split(".")[0]
-#             header_macro_name = file_name.replace("-", "_").upper() + "_H"
-#             code = f"#ifndef {header_macro_name}\n#define {header_macro_name}\n\n{code}\n#endif"
-#         return code
-        
-# def recreate_files_from_metadata(metadata: dict[str, CFileMetadata], location: str):
-#     import shutil
-#     shutil.rmtree(location, ignore_errors=True)
-#     for file_name, file_metadata in metadata.items():
-#         new_file_name = os.path.join(location, file_name)
-#         os.makedirs(os.path.dirname(new_file_name), exist_ok=True)
-#         with open(new_file_name, "w") as f:
-#             f.write(file_metadata.recreate_code())
-
-
 if __name__ == "__main__":
     proj_name = "bzp"
     data = preprocess(f"data/{proj_name}", ["include", "src"], f"preprocessed_data/{proj_name}")

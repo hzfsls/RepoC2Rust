@@ -1,3 +1,3 @@
-pub fn CmptPriceBit0(mut encCtx: Ptr<CmptLzEncCtx>, mut bit0Prob: CmptlzProb) -> u32 {
+pub fn slist_sort_internal(mut list: Ptr<Ptr<SListEntry>>, mut compare_func: SListCompareFunc) -> Ptr<SListEntry> {
     unimplemented!();
 }

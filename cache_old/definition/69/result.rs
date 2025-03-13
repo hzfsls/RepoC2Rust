@@ -1,5 +1,6 @@
 #[repr(C)]
 #[derive(Default, Clone, Copy)]
-pub struct RapidlzUnalignU16 {
-    pub v: u16,
+pub struct _HashTableEntry {
+    pub pair: HashTablePair,
+    pub next: Ptr<HashTableEntry>,
 }

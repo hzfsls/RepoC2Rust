@@ -1,3 +1,3 @@
-pub fn PosSlotHelper(mut n: u32) -> u32 {
+pub fn avl_tree_new(mut compare_func: AVLTreeCompareFunc) -> Ptr<AVLTree> {
     unimplemented!();
 }

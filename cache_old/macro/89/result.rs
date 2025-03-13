@@ -1,2 +1,2 @@
-macro_rules! BZP_BITS8 { () => { 8 } }
-pub(crate) use BZP_BITS8;
+macro_rules! BZP_HUFFMAN_LEN_REDUCED { () => { 3 } }
+pub(crate) use BZP_HUFFMAN_LEN_REDUCED;

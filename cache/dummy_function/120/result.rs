@@ -1,3 +1,3 @@
-pub fn BzpBinaryLiftingSort(mut bwt: Ptr<BzpBwtInfo>) {
+pub fn BzpGetHuffmanGroups(mut nBlock: i32) -> i32 {
     unimplemented!();
 }

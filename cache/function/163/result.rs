@@ -1,5 +1,3 @@
-pub fn CmptLzDecCheckDictSizeUpdate(mut decCtx: Ptr<CmptLzDecCtx>) {
-    if decCtx.checkDicSize == 0 && decCtx.processedPos >= decCtx.prop.dicSize {
-        decCtx.checkDicSize = decCtx.prop.dicSize.cast();
-    }
+pub fn arraylist_prepend(mut arraylist: Ptr<ArrayList>, mut data: ArrayListValue) -> i32 {
+    return arraylist_insert(arraylist.cast(), 0, data.cast());
 }

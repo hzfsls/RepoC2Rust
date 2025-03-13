@@ -1,6 +1,9 @@
-macro_rules! VOS_AVLL_INSERT { ($TREE:expr, $NODE:expr) => 
+macro_rules! FIND_RIGHTMOST_NODE { ($pstNode:expr) =>
     {
-        VOS_AVL3_INSERT!($TREE.stTree, $NODE, $TREE.stTreeInfo)
+        while $pstNode.pstRight != AVL_NULL_PTR!()
+        {
+            $pstNode = $pstNode.pstRight;
+        }
     }
 }
-pub(crate) use VOS_AVLL_INSERT;
+pub(crate) use FIND_RIGHTMOST_NODE;

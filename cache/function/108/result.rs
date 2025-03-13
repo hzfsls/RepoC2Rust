@@ -1,11 +1,8 @@
-pub fn BzpMapInputChar(mut mtf: Ptr<BzpMtfInfo>, mut list: Ptr<u8>, mut lenList: i32) {
-    if BZP_ASCII_SIZE!() > lenList {
-        return;
-    }
-    c_for!(let mut i: i32 = 0; i < BZP_ASCII_SIZE!(); i.suffix_plus_plus(); {
-        if mtf.inUse[i] {
-            list[mtf.nUse] = i.cast::<u8>();
-            mtf.nUse.suffix_plus_plus();
-        }
+pub fn BzpHuffmanInitArray(mut huffman: Ptr<BzpHuffmanInfo>) {
+    let mut i: i32 = Default::default();
+    huffman.nHeap = 0;
+    huffman.nWeight = huffman.alphaSize.cast();
+    c_for!(let mut i: i32 = 0; i < huffman.alphaSize; i.suffix_plus_plus(); {
+        huffman.parent[i] = -1;
     });
 }

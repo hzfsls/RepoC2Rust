@@ -1,15 +1,7 @@
 #[repr(C)]
-#[derive(Default)]
-pub struct _InDeComdata {
-    pub input: Ptr<BzpStream>,
-    pub output: Ptr<BzpStream>,
-    pub lasChar: i32,
-    pub num: i32,
-    pub buf: u32,
-    pub nBuf: i32,
-    pub blockSize: i32,
-    pub blockCRC: u32,
-    pub list: Array<i32, { BZP_ASCII_SIZE!() }>,
+#[derive(Default, Clone, Copy)]
+pub struct _ListEntry {
+    pub data: ListValue,
+    pub prev: Ptr<ListEntry>,
+    pub next: Ptr<ListEntry>,
 }
-
-pub type InDeComdata = _InDeComdata;

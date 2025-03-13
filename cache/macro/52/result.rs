@@ -1,2 +1,2 @@
-macro_rules! BZP_NGROUPS_BLOCK_NUM_LIMIT1 { () => { 600 } }
-pub(crate) use BZP_NGROUPS_BLOCK_NUM_LIMIT1;
+macro_rules! BZP_HDR_B { () => { 0x42 } }
+pub(crate) use BZP_HDR_B;

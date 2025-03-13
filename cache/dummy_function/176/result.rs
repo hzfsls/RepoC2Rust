@@ -1,3 +1,3 @@
-pub fn CmptLzPropsDecode(mut protData: Ptr<u8>, mut protSize: u32, mut decProt: Ptr<CmptLzDecProt>) -> i32 {
+pub fn string_hash(mut string: Ptr<Void>) -> u32 {
     unimplemented!();
 }

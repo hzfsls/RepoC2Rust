@@ -1,2 +1,2 @@
-macro_rules! BZP_HDR_0 { () => { 0x30 } }
-pub(crate) use BZP_HDR_0;
+macro_rules! BZP_BIT { () => { 1 } }
+pub(crate) use BZP_BIT;

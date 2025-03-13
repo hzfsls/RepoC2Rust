@@ -1,3 +1,3 @@
-pub fn CmptRcDistProcess(mut encCtx: Ptr<CmptLzEncCtx>, mut posSlot: u32, mut dist: u32) -> i32 {
+pub fn hash_table_num_entries(mut hash_table: Ptr<HashTable>) -> u32 {
     unimplemented!();
 }

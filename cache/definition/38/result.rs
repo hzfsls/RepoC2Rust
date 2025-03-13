@@ -1,1 +1,1 @@
-pub type CmptLzEncCtx = TagCmptLzEncCtx;
+pub type SortedArrayEqualFunc = FuncPtr<fn(SortedArrayValue, SortedArrayValue) -> i32>;

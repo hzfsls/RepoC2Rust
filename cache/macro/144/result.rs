@@ -1,2 +1,2 @@
-macro_rules! ALWAYS_INLINE { () => { __forceinline!() } }
-pub(crate) use ALWAYS_INLINE;
+macro_rules! CMPTLZ_RANGE_CODE_SIZE { () => { 5 } }
+pub(crate) use CMPTLZ_RANGE_CODE_SIZE;

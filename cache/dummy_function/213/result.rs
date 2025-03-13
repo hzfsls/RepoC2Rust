@@ -1,3 +1,3 @@
-pub fn CmptPriceSymbolReverse(mut encCtx: Ptr<CmptLzEncCtx>, mut symbolProbs: Ptr<CmptlzProb>, mut symbolBitsNum: u32, mut symbol: u32) -> u32 {
+pub fn slist_iterate(mut list: Ptr<Ptr<SListEntry>>, mut iter: Ptr<SListIterator>) {
     unimplemented!();
 }

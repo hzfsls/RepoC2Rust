@@ -1,16 +1,22 @@
-pub fn CmptHeadWrite(mut encCtx: Ptr<CmptLzEncCtx>, mut protData: Ptr<u8>, mut propsSize: Ptr<usize>) -> i32 {
-    if protData == NULL!() {
-        CMPTLZ_LOG!(CMPT_ERROR_DATA!(), cstr!("protData is NULL"));
-        return CMPT_ENC_ERROR_HEAD!();
+pub fn queue_pop_head(mut queue: Ptr<Queue>) -> QueueValue {
+    let mut entry: Ptr<QueueEntry> = Default::default();
+    let mut result: QueueValue = Default::default();
+
+    if queue_is_empty(queue.cast()) {
+        return QUEUE_NULL!();
     }
 
-    if *propsSize < CMPTLZ_PROPS_SIZE!() {
-        CMPTLZ_LOG!(CMPT_ERROR_DATA!(), cstr!("propsSize need 5 bytes, get {}"), *propsSize);
-        return CMPT_ENC_ERROR_HEAD!();
+    entry = queue.head.cast();
+    queue.head = entry.next.cast();
+    result = entry.data.cast();
+
+    if queue.head == NULL!() {
+        queue.tail = NULL!();
+    } else {
+        queue.head.prev = NULL!();
     }
 
-    CmptlzWriteLE32Bit(protData.cast::<Ptr<u8>>() + 1, encCtx.dicSize.cast());
-    protData[0] = ((encCtx.posBits * CMPTLZ_POS_STATE_MAX!() + encCtx.litPos) * CMPTLZ_LIT_CTX_MAX!() + encCtx.litCtx).cast();
-    *propsSize = CMPTLZ_PROPS_SIZE!();
-    return 0;
+    c_free!(entry);
+
+    return result.cast();
 }

@@ -1,2 +1,2 @@
-macro_rules! BZP_MAX_ITER_NUM { () => { 4 } }
-pub(crate) use BZP_MAX_ITER_NUM;
+macro_rules! BZP_HUFFMAN_MAX_SIZE_SELECT { () => { (BZP_BLOCK_SIZE_LEVEL_UPPER_LIMIT!() * BZP_BASE_BLOCK_SIZE!() / BZP_ELEMS_NUM_IN_ONE_GROUP!()) } }
+pub(crate) use BZP_HUFFMAN_MAX_SIZE_SELECT;

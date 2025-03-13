@@ -1,3 +1,3 @@
-pub fn CmptPriceBit1(mut encCtx: Ptr<CmptLzEncCtx>, mut bit0Prob: CmptlzProb) -> u32 {
-    return encCtx.priceRootTable[((bit0Prob ^ (CMPTLZ_PROB_MAX_NUM!() - 1)) >> CMPT_PRICE_BITS_MOVING_NUM!()].cast();
+pub fn slist_sort(mut list: Ptr<Ptr<SListEntry>>, mut compare_func: SListCompareFunc) {
+    slist_sort_internal(list.cast(), compare_func.cast());
 }

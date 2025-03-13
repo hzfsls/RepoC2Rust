@@ -1,3 +1,3 @@
-pub fn BzpBuildTreeBalanceHeight(mut huffman: Ptr<BzpHuffmanInfo>) {
+pub fn sortedarray_free(mut sortedarray: Ptr<SortedArray>) {
     unimplemented!();
 }

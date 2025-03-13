@@ -1,9 +1,11 @@
 #[repr(C)]
 #[derive(Default, Clone, Copy)]
-pub struct avl3_tree {
-    pub pstRoot: Ptr<AVL3_NODE>,
-    pub pstFirst: Ptr<AVL3_NODE>,
-    pub pstLast: Ptr<AVL3_NODE>,
+pub struct avl3_node {
+    pub pstParent: Ptr<avl3_node>,
+    pub pstLeft: Ptr<avl3_node>,
+    pub pstRight: Ptr<avl3_node>,
+    pub sLHeight: i16,
+    pub sRHeight: i16,
 }
 
-pub type AVL3_TREE = avl3_tree;
+pub type AVL3_NODE = avl3_node;

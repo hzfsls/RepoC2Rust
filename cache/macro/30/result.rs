@@ -1,2 +1,2 @@
-macro_rules! BZP_OUTPUT_COMPRESS { () => { 1 } }
-pub(crate) use BZP_OUTPUT_COMPRESS;
+macro_rules! BZP_MTF_ENCODE_BASE { () => { 2 } }
+pub(crate) use BZP_MTF_ENCODE_BASE;

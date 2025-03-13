@@ -1,11 +1,22 @@
-pub fn CmptRcFlush64Kb(mut rcCtx: Ptr<CmptRcCtx>) -> i32 {
-    let mut flushOutLen: usize = (rcCtx.buf - rcCtx.bufBase).cast();
-    let mut res: i32 = c_memcpy_s!(rcCtx.outBuf, rcCtx.outBufLeft, rcCtx.bufBase, flushOutLen);
-    if res != 0 {
-        return CMPT_ENC_ERROR_WRITE!();
+pub fn hash_table_new(mut hash_func: HashTableHashFunc, mut equal_func: HashTableEqualFunc) -> Ptr<HashTable> {
+    let mut hash_table: Ptr<HashTable> = c_malloc!(c_sizeof!(HashTable));
+
+    if hash_table == NULL!() {
+        return NULL!();
     }
-    rcCtx.outBuf += flushOutLen;
-    rcCtx.outBufLeft -= flushOutLen;
-    rcCtx.buf = rcCtx.bufBase.cast();
-    return CMPT_OK!();
+
+    hash_table.hash_func = hash_func.cast();
+    hash_table.equal_func = equal_func.cast();
+    hash_table.key_free_func = NULL!();
+    hash_table.value_free_func = NULL!();
+    hash_table.entries = 0;
+    hash_table.prime_index = 0;
+
+    if !hash_table_allocate_table(hash_table.cast()) {
+        c_free!(hash_table);
+
+        return NULL!();
+    }
+
+    return hash_table.cast();
 }

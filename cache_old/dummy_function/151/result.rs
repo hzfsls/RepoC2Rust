@@ -1,3 +1,3 @@
-pub fn CmptLzGetIsRepG1Prob(mut probsMatrix: Ptr<CmptLzDecProb>) -> Ptr<CmptLzDecProb> {
+pub fn bloom_filter_free(mut bloomfilter: Ptr<BloomFilter>) {
     unimplemented!();
 }

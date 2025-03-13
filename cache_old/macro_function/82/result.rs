@@ -1,13 +1,7 @@
-macro_rules! CMPTLZ_RANGE_TRY_NORMALIZE {
-    ($range:expr, $rangeCode:expr, $bufTryDec:expr, $bufLimit:expr) => {
-        if $range < CMPTLZ_RANGE_DOWN_LIMIT!() {
-            if $bufTryDec >= $bufLimit {
-                return CMPTLZ_DEC_INPUT_EOF!();
-            }
-            $range <<= CMPTLZ_ONE_BYTE_WIDTH!();
-            $rangeCode <<= CMPTLZ_ONE_BYTE_WIDTH!();
-            $rangeCode |= *$bufTryDec.plus_plus();
-        }
+macro_rules! CMPT_RC_BIT_0_PROCESS {
+    ($rcCtx:expr, $prob:expr, $newBound:expr, $range:expr, $bit0Prob:expr, $shiftRes:expr) => {
+        CMPT_RC_BIT_0!($prob, $newBound, $range, $bit0Prob);
+        CMPT_RC_NORMALIZE!($rcCtx, $range, $shiftRes);
     }
 }
-pub(crate) use CMPTLZ_RANGE_TRY_NORMALIZE;
+pub(crate) use CMPT_RC_BIT_0_PROCESS;

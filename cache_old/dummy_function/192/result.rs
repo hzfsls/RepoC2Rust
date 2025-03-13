@@ -1,3 +1,3 @@
-pub fn CmptLzRepDec(mut decCtx: Ptr<CmptLzDecCtx>, mut pRange: Ptr<u32>, mut pRangeCode: Ptr<u32>, mut pRangeBound: Ptr<u32>, mut dicPosLimit: usize, mut posState: u32) -> u32 {
+pub fn list_sort(mut list: Ptr<Ptr<ListEntry>>, mut compare_func: ListCompareFunc) {
     unimplemented!();
 }

@@ -1,2 +1,2 @@
-macro_rules! CMPT_INFINITY_PRICE { () => { (1isize as u32) << 30 } }
-pub(crate) use CMPT_INFINITY_PRICE;
+macro_rules! CMPT_MF_LONGEST_MATCH_SAFE { () => { CMPT_MF_LONGEST_MATCH!() + CMPTLZ_MEM_COMPARE_SAFE_DIST!() } }
+pub(crate) use CMPT_MF_LONGEST_MATCH_SAFE;

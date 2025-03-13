@@ -1,3 +1,3 @@
-pub fn RapidlzCountLeadZero64(mut x: u64) -> u8 {
+pub fn rb_tree_insert_case1(mut tree: Ptr<RBTree>, mut node: Ptr<RBTreeNode>) {
     unimplemented!();
 }

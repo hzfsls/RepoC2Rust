@@ -1,11 +1,13 @@
-pub fn RapidlzIsLE() -> i32 {
-    #[cfg(any(target_arch = "x86", target_arch = "x86_64", target_arch = "arm", target_arch = "aarch64"))]
-    {
-        return if cfg!(target_endian = "little") { 1 } else { 0 };
+pub fn rb_tree_new(mut compare_func: RBTreeCompareFunc) -> Ptr<RBTree> {
+    let mut new_tree: Ptr<RBTree> = c_malloc!(c_sizeof!(RBTree));
+
+    if new_tree == NULL!() {
+        return NULL!();
     }
-    #[cfg(not(any(target_arch = "x86", target_arch = "x86_64", target_arch = "arm", target_arch = "aarch64")))]
-    {
-        let mut n: i32 = 1;
-        return (*c_ref!(n).cast::<Ptr<u8>>()).cast::<i32>();
-    }
+
+    new_tree.root_node = NULL!();
+    new_tree.num_nodes = 0;
+    new_tree.compare_func = compare_func;
+
+    return new_tree.cast();
 }

@@ -1,3 +1,3 @@
-pub fn BZPDeCompressData(mut inData: Ptr<InDeComdata>) -> i32 {
+pub fn BzpMtfFinish(mut mtf: Ptr<BzpMtfInfo>) {
     unimplemented!();
 }

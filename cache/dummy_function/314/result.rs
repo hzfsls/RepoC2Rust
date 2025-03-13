@@ -1,3 +1,3 @@
-pub fn RapidlzStoreOffMatch(mut dst: Ptr<u8>, mut token: Ptr<u8>, mut matchLength: u32, mut offset: u16) -> Ptr<u8> {
+pub fn trie_free_list_pop(mut list: Ptr<Ptr<TrieNode>>) -> Ptr<TrieNode> {
     unimplemented!();
 }

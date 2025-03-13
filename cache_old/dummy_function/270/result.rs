@@ -1,3 +1,3 @@
-pub fn RapidlzZeroBytesDecode(mut src: Ptr<u8>, mut srcSize: i32) -> i32 {
+pub fn avl_tree_node_get_replacement(mut tree: Ptr<AVLTree>, mut node: Ptr<AVLTreeNode>) -> Ptr<AVLTreeNode> {
     unimplemented!();
 }

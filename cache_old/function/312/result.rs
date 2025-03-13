@@ -1,20 +1,11 @@
-pub fn RapidlzCompressStoreOptionalLength(mut dst: Ptr<u8>, mut litLength: u32) -> Ptr<u8> {
-    let mut dstCurr: Ptr<u8> = dst.cast();
-    let mut length: u32 = litLength.cast();
+pub fn trie_new() -> Ptr<Trie> {
+    let mut new_trie: Ptr<Trie> = c_malloc!(c_sizeof!(Trie));
 
-    if length < RAPIDLZ_MAX_BYTE_VALUE!() {
-        *dstCurr = length.cast::<u8>();
-        dstCurr += 1;
-        return dstCurr.cast();
+    if new_trie == NULL!() {
+        return NULL!();
     }
 
-    c_do!({
-        *dstCurr = RAPIDLZ_MAX_BYTE_VALUE!().cast::<u8>();
-        dstCurr += 1;
-        length -= RAPIDLZ_MAX_BYTE_VALUE!();
-    } while length >= RAPIDLZ_MAX_BYTE_VALUE!());
+    new_trie.root_node = NULL!();
 
-    *dstCurr = length.cast::<u8>();
-    dstCurr += 1;
-    return dstCurr.cast();
+    return new_trie.cast();
 }

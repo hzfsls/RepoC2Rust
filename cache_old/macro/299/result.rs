@@ -1,2 +1,2 @@
-macro_rules! RAPIDLZ_SECUREC_ERROR { () => { (-97isize) as usize } }
-pub(crate) use RAPIDLZ_SECUREC_ERROR;
+macro_rules! RAPIDLZ_MAX_4BIT_MATCH { () => { 19 } }
+pub(crate) use RAPIDLZ_MAX_4BIT_MATCH;

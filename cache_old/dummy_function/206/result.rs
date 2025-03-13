@@ -1,3 +1,3 @@
-pub fn CmptlzDpReverse(mut encCtx: Ptr<CmptLzEncCtx>, mut cur: u32) {
+pub fn slist_length(mut list: Ptr<SListEntry>) -> u32 {
     unimplemented!();
 }

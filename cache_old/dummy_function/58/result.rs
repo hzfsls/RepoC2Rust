@@ -1,3 +1,3 @@
-pub fn BzpWriteInt32(mut val: i32, mut data: Ptr<BzpOutComdata>) {
+pub fn BzpProcessData(mut bzpInfo: Ptr<BzpAlgorithmInfo>, mut IsLastdata: bool) -> i32 {
     unimplemented!();
 }

@@ -1,8 +1,6 @@
-pub fn CmptLzDecFree(mut decCtx: Ptr<CmptLzDecCtx>, mut memHook: Ptr<CmptLzMemHook>) -> i32 {
-    if decCtx == NULL!() || memHook == NULL!() {
-        return CMPT_ERROR_UNSUPPORTED!();
+pub fn list_next(mut listentry: Ptr<ListEntry>) -> Ptr<ListEntry> {
+    if listentry == NULL!() {
+        return NULL!();
     }
-    CmptLzDecFreeProbs(decCtx.cast(), memHook.cast());
-    CmptLzFreeDict(decCtx.cast(), memHook.cast());
-    return CMPT_OK!();
+    return listentry.next.cast();
 }

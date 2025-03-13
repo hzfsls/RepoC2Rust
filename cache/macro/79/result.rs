@@ -1,2 +1,2 @@
-macro_rules! BZP_FILE_END_2 { () => { 0x45 } }
-pub(crate) use BZP_FILE_END_2;
+macro_rules! BZP_RLC_NUM_1 { () => { 1 } }
+pub(crate) use BZP_RLC_NUM_1;

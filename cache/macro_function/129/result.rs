@@ -1,10 +1,6 @@
-macro_rules! RAPIDLZ_SAFE_COPY_TILL_END {
-    ($curSrc:expr, $leftSrcSize:expr, $curDest:expr, $destEnd:expr, $len:expr) => {
-        RAPIDLZ_SAFE_LIT_COPY!($curSrc, $leftSrcSize, $curDest, $destEnd, $len);
-        RAPIDLZ_POSITION_UPDATE!($curSrc, $curDest, $len);
-        if $leftSrcSize == $len {
-            return $curDest - c_ref!(dest).cast::<Ptr<u8>>();
-        }
+macro_rules! RAPIDLZ_LITERAL_LEN_COPY_END {
+    ($curDest:expr, $len:expr) => {
+        $curDest + $len + 1 + (($len + RAPIDLZ_MAX_BYTE_VALUE!() - RAPIDLZ_MAX_4BIT_VALUE!()) / RAPIDLZ_MAX_BYTE_VALUE!())
     }
 }
-pub(crate) use RAPIDLZ_SAFE_COPY_TILL_END;
+pub(crate) use RAPIDLZ_LITERAL_LEN_COPY_END;

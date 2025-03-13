@@ -1,2 +1,11 @@
-macro_rules! VOS_ROTR32 { ($x:expr, $uiBlcLen:expr) => { (($x << (32 - $uiBlcLen)) | ($x >> $uiBlcLen)) } }
-pub(crate) use VOS_ROTR32;
+macro_rules! CMPTLZ_RANGE_NORMALIZE { ($range:expr, $rangeCode:expr, $bufToDec:expr) =>
+    {
+        if $range < CMPTLZ_RANGE_DOWN_LIMIT!()
+        {
+            $range <<= CMPTLZ_ONE_BYTE_WIDTH!();
+            $rangeCode <<= CMPTLZ_ONE_BYTE_WIDTH!();
+            $rangeCode |= $bufToDec.plus_plus();
+        }
+    }
+}
+pub(crate) use CMPTLZ_RANGE_NORMALIZE;

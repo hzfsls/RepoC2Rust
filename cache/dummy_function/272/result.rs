@@ -1,3 +1,3 @@
-pub fn RapidlzHash4GetPos(mut hashValue: u32, mut hashTable: Ptr<u32>) -> u32 {
+pub fn avl_tree_remove(mut tree: Ptr<AVLTree>, mut key: AVLTreeKey) -> i32 {
     unimplemented!();
 }

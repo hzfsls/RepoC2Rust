@@ -1,3 +1,3 @@
-pub fn CmptlzDecompress(mut src: Ptr<Void>, mut srcSize: usize, mut dst: Ptr<Void>, mut dstSize: Ptr<usize>, mut param: Ptr<CmptlzDecParam>) -> i32 {
+pub fn binary_heap_cmp(mut heap: Ptr<BinaryHeap>, mut data1: BinaryHeapValue, mut data2: BinaryHeapValue) -> i32 {
     unimplemented!();
 }

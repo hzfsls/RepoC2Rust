@@ -1,2 +1,2 @@
-macro_rules! CMPT_MF_MATCH_2_BYTES { () => { 2 } }
-pub(crate) use CMPT_MF_MATCH_2_BYTES;
+macro_rules! CMPTLZ_BASE_H { () => { } }
+pub(crate) use CMPTLZ_BASE_H;

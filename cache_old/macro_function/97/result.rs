@@ -1,10 +1,10 @@
-macro_rules! CMPT_RC_NORMALIZE { ($rcCtx:expr, $range:expr, $shiftRes:expr) =>
-    {
-        if $range < CMPT_RC_MIN_RANGE!()
-        {
-            $range <<= 8;
-            $shiftRes = CmptRcShiftLow($rcCtx);
-        }
-    }
+macro_rules! CMPT_GET_DIST_STATE { ($len:expr) => 
+    { 
+        if $len < 4 + CMPTLZ_MATCH_LEN_MIN!() { 
+            $len - CMPTLZ_MATCH_LEN_MIN!() 
+        } else { 
+            4 - 1 
+        } 
+    } 
 }
-pub(crate) use CMPT_RC_NORMALIZE;
+pub(crate) use CMPT_GET_DIST_STATE;

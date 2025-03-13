@@ -1,19 +1,11 @@
-pub fn CmptlzDpInitLongRep(mut encCtx: Ptr<CmptLzEncCtx>, mut repLens: Ptr<u32>, mut repMatchPrice: u32, mut posState: u32) {
-    let mut i: u32 = 0;
-    c_for!(i = 0; i < CMPTLZ_NUM_REPS!(); i.suffix_plus_plus(); {
-        let mut repLen: u32 = repLens[i].cast();
-        if repLen < CMPTLZ_MATCH_LEN_MIN!() {
-            continue;
+pub fn list_iter_remove(mut iter: Ptr<ListIterator>) {
+    if iter.current == NULL!() || iter.current != *iter.prev_next {
+    } else {
+        *iter.prev_next = iter.current.next.cast();
+        if iter.current.next != NULL!() {
+            iter.current.next.prev = iter.current.prev.cast();
         }
-        let mut price: u32 = repMatchPrice + CmptPriceLongRep(encCtx.cast(), i.cast(), encCtx.state.cast(), posState.cast()).cast();
-        c_do!({
-            let mut curAndLenPrice: u32 = price + CmptPriceLen(c_ref!(encCtx.repLenEncoder).cast(), repLen.cast(), posState.cast()).cast();
-            if curAndLenPrice < encCtx.opts[repLen].price {
-                encCtx.opts[repLen].price = curAndLenPrice.cast();
-                encCtx.opts[repLen].posPrev = 0;
-                encCtx.opts[repLen].backPrev = i.cast();
-            }
-            repLen.suffix_minus_minus();
-        } while repLen >= CMPTLZ_MATCH_LEN_MIN!());
-    });
+        c_free!(iter.current);
+        iter.current = NULL!();
+    }
 }

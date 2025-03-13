@@ -1,2 +1,2 @@
-macro_rules! CMPTLZ_ALIGN { () => { CMPTLZ_IS_MATCH!() + (CMPTLZ_PB_STATE_NUM_ALIGN!() << CMPTLZ_PB_BITS_MAX!()) } }
-pub(crate) use CMPTLZ_ALIGN;
+macro_rules! CMPTLZ_BIG_DICT_LG_SIZE { () => { 30 } }
+pub(crate) use CMPTLZ_BIG_DICT_LG_SIZE;

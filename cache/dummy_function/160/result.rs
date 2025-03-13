@@ -1,3 +1,3 @@
-pub fn CmptLzGetLenCondition(mut decLen: u32) -> u32 {
+pub fn arraylist_enlarge(mut arraylist: Ptr<ArrayList>) -> i32 {
     unimplemented!();
 }

@@ -1,2 +1,2 @@
-macro_rules! RAPIDLZ_FAST_DIST_MIN { () => { 64 } }
-pub(crate) use RAPIDLZ_FAST_DIST_MIN;
+macro_rules! MD5_INPUT_LEN_MAX { () => { 0xffffffffffffffff } }
+pub(crate) use MD5_INPUT_LEN_MAX;

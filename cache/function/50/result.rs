@@ -1,18 +1,9 @@
-pub fn BzpAlgorithmInfoInit(mut blockSize: i32) -> Ptr<BzpAlgorithmInfo> {
-    let mut bzpInfo: Ptr<BzpAlgorithmInfo> = c_malloc!(c_sizeof!(BzpAlgorithmInfo));
-    if bzpInfo == NULL!() {
-        return NULL!();
-    }
-    bzpInfo.bwt = BzpBlockSortInit(blockSize.cast());
-    bzpInfo.mtf = BzpMtfInit(blockSize.cast());
-    bzpInfo.huffman = BzpHuffmanGroupsInit(blockSize.cast());
-    bzpInfo.outData = BzpOutComDataInit(blockSize.cast());
-    bzpInfo.compressFile = BzpFileInit();
-
-    if bzpInfo.bwt == NULL!() || bzpInfo.outData == NULL!() || bzpInfo.compressFile == NULL!() || bzpInfo.mtf == NULL!() ||
-        bzpInfo.huffman == NULL!() {
-        BzpAlgorithmInfoFinish(bzpInfo.cast());
-        return NULL!();
-    }
-    return bzpInfo.cast();
+pub fn BzpWriteInputEncode(mut outData: Ptr<BzpOutComdata>, mut mtf: Ptr<BzpMtfInfo>, mut huffman: Ptr<BzpHuffmanGroups>) {
+    c_for!(let mut i: i32 = 0; i < mtf.nMtf; i.suffix_plus_plus(); {
+        let mut val: i32 = mtf.mtfV[i].cast();
+        let mut gid: i32 = huffman.select[i / BZP_ELEMS_NUM_IN_ONE_GROUP!()].cast();
+        let mut code: i32 = huffman.huffmanGroups[gid].table[val].cast();
+        let mut len: i32 = huffman.huffmanGroups[gid].len[val].cast();
+        BzpWriteToArray(code.cast(), len.cast(), outData.cast());
+    });
 }

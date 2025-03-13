@@ -1,2 +1,2 @@
-macro_rules! CMPTLZ_ISREPG1 { () => { CMPTLZ_ISREPG0!() + CMPTLZ_MKSTATE_NUM!() } }
-pub(crate) use CMPTLZ_ISREPG1;
+macro_rules! CMPTLZ_REP4 { () => { 4 } }
+pub(crate) use CMPTLZ_REP4;

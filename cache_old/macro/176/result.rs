@@ -1,2 +1,2 @@
-macro_rules! CMPTLZ_LEN_CONDITION_TO_POSSLOT { () => { 4 } }
-pub(crate) use CMPTLZ_LEN_CONDITION_TO_POSSLOT;
+macro_rules! CMPTLZ_MATCH_LEN_CODER { () => { CMPTLZ_REP_LEN_CODER!() + CMPTLZ_LENPROB_NUM!() } }
+pub(crate) use CMPTLZ_MATCH_LEN_CODER;

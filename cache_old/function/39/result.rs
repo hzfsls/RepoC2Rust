@@ -1,11 +1,18 @@
-pub fn VOS_MD5CalcEx(mut output: Ptr<u8>, mut outputLen: u32, mut input: Ptr<u8>, mut inputLen: u32) {
-    let mut context: MD5_CTX = Default::default();
-
-    if outputLen < MD5_DIGEST_LEN!() {
-        return;
+pub fn BzpOutComDataInit(mut blockSize: i32) -> Ptr<BzpOutComdata> {
+    let mut outData: Ptr<BzpOutComdata> = c_malloc!(c_sizeof!(BzpOutComdata));
+    if outData == NULL!() {
+        return NULL!();
     }
+    outData.out = NULL!();
 
-    VOS_MD5Init(c_ref!(context).cast());
-    VOS_MD5Update(c_ref!(context).cast(), input.cast::<Ptr<u8>>(), inputLen.cast());
-    VOS_MD5FinalEx(output.cast(), outputLen.cast(), c_ref!(context).cast());
+    outData.out = c_malloc!(blockSize * BZP_BASE_BLOCK_SIZE!() * c_sizeof!(u32));
+    if outData.out == NULL!() {
+        c_free!(outData);
+        return NULL!();
+    }
+    outData.nBuf = 0;
+    outData.buf = 0;
+    outData.num = 0;
+    outData.blockSize = blockSize;
+    return outData.cast();
 }

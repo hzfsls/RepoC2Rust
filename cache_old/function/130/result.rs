@@ -1,19 +1,29 @@
-pub fn BzpGetCodeLen(mut huffman: Ptr<BzpHuffmanInfo>) -> i32 {
-    let mut maxlen: i32 = 0;
+pub fn sortedarray_new(mut length: u32, mut equ_func: SortedArrayEqualFunc, mut cmp_func: SortedArrayCompareFunc) -> Ptr<SortedArray> {
+    if equ_func == NULL!() || cmp_func == NULL!() {
+        return NULL!();
+    }
 
-    BzpBuildHuffmanTree(huffman.cast());
-    let mut i: i32 = Default::default();
-    maxlen = 0;
-    c_for!(let mut i: i32 = 0; i < huffman.alphaSize; i.suffix_plus_plus(); {
-        let mut x: i32 = i.cast();
-        let mut tlen: i32 = 0;
-        while huffman.parent[x] >= 0 {
-            x = huffman.parent[x].cast();
-            tlen += 1;
-        }
-        huffman.len[i] = tlen.cast();
-        maxlen = BZP_MAX_FUN!(maxlen, tlen);
-    });
+    if length == 0 {
+        length = 16;
+    }
 
-    return maxlen.cast();
+    let mut array: Ptr<SortedArrayValue> = c_malloc!(c_sizeof!(SortedArrayValue) * length);
+
+    if array == NULL!() {
+        return NULL!();
+    }
+
+    let mut sortedarray: Ptr<SortedArray> = c_malloc!(c_sizeof!(SortedArray));
+
+    if sortedarray == NULL!() {
+        c_free!(array);
+        return NULL!();
+    }
+
+    sortedarray.data = array.cast();
+    sortedarray.length = 0;
+    sortedarray._alloced = length;
+    sortedarray.equ_func = equ_func.cast();
+    sortedarray.cmp_func = cmp_func.cast();
+    return sortedarray.cast();
 }

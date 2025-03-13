@@ -1,22 +1,84 @@
-pub fn CmptlzLogWrite(mut errorCode: usize, mut funcName: Ptr<u8>, mut line: u16, mut fmt: Ptr<u8>, mut alist: VaList) {
-    // alist already initialized at parameter list
-    let mut output: Array<u8, { LOG_BUF_SIZE!() }> = Default::default();
-    let mut ret: i32 = Default::default();
-    let mut len: usize = Default::default();
-    let mut func: CmptlzLogFunc = *g_cmptlzLogFunc.lock();
-    if func == NULL!() {
-        return;
+pub fn binomial_heap_merge(mut heap: Ptr<BinomialHeap>, mut other: Ptr<BinomialHeap>) -> i32 {
+    let mut new_roots: Ptr<Ptr<BinomialTree>>;
+    let mut new_roots_length: u32;
+    let mut vals: Array<Ptr<BinomialTree>, 3> = Default::default();
+    let mut num_vals: i32;
+    let mut carry: Ptr<BinomialTree> = Default::default();
+    let mut new_carry: Ptr<BinomialTree> = Default::default();
+    let mut max: u32;
+    let mut i: u32;
+
+    if heap.roots_length > other.roots_length {
+        max = heap.roots_length + 1;
+    } else {
+        max = other.roots_length + 1;
     }
-    ret = c_snprintf_s!(output, LOG_BUF_SIZE!(), LOG_BUF_SIZE!() - 1, cstr!("\n[Cmptlz-Log] Func={}, Line={}, Error={}\n"), funcName, line, errorCode);
-    if ret < 0 {
-        return;
+
+    new_roots = c_malloc!(max * c_sizeof!(Ptr<BinomialTree>));
+
+    if new_roots == NULL!() {
+        return 0;
     }
-    len = ret.cast();
-    // va_start not needed
-    ret = c_vsnprintf_s!(output.cast::<Ptr<u8>>() + len, LOG_BUF_SIZE!() - len, LOG_BUF_SIZE!() - len - 1, fmt, alist);
-    // va_end not needed
-    if ret < 0 {
-        return;
-    }
-    func(output.cast(), c_strlen!(output) + 1);
+
+    new_roots_length = 0;
+    carry = NULL!();
+
+    c_for!(let mut i: u32 = 0; i < max; i.prefix_plus_plus(); {
+        num_vals = 0;
+
+        if i < heap.roots_length && heap.roots[i] != NULL!() {
+            vals[num_vals] = heap.roots[i].cast();
+            num_vals += 1;
+        }
+
+        if i < other.roots_length && other.roots[i] != NULL!() {
+            vals[num_vals] = other.roots[i].cast();
+            num_vals += 1;
+        }
+
+        if carry != NULL!() {
+            vals[num_vals] = carry.cast();
+            num_vals += 1;
+        }
+
+        if (num_vals & 1) != 0 {
+            new_roots[i] = vals[num_vals - 1].cast();
+            binomial_tree_ref(new_roots[i].cast());
+            new_roots_length = i + 1;
+        } else {
+            new_roots[i] = NULL!();
+        }
+
+        if (num_vals & 2) != 0 {
+            new_carry = binomial_tree_merge(heap.cast(), vals[0].cast(), vals[1].cast());
+
+            if new_carry == NULL!() {
+                binomial_heap_merge_undo(new_roots.cast(), i.cast());
+
+                binomial_tree_unref(carry.cast());
+
+                return 0;
+            }
+        } else {
+            new_carry = NULL!();
+        }
+
+        binomial_tree_unref(carry.cast());
+
+        carry = new_carry.cast();
+
+        binomial_tree_ref(carry.cast());
+    });
+
+    c_for!(let mut i: u32 = 0; i < heap.roots_length; i.prefix_plus_plus(); {
+        if heap.roots[i] != NULL!() {
+            binomial_tree_unref(heap.roots[i].cast());
+        }
+    });
+
+    c_free!(heap.roots);
+    heap.roots = new_roots.cast();
+    heap.roots_length = new_roots_length;
+
+    return 1;
 }

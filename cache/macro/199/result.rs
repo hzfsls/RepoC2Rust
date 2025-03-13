@@ -1,2 +1,2 @@
-macro_rules! CMPTLZ_LIT_POS_MAX { () => { 5 } }
-pub(crate) use CMPTLZ_LIT_POS_MAX;
+macro_rules! CMPT_EMPTY_HASH_VALUE { () => { 0 } }
+pub(crate) use CMPT_EMPTY_HASH_VALUE;

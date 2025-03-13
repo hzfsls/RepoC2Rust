@@ -1,3 +1,3 @@
-pub fn CmptLzDecAllocate(mut decCtx: Ptr<CmptLzDecCtx>, mut protData: Ptr<u8>, mut protSize: u32, mut memHook: Ptr<CmptLzMemHook>) -> i32 {
+pub fn list_prev(mut listentry: Ptr<ListEntry>) -> Ptr<ListEntry> {
     unimplemented!();
 }

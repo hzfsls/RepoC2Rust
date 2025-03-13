@@ -1,3 +1,3 @@
-pub fn CmptlzWriteLE32Bit(mut addr: Ptr<Void>, mut val: u32) {
+pub fn binomial_heap_pop(mut heap: Ptr<BinomialHeap>) -> BinomialHeapValue {
     unimplemented!();
 }

@@ -1,3 +1,3 @@
-pub fn BZPReadFileEnd(mut inData: Ptr<InDeComdata>, mut caltotalCRC: u32) -> i32 {
+pub fn BzpNumEncode(mut mtf: Ptr<BzpMtfInfo>, mut num: i32) {
     unimplemented!();
 }

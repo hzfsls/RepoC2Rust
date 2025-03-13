@@ -1,3 +1,3 @@
-pub fn BzpCalculateCost(mut huffman: Ptr<BzpHuffmanGroups>, mut st: i32, mut ed: i32) {
+pub fn binomial_tree_unref(mut tree: Ptr<BinomialTree>) {
     unimplemented!();
 }

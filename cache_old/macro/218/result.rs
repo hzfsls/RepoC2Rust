@@ -1,2 +1,2 @@
-macro_rules! CMPTLZ_ENC_STRUCT_H { () => { } }
-pub(crate) use CMPTLZ_ENC_STRUCT_H;
+macro_rules! CMPTLZ_PROB_INIT { () => { 1024 } }
+pub(crate) use CMPTLZ_PROB_INIT;

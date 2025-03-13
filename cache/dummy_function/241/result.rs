@@ -1,3 +1,3 @@
-pub fn CmptPriceCheck(mut encCtx: Ptr<CmptLzEncCtx>) {
+pub fn set_iter_next(mut iterator: Ptr<SetIterator>) -> SetValue {
     unimplemented!();
 }

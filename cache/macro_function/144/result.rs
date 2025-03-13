@@ -1,10 +1,10 @@
-macro_rules! RAPIDLZ_EXPAND_FORWARD { ($srcBegin:expr, $matchBegin:expr, $srcCurr:expr, $srcAnchor:expr) =>
+macro_rules! SAFE_COPY_MATCH { ($dstCurr:expr, $matchSrc:expr, $matchLength:expr) =>
     {
-        while $srcBegin < $matchBegin && $srcCurr > $srcAnchor && RAPIDLZ_UNLIKELY!($matchBegin[-1] == $srcCurr[-1])
+        while $matchLength > 0
         {
-            $matchBegin.minus_minus();
-            $srcCurr.minus_minus();
+            *$dstCurr.plus_plus() = *$matchSrc.plus_plus();
+            $matchLength -= 1;
         }
     }
 }
-pub(crate) use RAPIDLZ_EXPAND_FORWARD;
+pub(crate) use SAFE_COPY_MATCH;

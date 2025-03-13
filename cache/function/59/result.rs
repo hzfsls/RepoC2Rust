@@ -1,8 +1,9 @@
-pub fn BzpFileEOF(mut f: FilePtr) -> bool {
-    let mut c: i32 = c_fgetc!(f);
-    if c == BZP_EOF!() {
-        return true;
+pub fn BzpCompressEnd(mut bzpInfo: Ptr<BzpAlgorithmInfo>) {
+    if bzpInfo.compressFile.input.filePtr != NULL!() {
+        c_fclose!(bzpInfo.compressFile.input.filePtr);
     }
-    c_ungetc!(c, f);
-    return false;
+    if bzpInfo.compressFile.output.filePtr != NULL!() {
+        c_fclose!(bzpInfo.compressFile.output.filePtr);
+    }
+    BzpAlgorithmInfoFinish(bzpInfo.cast());
 }

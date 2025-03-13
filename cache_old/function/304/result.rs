@@ -1,7 +1,13 @@
-pub fn RapidlzCopyLiteralsFast(mut src: Ptr<u8>, mut dst: Ptr<u8>, mut length: u32) {
-    if RAPIDLZ_LIKELY!(length <= RAPIDLZ_SIXTEEN_BYTE!()) {
-        RapidlzCopy16Byte(dst.cast(), src.cast());
-        return;
+pub fn rb_tree_remove(mut tree: Ptr<RBTree>, mut key: RBTreeKey) -> i32 {
+    let mut node: Ptr<RBTreeNode> = Default::default();
+
+    node = rb_tree_lookup_node(tree.cast(), key.cast());
+
+    if node == NULL!() {
+        return 0;
     }
-    RapidlzWildCopy16(src.cast(), dst.cast(), (dst + length).cast());
+
+    rb_tree_remove_node(tree.cast(), node.cast());
+
+    return 1;
 }

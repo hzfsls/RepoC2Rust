@@ -1,3 +1,3 @@
-pub fn CmptlzPriceInit(mut encCtx: Ptr<CmptLzEncCtx>) {
+pub fn avl_tree_update_height(mut node: Ptr<AVLTreeNode>) {
     unimplemented!();
 }

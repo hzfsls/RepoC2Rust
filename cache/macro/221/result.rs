@@ -1,2 +1,2 @@
-macro_rules! CMPTLZ_MATCH_LEN_MIN { () => { 2 } }
-pub(crate) use CMPTLZ_MATCH_LEN_MIN;
+macro_rules! CMPT_DIST_LIMIT_2 { () => { 128 } }
+pub(crate) use CMPT_DIST_LIMIT_2;

@@ -1,2 +1,2 @@
-macro_rules! BZP_BITS3 { () => { 3 } }
-pub(crate) use BZP_BITS3;
+macro_rules! BZP_CRC_MOVE_RIGHT_VAL { () => { 31 } }
+pub(crate) use BZP_CRC_MOVE_RIGHT_VAL;

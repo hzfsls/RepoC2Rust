@@ -1,2 +1,2 @@
-macro_rules! BZP_MAX_ALPHA_SIZE { () => { 258 } }
-pub(crate) use BZP_MAX_ALPHA_SIZE;
+macro_rules! BZP_HUFFMAN_LEN_MAX_COST { () => { 15 } }
+pub(crate) use BZP_HUFFMAN_LEN_MAX_COST;

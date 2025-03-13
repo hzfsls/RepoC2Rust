@@ -114,7 +114,7 @@ def resolve_metadata(files: dict[str, str], declarations: dict[str, str]) -> dic
     # 处理function_declarations
     for path in files:
         target_path = name_dict[c_filename_to_rust_filename(path.split("/")[-1])]
-        target_path.declarations += [ declarations_use[f] for f in files[path]["declarations"] if f in declarations_use and declarations_use[f] != path ]
+        target_path.declarations += [ declarations_use[f] for f in files[path]["declarations"] if f in declarations_use and declarations[f] != path ]
     # 处理macros
     for path in files:
         target_path = name_dict[c_filename_to_rust_filename(path.split("/")[-1])]
@@ -126,7 +126,15 @@ def resolve_metadata(files: dict[str, str], declarations: dict[str, str]) -> dic
     # 处理types
     for path in files:
         target_path = name_dict[c_filename_to_rust_filename(path.split("/")[-1])]
-        target_path.definitions += [ RustCode(t) for t in files[path]["types"]]    
+        for t, v in files[path]["types"].items():
+            if t != "":
+                code = RustCode(v)
+                code.rust_code = f"pub type {t} = i32;"
+                target_path.definitions.append(code)
+            else:
+                for v0 in v:
+                    code = RustCode(v0)
+                    target_path.definitions.append(code)
     # 处理global_variables
     for path in files:
         target_path = name_dict[c_filename_to_rust_filename(path.split("/")[-1])]

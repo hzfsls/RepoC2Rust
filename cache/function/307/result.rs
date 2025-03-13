@@ -1,3 +1,3 @@
-pub fn RapidlzVersionGet() -> Ptr<u8> {
-    return g_rapidlzVersion.cast();
+pub fn rb_tree_node_value(mut node: Ptr<RBTreeNode>) -> RBTreeValue {
+    return node.value.cast();
 }

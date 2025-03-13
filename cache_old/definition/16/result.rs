@@ -1,36 +1,15 @@
-pub type BZP_ERROR_BASE_NO = i32;
-
-macro_rules! BZP_ERROR_MEMORY_OPER_FAILURE {
-    () => {
-        1
-    };
+#[repr(C)]
+#[derive(Default)]
+pub struct InDeComdata {
+    pub input: Ptr<BzpStream>,
+    pub output: Ptr<BzpStream>,
+    pub lasChar: i32,
+    pub num: i32,
+    pub buf: u32,
+    pub nBuf: i32,
+    pub blockSize: i32,
+    pub blockCRC: u32,
+    pub list: Array<i32, { BZP_ASCII_SIZE!() }>,
 }
-pub(crate) use BZP_ERROR_MEMORY_OPER_FAILURE;
 
-macro_rules! BZP_ERROR_PARAM {
-    () => {
-        2
-    };
-}
-pub(crate) use BZP_ERROR_PARAM;
-
-macro_rules! BZP_ERROR_IO {
-    () => {
-        3
-    };
-}
-pub(crate) use BZP_ERROR_IO;
-
-macro_rules! BZP_ERROR_DATA {
-    () => {
-        4
-    };
-}
-pub(crate) use BZP_ERROR_DATA;
-
-macro_rules! BZP_ERROR_DATA_MAGIC {
-    () => {
-        5
-    };
-}
-pub(crate) use BZP_ERROR_DATA_MAGIC;
+pub type InDeComdata = _InDeComdata;

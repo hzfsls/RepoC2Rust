@@ -1,3 +1,3 @@
-pub fn BzpGetDictionaryList(mut inData: Ptr<InDeComdata>) -> i32 {
+pub fn BzpMtfReSet(mut mtf: Ptr<BzpMtfInfo>) {
     unimplemented!();
 }

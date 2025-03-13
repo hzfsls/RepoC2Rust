@@ -1,2 +1,2 @@
-macro_rules! CMPTLZ_BASE_H { () => { } }
-pub(crate) use CMPTLZ_BASE_H;
+macro_rules! ALGORITHM_HASH_TABLE_H { () => { } }
+pub(crate) use ALGORITHM_HASH_TABLE_H;

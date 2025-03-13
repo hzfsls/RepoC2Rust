@@ -1,9 +1,9 @@
-macro_rules! RAPIDLZ_RETURN_IF_NOT_EOK {
-    ($condition:expr, $errCode:expr) => {
-        if $condition != EOK {
-            RAPIDLZ_LOG!($errCode, cstr!(" "));
-            return $errCode;
+macro_rules! RAPIDLZ_SAFE_LIT_COPY {
+    ($curSrc:expr, $leftSrcSize:expr, $curDest:expr, $destEnd:expr, $litLen:expr) => {
+        if RAPIDLZ_UNLIKELY!($litLen > $leftSrcSize || memmove_s($curDest, $destEnd - $curDest, $curSrc, $litLen) != EOK) {
+            RAPIDLZ_LOG!(RAPIDLZ_DST_SIZE_SMALL, cstr!("litLen:%u dstEnd - dst:%zu\n"), $litLen, $leftSrcSize);
+            return RAPIDLZ_ERROR_OUTPUT;
         }
     }
 }
-pub(crate) use RAPIDLZ_RETURN_IF_NOT_EOK;
+pub(crate) use RAPIDLZ_SAFE_LIT_COPY;

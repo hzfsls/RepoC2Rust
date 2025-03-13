@@ -1,2 +1,2 @@
-macro_rules! BZP_BUFF_READ_EMPTY { () => { (bzpf.input.pos >= bzpf.input.nBuf).as_bool() } }
-pub(crate) use BZP_BUFF_READ_EMPTY;
+macro_rules! ALGORITHM_BINARY_HEAP_H { () => { } }
+pub(crate) use ALGORITHM_BINARY_HEAP_H;

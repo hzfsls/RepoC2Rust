@@ -1,3 +1,3 @@
-pub fn CmptPriceSymbol(mut encCtx: Ptr<CmptLzEncCtx>, mut symbolProbs: Ptr<CmptlzProb>, mut symbolBitsNum: u32, mut symbol: u32) -> u32 {
+pub fn slist_find_data(mut list: Ptr<SListEntry>, mut callback: SListEqualFunc, mut data: SListValue) -> Ptr<SListEntry> {
     unimplemented!();
 }

@@ -1,3 +1,11 @@
-pub fn RapidlzHash4CalcValue(mut curSrc: Ptr<u8>) -> u32 {
-    return (RAPIDLZ_READ32BIT!(curSrc) * RAPIDLZ_GOLDEN_SECTION_PRIME!()) >> RAPIDLZ_STREAM_HASH_BITS!();
+pub fn avl_tree_lookup(mut tree: Ptr<AVLTree>, mut key: AVLTreeKey) -> AVLTreeValue {
+    let mut node: Ptr<AVLTreeNode> = Default::default();
+
+    node = avl_tree_lookup_node(tree.cast(), key.cast());
+
+    if node == NULL!() {
+        return AVL_TREE_NULL!();
+    } else {
+        return node.value.cast();
+    }
 }

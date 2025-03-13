@@ -1,2 +1,2 @@
-macro_rules! CMPTLZ_UTILS_H { () => { } }
-pub(crate) use CMPTLZ_UTILS_H;
+macro_rules! CMPTLZ_PB_STATE_NUM_ALIGN { () => { 16 } }
+pub(crate) use CMPTLZ_PB_STATE_NUM_ALIGN;

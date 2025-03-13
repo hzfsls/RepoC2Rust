@@ -1,3 +1,3 @@
-pub fn CmptlzDp(mut encCtx: Ptr<CmptLzEncCtx>, mut mf: Ptr<CmptMfCtx>, mut position: u32) {
+pub fn slist_to_array(mut list: Ptr<SListEntry>) -> Ptr<SListValue> {
     unimplemented!();
 }

@@ -1,3 +1,3 @@
-pub fn CmptLzGetProbsMatrix(mut decCtx: Ptr<CmptLzDecCtx>) -> Ptr<CmptLzDecProb> {
+pub fn binomial_heap_num_entries(mut heap: Ptr<BinomialHeap>) -> u32 {
     unimplemented!();
 }

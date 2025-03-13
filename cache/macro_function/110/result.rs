@@ -1,12 +1,2 @@
-macro_rules! CMPT_MF_MOVE_POS { ($mf:expr) =>
-    {
-        $mf.readPos.plus_plus();
-        $mf.cyclePos.plus_plus();
-        $mf.cyclePos = if $mf.cyclePos == $mf.cycleSize { 0 } else { $mf.cyclePos };
-        if CMPTLZ_UNLIKELY!($mf.readPos + $mf.offset == CMPTLZ_UINT32_MAX)
-        {
-            CmptMfMovePos($mf);
-        }
-    }
-}
-pub(crate) use CMPT_MF_MOVE_POS;
+macro_rules! MD5_LINEAR_FUNC_I { ($B:expr, $C:expr, $D:expr) => { $C ^ ($B | (!$D)) } }
+pub(crate) use MD5_LINEAR_FUNC_I;

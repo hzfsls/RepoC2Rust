@@ -1,10 +1,6 @@
-macro_rules! VOS_AVL_LAST {
-    ($TREE:expr) => {
-        if c_ref!($TREE).pstLast != AVL_NULL_PTR!().cast::<Ptr<AVL_NODE>>() {
-            c_ref!($TREE).pstLast.pSelf
-        } else {
-            AVL_NULL_PTR!()
-        }
+macro_rules! VOS_AVL_INSERT_OR_FIND {
+    ($TREE:expr, $NODE:expr) => {
+        VOS_AVL_Insert_Or_Find(c_ref!($TREE), c_ref!($NODE))
     }
 }
-pub(crate) use VOS_AVL_LAST;
+pub(crate) use VOS_AVL_INSERT_OR_FIND;

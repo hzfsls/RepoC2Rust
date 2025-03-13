@@ -1,2 +1,2 @@
-macro_rules! RAPIDLZ_INPUT_INVALID { () => { (-100isize) as usize } }
-pub(crate) use RAPIDLZ_INPUT_INVALID;
+macro_rules! RAPIDLZ_GOLDEN_SECTION_PRIME { () => { 2654435761 } }
+pub(crate) use RAPIDLZ_GOLDEN_SECTION_PRIME;

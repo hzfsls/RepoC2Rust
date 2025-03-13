@@ -1,3 +1,3 @@
-pub fn vosSha256CompressBlock(mut state: Ptr<u32>, mut block: Ptr<u8>) {
+pub fn BzpWriteValidASCII(mut outData: Ptr<BzpOutComdata>, mut bwt: Ptr<BzpBwtInfo>) {
     unimplemented!();
 }

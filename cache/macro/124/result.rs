@@ -1,2 +1,2 @@
-macro_rules! CMPT_ENC_ERROR_HEAD { () => { CMPTLZ_ERROR_CONVERT!(CMPTLZ_ENC_ERROR_HEAD!()) } }
-pub(crate) use CMPT_ENC_ERROR_HEAD;
+macro_rules! RB_TREE_NULL { () => { NULL!() } }
+pub(crate) use RB_TREE_NULL;

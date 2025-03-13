@@ -1,10 +1,6 @@
-macro_rules! GET_NODE_START_ADDRESS {
-    ($pstNode:expr, $usOffset:expr) => {
-        if $pstNode != AVL_NULL_PTR!() {
-            $pstNode.cast::<Ptr<u8>>() - $usOffset
-        } else {
-            AVL_NULL_PTR!()
-        }
+macro_rules! VOS_AVL_FIND_NEXT {
+    ($TREE:expr, $KEY:expr) => {
+        VOS_AVL_Find_Or_Find_Next(c_ref!($TREE), $KEY, AVL_TRUE!())
     }
 }
-pub(crate) use GET_NODE_START_ADDRESS;
+pub(crate) use VOS_AVL_FIND_NEXT;

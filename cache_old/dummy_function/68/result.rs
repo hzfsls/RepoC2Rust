@@ -1,3 +1,3 @@
-pub fn BzpFlushbuf(mut outData: Ptr<BzpOutComdata>) {
+pub fn BzpCheckFileHead(mut inData: Ptr<InDeComdata>) -> i32 {
     unimplemented!();
 }

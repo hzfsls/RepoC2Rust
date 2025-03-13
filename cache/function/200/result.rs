@@ -1,45 +1,23 @@
-pub fn CmptlzDpPre(mut encCtx: Ptr<CmptLzEncCtx>, mut mainReps: Ptr<u32>, mut cur: u32) {
-    let mut posPointer: u32 = encCtx.opts[cur].posPrev.cast();
-    let mut state: CmptlzState = encCtx.opts[posPointer].state.cast();
+pub fn slist_append(mut list: Ptr<Ptr<SListEntry>>, mut data: SListValue) -> Ptr<SListEntry> {
+    let mut rover: Ptr<SListEntry> = Default::default();
+    let mut newentry: Ptr<SListEntry> = c_malloc!(c_sizeof!(SListEntry));
 
-    if posPointer == cur - 1 {
-        if encCtx.opts[cur].backPrev == 0 {
-            CMPT_STATE_UPDATE_WHEN_SHORTREP!(state);
-        } else {
-            CMPT_STATE_UPDATE_WHEN_LIT!(state);
-        }
-    } else {
-        let mut backPointer: u32;
-        backPointer = encCtx.opts[cur].backPrev.cast();
-
-        if backPointer < CMPTLZ_NUM_REPS!() {
-            CMPT_STATE_UPDATE_WHEN_LONGREP!(state);
-        } else {
-            CMPT_STATE_UPDATE_WHEN_MATCH!(state);
-        }
-
-        let mut i: u32;
-        if backPointer < CMPTLZ_NUM_REPS!() {
-            mainReps[0] = encCtx.opts[posPointer].backs[backPointer].cast();
-
-            c_for!(i = 1; i <= backPointer; i.suffix_plus_plus(); {
-                mainReps[i] = encCtx.opts[posPointer].backs[i - 1].cast();
-            });
-            c_for!(; i < CMPTLZ_NUM_REPS!(); i.suffix_plus_plus(); {
-                mainReps[i] = encCtx.opts[posPointer].backs[i].cast();
-            });
-        } else {
-            mainReps[0] = (backPointer - CMPTLZ_NUM_REPS!()).cast();
-            c_for!(i = 1; i < CMPTLZ_NUM_REPS!(); i.suffix_plus_plus(); {
-                mainReps[i] = encCtx.opts[posPointer].backs[i - 1].cast();
-            });
-        }
+    if newentry == NULL!() {
+        return NULL!();
     }
 
-    encCtx.opts[cur].state = state.cast();
+    newentry.data = data.cast();
+    newentry.next = NULL!();
 
-    let mut i: u32;
-    c_for!(i = 0; i < CMPTLZ_NUM_REPS!(); i.suffix_plus_plus(); {
-        encCtx.opts[cur].backs[i] = mainReps[i].cast();
-    });
+    if *list == NULL!() {
+        *list = newentry.cast();
+    } else {
+        rover = *list.cast();
+        while rover.next != NULL!() {
+            rover = rover.next.cast();
+        }
+        rover.next = newentry.cast();
+    }
+
+    return newentry.cast();
 }

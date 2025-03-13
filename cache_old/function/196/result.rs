@@ -1,7 +1,14 @@
-pub fn CmptlzDpInitShortRep(mut encCtx: Ptr<CmptLzEncCtx>, mut repMatchPrice: u32, mut posState: u32) {
-    let mut shortRepPrice: u32 = repMatchPrice + CmptPriceShortRep(encCtx.cast(), encCtx.state.cast(), posState.cast());
-    if shortRepPrice < encCtx.opts[1].price {
-        encCtx.opts[1].price = shortRepPrice.cast();
-        encCtx.opts[1].backPrev = 0;
+pub fn list_iter_next(mut iter: Ptr<ListIterator>) -> ListValue {
+    if iter.current == NULL!() || iter.current != *iter.prev_next {
+        iter.current = *iter.prev_next;
+    } else {
+        iter.prev_next = c_ref!(iter.current.next).cast();
+        iter.current = iter.current.next.cast();
+    }
+
+    if iter.current == NULL!() {
+        return LIST_NULL!();
+    } else {
+        return iter.current.data.cast();
     }
 }

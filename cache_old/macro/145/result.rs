@@ -1,2 +1,2 @@
-macro_rules! ALWAYS_INLINE { () => { inline } }
-pub(crate) use ALWAYS_INLINE;
+macro_rules! CMPTLZ_REQUIRED_INPUT_MAX { () => { 20 } }
+pub(crate) use CMPTLZ_REQUIRED_INPUT_MAX;

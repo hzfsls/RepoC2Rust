@@ -1,3 +1,3 @@
-pub fn BzpBuildHuffmanTree(mut huffman: Ptr<BzpHuffmanInfo>) {
+pub fn sortedarray_length(mut array: Ptr<SortedArray>) -> u32 {
     unimplemented!();
 }

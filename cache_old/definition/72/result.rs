@@ -1,7 +1,1 @@
-#[repr(C)]
-#[derive(Default, Clone, Copy)]
-pub struct RapidlzUnalign64 {
-    pub v: i64,
-}
-
-pub type RapidlzUnalign64 = _RapidlzUnalign64;
+pub static hash_table_num_primes: Global<u32> = global!(size_of!(hash_table_primes) / size_of!(i32));

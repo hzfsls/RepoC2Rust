@@ -1,2 +1,2 @@
-macro_rules! RAPIDLZ_DICT_HASH_MOVE_BYTES { () => { 3 } }
-pub(crate) use RAPIDLZ_DICT_HASH_MOVE_BYTES;
+macro_rules! CMPTLZ_MF_CCTX_HANDLE { () => { CMPTLZ_HANDLE_CONVERT!(CMPTLZ_MF_CCTX!()) } }
+pub(crate) use CMPTLZ_MF_CCTX_HANDLE;

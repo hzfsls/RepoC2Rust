@@ -1,2 +1,2 @@
-macro_rules! CMPT_ENC_ERROR_FILESIZE { () => { CMPTLZ_ERROR_CONVERT!(CMPTLZ_ENC_ERROR_FILESIZE!()) } }
-pub(crate) use CMPT_ENC_ERROR_FILESIZE;
+macro_rules! ALGORITHM_HASH_INT_H { () => { } }
+pub(crate) use ALGORITHM_HASH_INT_H;

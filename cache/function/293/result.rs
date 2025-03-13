@@ -1,8 +1,7 @@
-pub fn RapidlzReadLE16Bit(mut addr: Ptr<Void>) -> u16 {
-    if RapidlzIsLE() != 0 {
-        return (*addr.cast::<Ptr<u16>>()).cast();
+pub fn rb_tree_free_subtree(mut node: Ptr<RBTreeNode>) {
+    if node != NULL!() {
+        rb_tree_free_subtree(node.children[RB_TREE_NODE_LEFT!()].cast());
+        rb_tree_free_subtree(node.children[RB_TREE_NODE_RIGHT!()].cast());
+        c_free!(node);
     }
-    let mut tmp1: u8 = ((addr.cast::<Ptr<u8>>())[0]).cast();
-    let mut tmp2: u8 = ((addr.cast::<Ptr<u8>>())[1]).cast();
-    return (tmp1 + (tmp2 << 8)).cast::<u16>();
 }

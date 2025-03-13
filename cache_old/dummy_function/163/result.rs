@@ -1,3 +1,3 @@
-pub fn CmptLzDecCheckDictSizeUpdate(mut decCtx: Ptr<CmptLzDecCtx>) {
+pub fn arraylist_prepend(mut arraylist: Ptr<ArrayList>, mut data: ArrayListValue) -> i32 {
     unimplemented!();
 }

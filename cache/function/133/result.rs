@@ -1,16 +1,13 @@
-pub fn BzpHuffmanGroupsReset(mut huffman: Ptr<BzpHuffmanGroups>, mut alphaSize: i32) -> i32 {
-    if BZP_INVALID_ALPHA_SIZE!(alphaSize) {
-        return BZP_ERROR_PARAM!();
+pub fn sortedarray_remove_range(mut sortedarray: Ptr<SortedArray>, mut index: u32, mut length: u32) {
+    if index > sortedarray.length || index + length > sortedarray.length {
+        return;
     }
 
-    huffman.alphaSize = alphaSize;
-    huffman.block = NULL!();
-    huffman.mtfFreq = NULL!();
-    huffman.nSelect = 0;
-    huffman.nGroups = 0;
+    c_memmove!(
+        c_ref!(sortedarray.data[index]).cast(),
+        c_ref!(sortedarray.data[index + length]).cast(),
+        (sortedarray.length - (index + length)) * c_sizeof!(SortedArrayValue)
+    );
 
-    c_for!(let mut i: i32 = 0; i < BZP_MAX_GROUPS_NUM!(); i.suffix_plus_plus(); {
-        BzpHuffmanInit(alphaSize.cast(), c_ref!(huffman.huffmanGroups[i]).cast());
-    });
-    return BZP_OK!();
+    sortedarray.length -= length;
 }

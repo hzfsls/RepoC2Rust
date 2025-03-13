@@ -1,3 +1,3 @@
-pub fn RapidlzCopyMatchFast(mut dst: Ptr<u8>, mut r#match: Ptr<u8>, mut offset: u16, mut length: u32) {
+pub fn rb_tree_node_key(mut node: Ptr<RBTreeNode>) -> RBTreeKey {
     unimplemented!();
 }

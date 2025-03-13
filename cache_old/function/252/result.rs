@@ -1,18 +1,33 @@
-pub fn CmptRcReverseProcess(mut rcCtx: Ptr<CmptRcCtx>, mut probs: Ptr<CmptlzProb>, mut numBits: u32, mut sym: u32) -> i32 {
-    let mut shiftRes: i32 = CMPT_OK!();
-    let mut range: u32 = rcCtx.range.cast();
-    let mut bit0Prob: u32 = Default::default();
-    let mut newBound: u32 = Default::default();
-    let mut bit: u32 = Default::default();
-    let mut m: u32 = 1;
-    c_do!({
-        bit = sym & 1;
-        sym >>= 1;
-        CMPT_RC_BIT_PROCESS!(rcCtx, probs + m, bit, bit0Prob, range, newBound, shiftRes);
-        CMPTLZ_RETURN_IF_NOT_OK!(shiftRes);
-        m = (m << 1) | bit;
-    } while numBits.prefix_minus_minus() != 0);
+pub fn hash_table_remove(mut hash_table: Ptr<HashTable>, mut key: HashTableKey) -> i32 {
+    let mut rover: Ptr<Ptr<HashTableEntry>> = Default::default();
+    let mut entry: Ptr<HashTableEntry> = Default::default();
+    let mut pair: Ptr<HashTablePair> = Default::default();
+    let mut index: u32 = Default::default();
+    let mut result: i32 = 0;
 
-    rcCtx.range = range.cast();
-    return CMPT_OK!();
+    index = (hash_table.hash_func(key) % hash_table.table_size).cast();
+
+    rover = c_ref!(hash_table.table[index]).cast();
+
+    while *rover != NULL!() {
+        pair = c_ref!((*rover).pair).cast();
+
+        if hash_table.equal_func(key, pair.key) != 0 {
+            entry = *rover;
+
+            *rover = entry.next;
+
+            hash_table_free_entry(hash_table, entry);
+
+            hash_table.entries -= 1;
+
+            result = 1;
+
+            break;
+        }
+
+        rover = c_ref!((*rover).next).cast();
+    }
+
+    return result;
 }

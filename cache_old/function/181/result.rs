@@ -1,6 +1,6 @@
-pub fn CmptLzFreeDict(mut decCtx: Ptr<CmptLzDecCtx>, mut memHook: Ptr<CmptLzMemHook>) {
-    if decCtx.dict != NULL!() {
-        CmptLzDecMemFree(memHook.cast(), CMPTLZ_DICT_HANDLE!(), decCtx.dict.cast());
-        decCtx.dict = NULL!();
+pub fn list_data(mut listentry: Ptr<ListEntry>) -> ListValue {
+    if listentry == NULL!() {
+        return LIST_NULL!();
     }
+    return listentry.data.cast();
 }

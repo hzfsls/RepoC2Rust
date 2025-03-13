@@ -1,3 +1,3 @@
-pub fn BzpHuffmanWeightAdd(mut w1: i32, mut w2: i32) -> i32 {
+pub fn sortedarray_get(mut array: Ptr<SortedArray>, mut i: u32) -> Ptr<SortedArrayValue> {
     unimplemented!();
 }

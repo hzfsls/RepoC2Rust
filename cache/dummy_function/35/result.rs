@@ -1,3 +1,3 @@
-pub fn VOS_MD5Init(mut context: Ptr<MD5_CTX>) {
+pub fn BzpOpenFile(mut bzpInfo: Ptr<BzpAlgorithmInfo>, mut inName: Ptr<u8>, mut outName: Ptr<u8>) -> i32 {
     unimplemented!();
 }

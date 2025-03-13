@@ -1,2 +1,2 @@
-macro_rules! CMPTLZ_ISREPG0 { () => { CMPTLZ_ISREP!() + CMPTLZ_MKSTATE_NUM!() } }
-pub(crate) use CMPTLZ_ISREPG0;
+macro_rules! CMPTLZ_SMALL_DICT_LG_SIZE { () => { 20 } }
+pub(crate) use CMPTLZ_SMALL_DICT_LG_SIZE;

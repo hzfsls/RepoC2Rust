@@ -1,10 +1,8 @@
-macro_rules! CMPT_RC_BREAK_SHIFTING { ($rcCtx:expr, $buf:expr, $res:expr) =>
-    {
-        CMPT_RC_BREAK_CHECK!($rcCtx, $buf, $res);
-        if $rcCtx.cacheSize == 0
-        {
-            return CMPT_OK;
+macro_rules! CMPTLZ_RETURN_IF_NOT_OK {
+    ($res:expr) => {
+        if CMPTLZ_UNLIKELY!($res != CMPT_OK) {
+            return $res;
         }
     }
 }
-pub(crate) use CMPT_RC_BREAK_SHIFTING;
+pub(crate) use CMPTLZ_RETURN_IF_NOT_OK;

@@ -1,2 +1,2 @@
-macro_rules! BZP_MAX_STACK_SIZE { () => { 100 } }
-pub(crate) use BZP_MAX_STACK_SIZE;
+macro_rules! BZP_NGROUPS_BLOCK_NUM_LIMIT2 { () => { 1200 } }
+pub(crate) use BZP_NGROUPS_BLOCK_NUM_LIMIT2;

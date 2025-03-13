@@ -1,2 +1,2 @@
-macro_rules! CMPTLZ_ENC_INNER_H { () => { } }
-pub(crate) use CMPTLZ_ENC_INNER_H;
+macro_rules! CMPT_ENC_ERROR_FILESIZE { () => { CMPTLZ_ERROR_CONVERT!(CMPTLZ_ENC_ERROR_FILESIZE!()) } }
+pub(crate) use CMPT_ENC_ERROR_FILESIZE;

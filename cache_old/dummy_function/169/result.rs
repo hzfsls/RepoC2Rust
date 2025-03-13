@@ -1,3 +1,3 @@
-pub fn CmptLzDecDecodeToBuf(mut decCtx: Ptr<CmptLzDecCtx>, mut pDecIn: Ptr<CmptLzDecIn>, mut pDecOut: Ptr<CmptLzDecOut>, mut finMode: EnCmptLzFinMode, mut finStatus: Ptr<EnCmptLzStatus>) -> i32 {
+pub fn arraylist_sort(mut arraylist: Ptr<ArrayList>, mut compare_func: ArrayListCompareFunc) {
     unimplemented!();
 }

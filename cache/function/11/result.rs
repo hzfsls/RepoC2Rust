@@ -1,25 +1,10 @@
-pub fn VOS_AVL3_Find(mut pstTree: Ptr<AVL3_TREE>, mut pstKey: Ptr<Void>, mut pstTreeInfo: Ptr<AVL3_TREE_INFO>) -> Ptr<Void> {
-    let mut pstNode: Ptr<AVL3_NODE> = Default::default();
-    let mut iResult: i32 = Default::default();
-    let mut iKeyOffset: i32 = Default::default();
-
-    if TREE_OR_TREEINFO_IS_NULL!(pstTree, pstTreeInfo) {
-        return AVL_NULL_PTR!();
+pub fn VOS_AVL3_Delete(mut pstTree: Ptr<AVL3_TREE>, mut pstNode: Ptr<AVL3_NODE>) {
+    let mut pstBaseNode: Ptr<AVLBASE_NODE_S> = Default::default();
+    let mut pstBaseTree: Ptr<AVLBASE_TREE_S> = Default::default();
+    if pstTree == AVL_NULL_PTR!() || pstNode == AVL_NULL_PTR!() {
+        return;
     }
-
-    pstNode = pstTree.pstRoot.cast();
-    iKeyOffset = GET_KEYOFFSET!(pstTreeInfo).cast();
-
-    while pstNode != AVL_NULL_PTR!() {
-        iResult = (pstTreeInfo.pfCompare)(pstKey.cast(), (pstNode.cast::<Ptr<u8>>() + iKeyOffset).cast()).cast();
-        if iResult > 0 {
-            pstNode = pstNode.pstRight.cast();
-        } else if iResult < 0 {
-            pstNode = pstNode.pstLeft.cast();
-        } else {
-            break;
-        }
-    }
-
-    return GET_NODE_START_ADDRESS!(pstNode, pstTreeInfo.usNodeOffset).cast();
+    pstBaseNode = pstNode.cast::<Ptr<AVLBASE_NODE_S>>();
+    pstBaseTree = pstTree.cast::<Ptr<AVLBASE_TREE_S>>();
+    VosAvlDelete(pstBaseNode.cast(), pstBaseTree.cast());
 }

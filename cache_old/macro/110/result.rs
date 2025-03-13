@@ -1,2 +1,2 @@
-macro_rules! BZP_BWT_ENCODE_H { () => { } }
-pub(crate) use BZP_BWT_ENCODE_H;
+macro_rules! AVL_TREE_NULL { () => { NULL!() } }
+pub(crate) use AVL_TREE_NULL;

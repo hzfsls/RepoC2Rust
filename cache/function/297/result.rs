@@ -1,9 +1,17 @@
-pub fn RapidlzWriteLE16(mut addr: Ptr<Void>, mut val: u16) {
-    if RapidlzIsLE() != 0 {
-        *addr.cast::<Ptr<u16>>() = val.cast();
+pub fn rb_tree_insert_case3(mut tree: Ptr<RBTree>, mut node: Ptr<RBTreeNode>) {
+    let mut grandparent: Ptr<RBTreeNode> = Default::default();
+    let mut uncle: Ptr<RBTreeNode> = Default::default();
+
+    grandparent = node.parent.parent.cast();
+    uncle = rb_tree_node_uncle(node.cast()).cast();
+
+    if uncle != NULL!() && uncle.color == RB_TREE_NODE_RED!() {
+        node.parent.color = RB_TREE_NODE_BLACK!();
+        uncle.color = RB_TREE_NODE_BLACK!();
+        grandparent.color = RB_TREE_NODE_RED!();
+
+        rb_tree_insert_case1(tree.cast(), grandparent.cast());
     } else {
-        let mut tmp: Ptr<u8> = addr.cast::<Ptr<u8>>();
-        tmp[0] = val.cast::<u8>();
-        tmp[1] = (val >> 8).cast::<u8>();
+        rb_tree_insert_case4(tree.cast(), node.cast());
     }
 }

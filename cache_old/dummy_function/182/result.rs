@@ -1,3 +1,3 @@
-pub fn CmptLzDecAllocateProbs(mut decCtx: Ptr<CmptLzDecCtx>, mut decProt: Ptr<CmptLzDecProt>, mut memHook: Ptr<CmptLzMemHook>) -> i32 {
+pub fn list_set_data(mut listentry: Ptr<ListEntry>, mut value: ListValue) {
     unimplemented!();
 }

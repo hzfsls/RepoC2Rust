@@ -1,2 +1,2 @@
-macro_rules! BZP_HUFFMAN_HEIGHT_WEIGHT_BITS { () => { 8 } }
-pub(crate) use BZP_HUFFMAN_HEIGHT_WEIGHT_BITS;
+macro_rules! BZP_BLOCK_HEAD_5 { () => { 0x59 } }
+pub(crate) use BZP_BLOCK_HEAD_5;

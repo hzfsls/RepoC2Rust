@@ -1,3 +1,3 @@
-pub fn CmptMfPrepare(mut encCtx: Ptr<CmptLzEncCtx>, mut src: Ptr<u8>, mut srcLen: usize, mut alloc: Ptr<CmptLzMemHook>) -> i32 {
+pub fn set_enlarge(mut set: Ptr<Set>) -> i32 {
     unimplemented!();
 }

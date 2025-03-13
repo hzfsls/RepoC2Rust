@@ -1,3 +1,3 @@
-pub fn CmptLzDecConstruct(mut decCtx: Ptr<CmptLzDecCtx>) {
+pub fn list_nth_entry(mut list: Ptr<ListEntry>, mut n: u32) -> Ptr<ListEntry> {
     unimplemented!();
 }

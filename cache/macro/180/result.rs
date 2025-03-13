@@ -1,2 +1,2 @@
-macro_rules! CMPTLZ_FULL_DISTANCE { () => { 1 << (CMPTLZ_HIGH_POSSLOT!() >> 1) } }
-pub(crate) use CMPTLZ_FULL_DISTANCE;
+macro_rules! CMPTLZ_ISREPG0 { () => { CMPTLZ_ISREP!() + CMPTLZ_MKSTATE_NUM!() } }
+pub(crate) use CMPTLZ_ISREPG0;

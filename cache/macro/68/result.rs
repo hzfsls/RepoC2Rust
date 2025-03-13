@@ -1,2 +1,2 @@
-macro_rules! BZP_HDR_Z { () => { 0x5a } }
-pub(crate) use BZP_HDR_Z;
+macro_rules! BZP_BUF_SIZE { () => { 5000 } }
+pub(crate) use BZP_BUF_SIZE;

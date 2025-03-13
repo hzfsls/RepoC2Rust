@@ -1,2 +1,2 @@
-macro_rules! CMPTLZ_ALIGN_BITS { () => { 4 } }
-pub(crate) use CMPTLZ_ALIGN_BITS;
+macro_rules! CMPT_MF_LONGEST_MATCH { () => { 273 } }
+pub(crate) use CMPT_MF_LONGEST_MATCH;

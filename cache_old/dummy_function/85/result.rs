@@ -1,3 +1,3 @@
-pub fn BzpReadUInt24(mut inData: Ptr<InDeComdata>) -> u32 {
+pub fn BzpHuffmanDecodeInit(mut blockSize: i32) -> Ptr<BzpHuffmanDecode> {
     unimplemented!();
 }

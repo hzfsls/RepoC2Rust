@@ -1,2 +1,2 @@
-macro_rules! CMPTLZ_ONE_BYTE_WIDTH { () => { 8 } }
-pub(crate) use CMPTLZ_ONE_BYTE_WIDTH;
+macro_rules! CMPTLZ_LOW_LENPROB_OFFSET { () => { 0 } }
+pub(crate) use CMPTLZ_LOW_LENPROB_OFFSET;

@@ -1,34 +1,21 @@
-pub fn CmptPriceGenDistTable(mut encCtx: Ptr<CmptLzEncCtx>) {
-    let mut distState: u32 = 0;
+pub fn queue_push_tail(mut queue: Ptr<Queue>, mut data: QueueValue) -> i32 {
+    let mut new_entry: Ptr<QueueEntry> = c_malloc!(c_sizeof!(QueueEntry));
 
-    c_do!({
-        let tmpPriceDistSlot: Ptr<u32> = encCtx.priceDistSlotTable[distState].cast();
+    if new_entry == NULL!() {
+        return 0;
+    }
 
-        c_for!(let mut i: u32 = 0; i < encCtx.distTableSize; i.suffix_plus_plus(); {
-            tmpPriceDistSlot[i] = CmptPriceSymbol(encCtx.cast(), encCtx.probDistSlot[distState].cast(), CMPTLZ_DIST_SLOT_BITS!(), i.cast()).cast();
-        });
+    new_entry.data = data.cast();
+    new_entry.prev = queue.tail.cast();
+    new_entry.next = NULL!();
 
-        c_for!(let mut i: u32 = 14; i < encCtx.distTableSize; i.suffix_plus_plus(); {
-            tmpPriceDistSlot[i] += CmptPriceOneBitDirect(((i >> 1) - 1 - CMPTLZ_ALIGN_BITS!()).cast()).cast();
-        });
+    if queue.tail == NULL!() {
+        queue.head = new_entry.cast();
+        queue.tail = new_entry.cast();
+    } else {
+        queue.tail.next = new_entry.cast();
+        queue.tail = new_entry.cast();
+    }
 
-        c_for!(let mut i: u32 = 0; i < 4; i.suffix_plus_plus(); {
-            encCtx.priceDistTable[distState][i] = tmpPriceDistSlot[i].cast();
-        });
-
-        distState.suffix_plus_plus();
-    } while distState < CMPTLZ_DIST_STATE_TOTAL!());
-
-    c_for!(let mut i: u32 = 4; i < 128; i.suffix_plus_plus(); {
-        let mut distSlot: u32 = PosSloter(i.cast()).cast();
-        let mut footerBits: u32 = ((distSlot >> 1) - 1).cast();
-        let mut base: u32 = ((2 | (distSlot & 1)) << footerBits).cast();
-        let mut price: u32 = CmptPriceSymbolReverse(encCtx.cast(), (encCtx.probDistSpecial + base - distSlot - 1).cast(), footerBits.cast(), (i - base).cast()).cast();
-
-        c_for!(let mut distState: u32 = 0; distState < 4; distState.suffix_plus_plus(); {
-            encCtx.priceDistTable[distState][i] = (price + encCtx.priceDistSlotTable[distState][distSlot]).cast();
-        });
-    });
-
-    encCtx.matchPriceCount = 0;
+    return 1;
 }

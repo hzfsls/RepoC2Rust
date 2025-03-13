@@ -1,2 +1,2 @@
-macro_rules! BZP_TYPE_H { () => { } }
-pub(crate) use BZP_TYPE_H;
+macro_rules! BZP_SHELL_SORT_INCREMENT0 { () => { 1 } }
+pub(crate) use BZP_SHELL_SORT_INCREMENT0;

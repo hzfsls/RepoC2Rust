@@ -547,6 +547,7 @@ Logical options:
 Others:
     1. Notice that using one field for indexing another field in a struct cause compilation error in Rust. For example, `my_struct.arr[my_struct.field] = 1;` should be translated to `let idx: usize = my_struct.field.cast(); my_struct.arr[idx] = 1;`.
     2. Don't use uninitialized variables in Rust, use Default::default() to initialize the variable. For example, `int a;` should be translated to `let mut a: i32 = Default::default();`.
+    3. When translating a global variable starts with `g_`, like `g_Offset`, use `.lock()`. For example, `int a = g_offsetCc[n];` should be translated to  `let a: i32 = (*g_offsetCc.lock())[n];`. However, global variable not starts with `g_` should not add `lock()`.
 Now follow these examples for translation:
 """ + example_1 + example_2 + example_3 + example_4 + example_5 + example_6 + example_7 + example_8 + example_9 + example_10
 
