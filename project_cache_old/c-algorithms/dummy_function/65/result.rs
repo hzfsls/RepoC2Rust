@@ -1,3 +1,3 @@
-pub fn list_sort_internal(mut list: Ptr<Ptr<ListEntry>>, mut compare_func: ListCompareFunc) -> Ptr<ListEntry> {
+pub fn avl_tree_subtree_height(mut node: Ptr<AVLTreeNode>) -> i32 {
     unimplemented!();
 }

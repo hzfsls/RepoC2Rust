@@ -1,3 +1,3 @@
-pub fn trie_remove_binary(mut trie: Ptr<Trie>, mut key: Ptr<u8>, mut key_length: i32) -> i32 {
+pub fn hash_table_remove(mut hash_table: Ptr<HashTable>, mut key: HashTableKey) -> i32 {
     unimplemented!();
 }

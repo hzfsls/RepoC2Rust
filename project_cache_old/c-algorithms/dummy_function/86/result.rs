@@ -1,3 +1,3 @@
-pub fn slist_find_data(mut list: Ptr<SListEntry>, mut callback: SListEqualFunc, mut data: SListValue) -> Ptr<SListEntry> {
+pub fn slist_free(mut list: Ptr<SListEntry>) {
     unimplemented!();
 }

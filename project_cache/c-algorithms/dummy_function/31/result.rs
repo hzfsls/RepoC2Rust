@@ -1,3 +1,3 @@
-pub fn bloom_filter_intersection(mut filter1: Ptr<BloomFilter>, mut filter2: Ptr<BloomFilter>) -> Ptr<BloomFilter> {
+pub fn arraylist_remove_range(mut arraylist: Ptr<ArrayList>, mut index: u32, mut length: u32) {
     unimplemented!();
 }

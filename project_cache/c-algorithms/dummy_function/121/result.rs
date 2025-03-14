@@ -1,3 +1,3 @@
-pub fn hash_table_free(mut hash_table: Ptr<HashTable>) {
+pub fn trie_insert_rollback(mut trie: Ptr<Trie>, mut key: Ptr<u8>) {
     unimplemented!();
 }

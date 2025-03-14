@@ -1,13 +1,9 @@
-pub fn avl_tree_remove(mut tree: Ptr<AVLTree>, mut key: AVLTreeKey) -> i32 {
-    let mut node: Ptr<AVLTreeNode> = Default::default();
-
-    node = avl_tree_lookup_node(tree.cast(), key.cast());
-
-    if (node == NULL!()).as_bool() {
+pub fn pointer_compare(mut location1: Ptr<Void>, mut location2: Ptr<Void>) -> i32 {
+    if (location1 < location2).as_bool() {
+        return -1;
+    } else if (location1 > location2).as_bool() {
+        return 1;
+    } else {
         return 0;
     }
-
-    avl_tree_remove_node(tree.cast(), node.cast());
-
-    return 1;
 }

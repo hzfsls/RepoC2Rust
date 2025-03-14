@@ -1,3 +1,3 @@
-pub fn avl_tree_node_child(mut node: Ptr<AVLTreeNode>, mut side: AVLTreeNodeSide) -> Ptr<AVLTreeNode> {
+pub fn binary_heap_pop(mut heap: Ptr<BinaryHeap>) -> BinaryHeapValue {
     unimplemented!();
 }

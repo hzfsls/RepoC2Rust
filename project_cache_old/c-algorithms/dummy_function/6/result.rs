@@ -1,3 +1,3 @@
-pub fn sortedarray_remove(mut sortedarray: Ptr<SortedArray>, mut index: u32) {
+pub fn rb_tree_free_subtree(mut node: Ptr<RBTreeNode>) {
     unimplemented!();
 }

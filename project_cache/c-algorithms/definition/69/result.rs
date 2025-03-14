@@ -1,1 +1,1 @@
-pub type HashTableEqualFunc = FuncPtr<fn(HashTableKey, HashTableKey) -> i32>;
+pub type SetFreeFunc = FuncPtr<fn(SetValue)>;

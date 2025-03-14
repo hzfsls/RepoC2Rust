@@ -1,35 +1,44 @@
-pub fn binary_heap_insert(mut heap: Ptr<BinaryHeap>, mut value: BinaryHeapValue) -> i32 {
-    let mut new_values: Ptr<BinaryHeapValue> = Default::default();
-    let mut index: u32 = Default::default();
-    let mut new_size: u32 = Default::default();
-    let mut parent: u32 = Default::default();
+pub fn binomial_heap_pop(mut heap: Ptr<BinomialHeap>) -> BinomialHeapValue {
+    let mut least_tree: Ptr<BinomialTree> = Default::default();
+    let mut fake_heap: BinomialHeap = Default::default();
+    let mut result: BinomialHeapValue = Default::default();
+    let mut i: u32 = Default::default();
+    let mut least_index: u32 = Default::default();
 
-    if (heap.num_values >= heap.alloced_size).as_bool() {
-        new_size = heap.alloced_size * 2;
-        new_values = c_realloc!(heap.values, c_sizeof!(BinaryHeapValue) * new_size);
-
-        if (new_values == NULL!()).as_bool() {
-            return 0;
-        }
-
-        heap.alloced_size = new_size;
-        heap.values = new_values;
+    if (heap.num_values == 0).as_bool() {
+        return BINOMIAL_HEAP_NULL!();
     }
 
-    index = heap.num_values;
-    heap.num_values.prefix_plus_plus();
+    least_index = UINT_MAX!();
 
-    while (index > 0).as_bool() {
-        parent = (index - 1) / 2;
-
-        if (binary_heap_cmp(heap, heap.values[parent], value) < 0).as_bool() {
-            break;
-        } else {
-            heap.values[index] = heap.values[parent].cast();
-            index = parent;
+    c_for!(i = 0; i < heap.roots_length; i.prefix_plus_plus(); {
+        if (heap.roots[i] == NULL!()).as_bool() {
+            continue;
         }
-    }
 
-    heap.values[index] = value.cast();
-    return 1;
+        if (least_index == UINT_MAX!() || binomial_heap_cmp(heap.cast(), heap.roots[i].value.cast(), heap.roots[least_index].value.cast()) < 0).as_bool() {
+            least_index = i;
+        }
+    });
+
+    least_tree = heap.roots[least_index].cast();
+    heap.roots[least_index] = NULL!();
+
+    fake_heap.heap_type = heap.heap_type.cast();
+    fake_heap.compare_func = heap.compare_func.cast();
+    fake_heap.roots = least_tree.subtrees.cast();
+    fake_heap.roots_length = least_tree.order.cast();
+
+    if binomial_heap_merge(heap.cast(), c_ref!(fake_heap).cast()).as_bool() {
+        result = least_tree.value.cast();
+        binomial_tree_unref(least_tree.cast());
+
+        heap.num_values -= 1;
+
+        return result.cast();
+    } else {
+        heap.roots[least_index] = least_tree.cast();
+
+        return BINOMIAL_HEAP_NULL!();
+    }
 }

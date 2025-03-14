@@ -1,3 +1,3 @@
-pub fn arraylist_append(mut arraylist: Ptr<ArrayList>, mut data: ArrayListValue) -> i32 {
+pub fn arraylist_sort(mut arraylist: Ptr<ArrayList>, mut compare_func: ArrayListCompareFunc) {
     unimplemented!();
 }

@@ -1,3 +1,3 @@
-pub fn hash_table_free_entry(mut hash_table: Ptr<HashTable>, mut entry: Ptr<HashTableEntry>) {
+pub fn trie_find_end(mut trie: Ptr<Trie>, mut key: Ptr<u8>) -> Ptr<TrieNode> {
     unimplemented!();
 }

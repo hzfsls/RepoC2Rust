@@ -1,3 +1,3 @@
-pub fn trie_num_entries(mut trie: Ptr<Trie>) -> u32 {
+pub fn hash_table_iter_next(mut iterator: Ptr<HashTableIterator>) -> HashTablePair {
     unimplemented!();
 }

@@ -1,1 +1,1 @@
-pub type Trie = _Trie;
+pub type QueueValue = VoidPtr;

@@ -1,7 +1,5 @@
-pub fn rb_tree_insert_case1(mut tree: Ptr<RBTree>, mut node: Ptr<RBTreeNode>) {
-    if (node.parent == NULL!()).as_bool() {
-        node.color = RB_TREE_NODE_BLACK!();
-    } else {
-        rb_tree_insert_case2(tree.cast(), node.cast());
+pub fn list_set_data(mut listentry: Ptr<ListEntry>, mut value: ListValue) {
+    if (listentry != NULL!()).as_bool() {
+        listentry.data = value.cast();
     }
 }

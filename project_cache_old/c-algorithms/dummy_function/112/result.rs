@@ -1,3 +1,3 @@
-pub fn set_union(mut set1: Ptr<Set>, mut set2: Ptr<Set>) -> Ptr<Set> {
+pub fn bloom_filter_intersection(mut filter1: Ptr<BloomFilter>, mut filter2: Ptr<BloomFilter>) -> Ptr<BloomFilter> {
     unimplemented!();
 }

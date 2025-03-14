@@ -1,18 +1,32 @@
-pub fn hash_table_free(mut hash_table: Ptr<HashTable>) {
-    let mut rover: Ptr<HashTableEntry> = Default::default();
-    let mut next: Ptr<HashTableEntry> = Default::default();
-    let mut i: u32 = Default::default();
+pub fn trie_insert_rollback(mut trie: Ptr<Trie>, mut key: Ptr<u8>) {
+    let mut node: Ptr<TrieNode> = Default::default();
+    let mut prev_ptr: Ptr<Ptr<TrieNode>> = Default::default();
+    let mut next_node: Ptr<TrieNode> = Default::default();
+    let mut next_prev_ptr: Ptr<Ptr<TrieNode>> = Default::default();
+    let mut p: Ptr<u8> = Default::default();
 
-    c_for!(let mut i = 0; i < hash_table.table_size; i.prefix_plus_plus(); {
-        rover = hash_table.table[i];
-        while (rover != NULL!()) {
-            next = rover.next;
-            hash_table_free_entry(hash_table, rover);
-            rover = next;
+    node = trie.root_node.cast();
+    prev_ptr = c_ref!(trie.root_node).cast();
+    p = key.cast();
+
+    while (node != NULL!()).as_bool() {
+        next_prev_ptr = c_ref!(node.next[(*p).cast::<usize>()]).cast();
+        next_node = *next_prev_ptr;
+        p = p + 1;
+
+        node.use_count -= 1;
+
+        if (node.use_count == 0).as_bool() {
+            c_free!(node);
+
+            if (prev_ptr != NULL!()).as_bool() {
+                *prev_ptr = NULL!();
+            }
+
+            next_prev_ptr = NULL!();
         }
-    });
 
-    c_free!(hash_table.table);
-
-    c_free!(hash_table);
+        node = next_node.cast();
+        prev_ptr = next_prev_ptr.cast();
+    }
 }

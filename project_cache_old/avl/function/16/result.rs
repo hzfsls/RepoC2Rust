@@ -1,8 +1,21 @@
-pub fn VosAvlNodeRightInsert(mut pstTree: Ptr<AVLBASE_TREE_S>, mut pstParentNode: Ptr<AVLBASE_NODE_S>, mut pstNode: Ptr<AVLBASE_NODE_S>) {
-    pstNode.pstParent = pstParentNode.cast();
-    pstParentNode.pstRight = pstNode.cast();
-    pstParentNode.sRHeight = 1;
-    if (pstParentNode == pstTree.pstLast).as_bool() {
-        pstTree.pstLast = pstNode.cast();
+pub fn VosAvlRebalance(mut ppstSubTree: Ptr<Ptr<AVLBASE_NODE_S>>) {
+    let mut iMoment: i32 = Default::default();
+
+    iMoment = ((*ppstSubTree).sRHeight - (*ppstSubTree).sLHeight).cast();
+
+    if (iMoment > 1).as_bool() {
+        if ((*ppstSubTree).pstRight.sLHeight > (*ppstSubTree).pstRight.sRHeight).as_bool() {
+            VosAvlRotateRight(c_ref!((*ppstSubTree).pstRight).cast());
+        }
+
+        VosAvlRotateLeft(ppstSubTree.cast());
+    } else if (iMoment < -1).as_bool() {
+        if ((*ppstSubTree).pstLeft.sRHeight > (*ppstSubTree).pstLeft.sLHeight).as_bool() {
+            VosAvlRotateLeft(c_ref!((*ppstSubTree).pstLeft).cast());
+        }
+
+        VosAvlRotateRight(ppstSubTree.cast());
     }
+
+    return;
 }

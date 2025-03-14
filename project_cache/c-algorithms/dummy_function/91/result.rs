@@ -1,3 +1,3 @@
-pub fn queue_new() -> Ptr<Queue> {
+pub fn slist_next(mut listentry: Ptr<SListEntry>) -> Ptr<SListEntry> {
     unimplemented!();
 }

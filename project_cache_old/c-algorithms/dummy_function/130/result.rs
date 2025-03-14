@@ -1,3 +1,3 @@
-pub fn hash_table_iter_next(mut iterator: Ptr<HashTableIterator>) -> HashTablePair {
+pub fn set_free_entry(mut set: Ptr<Set>, mut entry: Ptr<SetEntry>) {
     unimplemented!();
 }

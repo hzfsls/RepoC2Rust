@@ -1,3 +1,3 @@
-pub fn list_remove_data(mut list: Ptr<Ptr<ListEntry>>, mut callback: ListEqualFunc, mut data: ListValue) -> u32 {
+pub fn avl_tree_free(mut tree: Ptr<AVLTree>) {
     unimplemented!();
 }

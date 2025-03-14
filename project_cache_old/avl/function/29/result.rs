@@ -1,15 +1,11 @@
-pub fn VosAvlSearchReplaceNodeInLTree(mut pstTree: Ptr<AVLBASE_TREE_S>, mut pstNode: Ptr<AVLBASE_NODE_S>) -> Ptr<AVLBASE_NODE_S> {
-    let mut pstReplaceNode: Ptr<AVLBASE_NODE_S> = Default::default();
+pub fn VOS_AVL3_First(mut pstTree: Ptr<AVL3_TREE>, mut pstTreeInfo: Ptr<AVL3_TREE_INFO>) -> Ptr<Void> {
+    let mut pstNode: Ptr<AVL3_NODE> = Default::default();
 
-    if (pstNode.pstLeft.pstRight == AVL_NULL_PTR!()).as_bool() {
-        pstReplaceNode = pstNode.pstLeft.cast();
-        pstReplaceNode.pstRight = pstNode.pstRight.cast();
-        pstReplaceNode.pstRight.pstParent = pstReplaceNode.cast();
-        pstReplaceNode.sRHeight = pstNode.sRHeight.cast();
-    } else {
-        VosAvlSwapRightMost(pstTree.cast(), pstNode.pstLeft.cast(), pstNode.cast());
-        pstReplaceNode = pstNode.pstLeft.cast();
+    if TREE_OR_TREEINFO_IS_NULL!(pstTree, pstTreeInfo).as_bool() {
+        return AVL_NULL_PTR!();
     }
 
-    return pstReplaceNode.cast();
+    pstNode = pstTree.pstFirst.cast();
+
+    return GET_NODE_START_ADDRESS!(pstNode, pstTreeInfo.usNodeOffset);
 }

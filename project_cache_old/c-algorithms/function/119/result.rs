@@ -1,13 +1,16 @@
-pub fn hash_table_free_entry(mut hash_table: Ptr<HashTable>, mut entry: Ptr<HashTableEntry>) {
-    let mut pair: Ptr<HashTablePair> = c_ref!(entry.pair).cast();
+pub fn trie_find_end(mut trie: Ptr<Trie>, mut key: Ptr<u8>) -> Ptr<TrieNode> {
+    let mut node: Ptr<TrieNode> = Default::default();
+    let mut p: Ptr<u8> = Default::default();
 
-    if (hash_table.key_free_func != NULL!()).as_bool() {
-        (hash_table.key_free_func)(pair.key.cast());
-    }
+    node = trie.root_node.cast();
 
-    if (hash_table.value_free_func != NULL!()).as_bool() {
-        (hash_table.value_free_func)(pair.value.cast());
-    }
+    c_for!(p = key; *p != 0; p.prefix_plus_plus(); {
+        if (node == NULL!()).as_bool() {
+            return NULL!();
+        }
 
-    c_free!(entry);
+        node = node.next[(*p).cast::<usize>()].cast();
+    });
+
+    return node.cast();
 }

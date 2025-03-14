@@ -1,1 +1,6 @@
-pub type ListEntry = _ListEntry;
+#[repr(C)]
+#[derive(Default, Clone, Copy)]
+pub struct _SetEntry {
+    pub data: SetValue,
+    pub next: Ptr<SetEntry>,
+}

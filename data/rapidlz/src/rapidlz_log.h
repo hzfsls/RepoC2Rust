@@ -25,13 +25,13 @@
 extern "C" {
 #endif
 
-#ifndef RAPIDLZFILENAME
-#ifdef RAPIDLZ_FILE_NAME
-#define RAPIDLZFILENAME ""
-#else
+// #ifndef RAPIDLZFILENAME
+// #ifdef RAPIDLZ_FILE_NAME
+// #define RAPIDLZFILENAME ""
+// #else
 #define RAPIDLZFILENAME (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
-#endif
-#endif
+// #endif
+// #endif
 
 /**
  * @ingroup rapidlz_log

@@ -1,3 +1,3 @@
-pub fn slist_remove_data(mut list: Ptr<Ptr<SListEntry>>, mut callback: SListEqualFunc, mut data: SListValue) -> u32 {
+pub fn avl_tree_num_entries(mut tree: Ptr<AVLTree>) -> u32 {
     unimplemented!();
 }

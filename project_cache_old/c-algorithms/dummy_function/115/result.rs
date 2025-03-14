@@ -1,3 +1,3 @@
-pub fn set_iter_next(mut iterator: Ptr<SetIterator>) -> SetValue {
+pub fn trie_new() -> Ptr<Trie> {
     unimplemented!();
 }

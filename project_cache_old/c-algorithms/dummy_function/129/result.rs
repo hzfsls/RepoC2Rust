@@ -1,3 +1,3 @@
-pub fn hash_table_iter_has_more(mut iterator: Ptr<HashTableIterator>) -> i32 {
+pub fn set_allocate_table(mut set: Ptr<Set>) -> i32 {
     unimplemented!();
 }

@@ -1,3 +1,3 @@
-pub fn rb_tree_insert(mut tree: Ptr<RBTree>, mut key: RBTreeKey, mut value: RBTreeValue) -> Ptr<RBTreeNode> {
+pub fn list_length(mut list: Ptr<ListEntry>) -> u32 {
     unimplemented!();
 }

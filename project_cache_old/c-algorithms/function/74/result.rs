@@ -1,25 +1,37 @@
-pub fn slist_append(mut list: Ptr<Ptr<SListEntry>>, mut data: SListValue) -> Ptr<SListEntry> {
-    let mut rover: Ptr<SListEntry> = Default::default();
-    let mut newentry: Ptr<SListEntry> = Default::default();
+pub fn avl_tree_remove_node(mut tree: Ptr<AVLTree>, mut node: Ptr<AVLTreeNode>) {
+    let mut swap_node: Ptr<AVLTreeNode> = Default::default();
+    let mut balance_startpoint: Ptr<AVLTreeNode> = Default::default();
+    let mut i: i32 = Default::default();
 
-    newentry = c_malloc!(c_sizeof!(SListEntry));
+    swap_node = avl_tree_node_get_replacement(tree.cast(), node.cast()).cast();
 
-    if (newentry == NULL!()).as_bool() {
-        return NULL!();
-    }
+    if (swap_node == NULL!()).as_bool() {
+        avl_tree_node_replace(tree.cast(), node.cast(), NULL!().cast());
 
-    newentry.data = data.cast();
-    newentry.next = NULL!();
-
-    if (*list == NULL!()).as_bool() {
-        *list = newentry.cast();
+        balance_startpoint = node.parent.cast();
     } else {
-        rover = *list.cast();
-        while (rover.next != NULL!()).as_bool() {
-            rover = rover.next.cast();
+        if (swap_node.parent == node).as_bool() {
+            balance_startpoint = swap_node.cast();
+        } else {
+            balance_startpoint = swap_node.parent.cast();
         }
-        rover.next = newentry.cast();
+
+        c_for!(let mut i: i32 = 0; i < 2; i.prefix_plus_plus(); {
+            swap_node.children[i] = node.children[i].cast();
+
+            if (swap_node.children[i] != NULL!()).as_bool() {
+                swap_node.children[i].parent = swap_node.cast();
+            }
+        });
+
+        swap_node.height = node.height.cast();
+
+        avl_tree_node_replace(tree.cast(), node.cast(), swap_node.cast());
     }
 
-    return newentry.cast();
+    c_free!(node.cast());
+
+    tree.num_nodes -= 1;
+
+    avl_tree_balance_to_root(tree.cast(), balance_startpoint.cast());
 }

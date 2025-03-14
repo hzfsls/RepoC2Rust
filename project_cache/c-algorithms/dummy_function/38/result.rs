@@ -1,3 +1,3 @@
-pub fn arraylist_remove_range(mut arraylist: Ptr<ArrayList>, mut index: u32, mut length: u32) {
+pub fn binomial_heap_cmp(mut heap: Ptr<BinomialHeap>, mut data1: BinomialHeapValue, mut data2: BinomialHeapValue) -> i32 {
     unimplemented!();
 }

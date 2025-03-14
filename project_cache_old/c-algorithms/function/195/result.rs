@@ -1,49 +1,33 @@
-pub fn trie_remove_binary(mut trie: Ptr<Trie>, mut key: Ptr<u8>, mut key_length: i32) -> i32 {
-    let mut node: Ptr<TrieNode> = Default::default();
-    let mut next: Ptr<TrieNode> = Default::default();
-    let mut last_next_ptr: Ptr<Ptr<TrieNode>> = Default::default();
-    let mut p: i32 = Default::default();
-    let mut c: u8 = Default::default();
+pub fn hash_table_remove(mut hash_table: Ptr<HashTable>, mut key: HashTableKey) -> i32 {
+    let mut rover: Ptr<Ptr<HashTableEntry>> = Default::default();
+    let mut entry: Ptr<HashTableEntry> = Default::default();
+    let mut pair: Ptr<HashTablePair> = Default::default();
+    let mut index: u32 = Default::default();
+    let mut result: i32 = 0;
 
-    node = trie_find_end_binary(trie.cast(), key.cast(), key_length.cast()).cast();
+    index = (hash_table.hash_func(key) % hash_table.table_size).cast();
 
-    if (node != NULL!()).as_bool() && (node.data != TRIE_NULL!()).as_bool() {
-        node.data = TRIE_NULL!();
-    } else {
-        return 0;
-    }
+    rover = c_ref!(hash_table.table[index]).cast();
 
-    node = trie.root_node.cast();
-    last_next_ptr = c_ref!(trie.root_node).cast();
-    p = 0;
+    while (*rover != NULL!()).as_bool() {
+        pair = c_ref!((*rover).pair).cast();
 
-    loop {
-        c = key[p].cast();
-        next = node.next[c].cast();
+        if (hash_table.equal_func(key, pair.key) != 0).as_bool() {
+            entry = *rover;
 
-        node.use_count -= 1;
+            *rover = entry.next;
 
-        if (node.use_count <= 0).as_bool() {
-            c_free!(node);
+            hash_table_free_entry(hash_table, entry);
 
-            if (last_next_ptr != NULL!()).as_bool() {
-                *last_next_ptr = NULL!();
-                last_next_ptr = NULL!();
-            }
-        }
+            hash_table.entries -= 1;
 
-        if (p == key_length).as_bool() {
+            result = 1;
+
             break;
-        } else {
-            p += 1;
         }
 
-        if (last_next_ptr != NULL!()).as_bool() {
-            last_next_ptr = c_ref!(node.next[c]).cast();
-        }
-
-        node = next.cast();
+        rover = c_ref!((*rover).next).cast();
     }
 
-    return 1;
+    return result.cast();
 }

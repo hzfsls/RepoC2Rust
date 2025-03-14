@@ -1,7 +1,12 @@
-pub fn binary_heap_cmp(mut heap: Ptr<BinaryHeap>, mut data1: BinaryHeapValue, mut data2: BinaryHeapValue) -> i32 {
-    if (heap.heap_type == BINARY_HEAP_TYPE_MIN!()).as_bool() {
-        return (heap.compare_func)(data1.cast(), data2.cast()).cast();
-    } else {
-        return (-(heap.compare_func)(data1.cast(), data2.cast())).cast();
+pub fn binomial_heap_new(mut heap_type: BinomialHeapType, mut compare_func: BinomialHeapCompareFunc) -> Ptr<BinomialHeap> {
+    let mut new_heap: Ptr<BinomialHeap> = c_calloc!(1, c_sizeof!(BinomialHeap));
+
+    if (new_heap == NULL!()).as_bool() {
+        return NULL!();
     }
+
+    new_heap.heap_type = heap_type.cast();
+    new_heap.compare_func = compare_func.cast();
+
+    return new_heap.cast();
 }

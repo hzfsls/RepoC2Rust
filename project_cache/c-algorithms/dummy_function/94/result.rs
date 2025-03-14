@@ -1,3 +1,3 @@
-pub fn queue_pop_head(mut queue: Ptr<Queue>) -> QueueValue {
+pub fn slist_length(mut list: Ptr<SListEntry>) -> u32 {
     unimplemented!();
 }

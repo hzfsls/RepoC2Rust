@@ -1,3 +1,3 @@
-pub fn list_prepend(mut list: Ptr<Ptr<ListEntry>>, mut data: ListValue) -> Ptr<ListEntry> {
+pub fn queue_new() -> Ptr<Queue> {
     unimplemented!();
 }

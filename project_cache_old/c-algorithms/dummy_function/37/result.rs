@@ -1,3 +1,3 @@
-pub fn arraylist_prepend(mut arraylist: Ptr<ArrayList>, mut data: ArrayListValue) -> i32 {
+pub fn int_hash(mut vlocation: Ptr<Void>) -> u32 {
     unimplemented!();
 }

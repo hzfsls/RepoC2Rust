@@ -1,22 +1,19 @@
-pub fn hash_table_new(mut hash_func: HashTableHashFunc, mut equal_func: HashTableEqualFunc) -> Ptr<HashTable> {
-    let mut hash_table: Ptr<HashTable> = c_malloc!(c_sizeof!(HashTable));
+pub fn trie_find_end_binary(mut trie: Ptr<Trie>, mut key: Ptr<u8>, mut key_length: i32) -> Ptr<TrieNode> {
+    let mut node: Ptr<TrieNode> = Default::default();
+    let mut j: i32 = Default::default();
+    let mut c: u8 = Default::default();
 
-    if (hash_table == NULL!()).as_bool() {
-        return NULL!();
-    }
+    node = trie.root_node.cast();
 
-    hash_table.hash_func = hash_func.cast();
-    hash_table.equal_func = equal_func.cast();
-    hash_table.key_free_func = NULL!();
-    hash_table.value_free_func = NULL!();
-    hash_table.entries = 0;
-    hash_table.prime_index = 0;
+    c_for!(let mut j: i32 = 0; j < key_length; j.suffix_plus_plus(); {
+        if (node == NULL!()).as_bool() {
+            return NULL!();
+        }
 
-    if !hash_table_allocate_table(hash_table.cast()).as_bool() {
-        c_free!(hash_table);
+        c = key[j].cast::<u8>();
 
-        return NULL!();
-    }
+        node = node.next[c].cast();
+    });
 
-    return hash_table.cast();
+    return node.cast();
 }

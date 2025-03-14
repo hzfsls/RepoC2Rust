@@ -1,1 +1,1 @@
-pub type AVLTreeNode = _AVLTreeNode;
+pub type TrieNode = _TrieNode;

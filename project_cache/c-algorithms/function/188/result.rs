@@ -1,8 +1,13 @@
-pub fn trie_free_list_pop(mut list: Ptr<Ptr<TrieNode>>) -> Ptr<TrieNode> {
-    let mut result: Ptr<TrieNode> = Default::default();
+pub fn hash_table_free_entry(mut hash_table: Ptr<HashTable>, mut entry: Ptr<HashTableEntry>) {
+    let mut pair: Ptr<HashTablePair> = c_ref!(entry.pair).cast();
 
-    result = *list;
-    *list = result.data.cast();
+    if (hash_table.key_free_func != NULL!()).as_bool() {
+        (hash_table.key_free_func)(pair.key.cast());
+    }
 
-    return result.cast();
+    if (hash_table.value_free_func != NULL!()).as_bool() {
+        (hash_table.value_free_func)(pair.value.cast());
+    }
+
+    c_free!(entry);
 }

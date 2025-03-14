@@ -1,3 +1,3 @@
-pub fn set_remove(mut set: Ptr<Set>, mut data: SetValue) -> i32 {
+pub fn bloom_filter_query(mut bloomfilter: Ptr<BloomFilter>, mut value: BloomFilterValue) -> i32 {
     unimplemented!();
 }

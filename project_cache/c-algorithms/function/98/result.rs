@@ -1,7 +1,51 @@
-pub fn queue_peek_tail(mut queue: Ptr<Queue>) -> QueueValue {
-    if queue_is_empty(queue.cast()).as_bool() {
-        return QUEUE_NULL!();
+pub fn slist_sort_internal(mut list: Ptr<Ptr<SListEntry>>, mut compare_func: SListCompareFunc) -> Ptr<SListEntry> {
+    let mut pivot: Ptr<SListEntry> = Default::default();
+    let mut rover: Ptr<SListEntry> = Default::default();
+    let mut less_list: Ptr<SListEntry> = Default::default();
+    let mut more_list: Ptr<SListEntry> = Default::default();
+    let mut less_list_end: Ptr<SListEntry> = Default::default();
+    let mut more_list_end: Ptr<SListEntry> = Default::default();
+
+    if (*list == NULL!()).as_bool() || ((*list).next == NULL!()).as_bool() {
+        return *list;
+    }
+
+    pivot = *list;
+
+    less_list = NULL!();
+    more_list = NULL!();
+    rover = (*list).next.cast();
+
+    while (rover != NULL!()).as_bool() {
+        let mut next: Ptr<SListEntry> = rover.next.cast();
+
+        if (compare_func(rover.data.cast(), pivot.data.cast()) < 0).as_bool() {
+            rover.next = less_list.cast();
+            less_list = rover.cast();
+        } else {
+            rover.next = more_list.cast();
+            more_list = rover.cast();
+        }
+
+        rover = next.cast();
+    }
+
+    less_list_end = slist_sort_internal(c_ref!(less_list).cast(), compare_func.cast());
+    more_list_end = slist_sort_internal(c_ref!(more_list).cast(), compare_func.cast());
+
+    *list = less_list.cast();
+
+    if (less_list == NULL!()).as_bool() {
+        *list = pivot.cast();
     } else {
-        return queue.tail.data.cast();
+        less_list_end.next = pivot.cast();
+    }
+
+    pivot.next = more_list.cast();
+
+    if (more_list == NULL!()).as_bool() {
+        return pivot.cast();
+    } else {
+        return more_list_end.cast();
     }
 }

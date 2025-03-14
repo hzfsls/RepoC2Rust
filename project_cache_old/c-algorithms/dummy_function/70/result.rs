@@ -1,3 +1,3 @@
-pub fn list_iter_next(mut iter: Ptr<ListIterator>) -> ListValue {
+pub fn avl_tree_node_balance(mut tree: Ptr<AVLTree>, mut node: Ptr<AVLTreeNode>) -> Ptr<AVLTreeNode> {
     unimplemented!();
 }

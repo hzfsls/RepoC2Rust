@@ -1,1 +1,1 @@
-pub type SetHashFunc = FuncPtr<fn(SetValue) -> u32>;
+pub type ArrayListEqualFunc = FuncPtr<fn(ArrayListValue, ArrayListValue) -> i32>;

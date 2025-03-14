@@ -1,3 +1,3 @@
-pub fn slist_nth_data(mut list: Ptr<SListEntry>, mut n: u32) -> SListValue {
+pub fn avl_tree_node_key(mut node: Ptr<AVLTreeNode>) -> AVLTreeKey {
     unimplemented!();
 }

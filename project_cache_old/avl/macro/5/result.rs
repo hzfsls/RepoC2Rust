@@ -1,2 +1,2 @@
-macro_rules! AVL_INT32_TO_LONG { () => { 1 } }
-pub(crate) use AVL_INT32_TO_LONG;
+macro_rules! AVL_FALSE { () => { 0 } }
+pub(crate) use AVL_FALSE;

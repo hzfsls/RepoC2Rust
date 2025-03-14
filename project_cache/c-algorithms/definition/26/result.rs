@@ -1,1 +1,1 @@
-pub type SortedArray = _SortedArray;
+pub type BinomialTree = _BinomialTree;

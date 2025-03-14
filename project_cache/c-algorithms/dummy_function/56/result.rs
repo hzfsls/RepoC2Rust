@@ -1,3 +1,3 @@
-pub fn list_set_data(mut listentry: Ptr<ListEntry>, mut value: ListValue) {
+pub fn queue_pop_head(mut queue: Ptr<Queue>) -> QueueValue {
     unimplemented!();
 }

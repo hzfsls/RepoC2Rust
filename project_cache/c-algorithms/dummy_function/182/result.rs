@@ -1,3 +1,3 @@
-pub fn rb_tree_node_child(mut node: Ptr<RBTreeNode>, mut side: RBTreeNodeSide) -> Ptr<RBTreeNode> {
+pub fn list_iter_has_more(mut iter: Ptr<ListIterator>) -> i32 {
     unimplemented!();
 }

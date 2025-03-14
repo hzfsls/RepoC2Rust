@@ -1,8 +1,9 @@
 #[repr(C)]
-#[derive(Default, Clone, Copy)]
-pub struct _BloomFilter {
-    pub hash_func: BloomFilterHashFunc,
-    pub table: Ptr<u8>,
-    pub table_size: u32,
-    pub num_functions: u32,
+#[derive(Default)]
+pub struct _RBTreeNode {
+    pub color: RBTreeNodeColor,
+    pub key: RBTreeKey,
+    pub value: RBTreeValue,
+    pub parent: Ptr<RBTreeNode>,
+    pub children: Array<Ptr<RBTreeNode>, 2>,
 }

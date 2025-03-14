@@ -1,4 +1,8 @@
-pub fn int_hash(mut vlocation: Ptr<Void>) -> u32 {
-    let mut location: Ptr<i32> = vlocation.cast::<Ptr<i32>>();
-    return (*location).cast::<u32>();
+pub fn trie_free_list_pop(mut list: Ptr<Ptr<TrieNode>>) -> Ptr<TrieNode> {
+    let mut result: Ptr<TrieNode> = Default::default();
+
+    result = *list;
+    *list = result.data.cast();
+
+    return result.cast();
 }

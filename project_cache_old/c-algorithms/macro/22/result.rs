@@ -1,2 +1,2 @@
-macro_rules! ALGORITHM_COMPARE_STRING_H { () => { } }
-pub(crate) use ALGORITHM_COMPARE_STRING_H;
+macro_rules! RB_TREE_NULL { () => { NULL!() } }
+pub(crate) use RB_TREE_NULL;

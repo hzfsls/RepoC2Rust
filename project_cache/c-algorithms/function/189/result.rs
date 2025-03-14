@@ -1,23 +1,22 @@
-pub fn trie_free(mut trie: Ptr<Trie>) {
-    let mut free_list: Ptr<TrieNode> = NULL!();
-    let mut node: Ptr<TrieNode> = Default::default();
-    let mut i: i32 = Default::default();
+pub fn hash_table_new(mut hash_func: HashTableHashFunc, mut equal_func: HashTableEqualFunc) -> Ptr<HashTable> {
+    let mut hash_table: Ptr<HashTable> = c_malloc!(c_sizeof!(HashTable));
 
-    if (trie.root_node != NULL!()).as_bool() {
-        trie_free_list_push(c_ref!(free_list).cast(), trie.root_node.cast());
+    if (hash_table == NULL!()).as_bool() {
+        return NULL!();
     }
 
-    while (free_list != NULL!()).as_bool() {
-        node = trie_free_list_pop(c_ref!(free_list).cast());
+    hash_table.hash_func = hash_func.cast();
+    hash_table.equal_func = equal_func.cast();
+    hash_table.key_free_func = NULL!();
+    hash_table.value_free_func = NULL!();
+    hash_table.entries = 0;
+    hash_table.prime_index = 0;
 
-        c_for!(let mut i: i32 = 0; i < 256; i.prefix_plus_plus(); {
-            if (node.next[i] != NULL!()).as_bool() {
-                trie_free_list_push(c_ref!(free_list).cast(), node.next[i].cast());
-            }
-        });
+    if !hash_table_allocate_table(hash_table.cast()).as_bool() {
+        c_free!(hash_table);
 
-        c_free!(node);
+        return NULL!();
     }
 
-    c_free!(trie);
+    return hash_table.cast();
 }

@@ -1,3 +1,3 @@
-pub fn bloom_filter_new(mut table_size: u32, mut hash_func: BloomFilterHashFunc, mut num_functions: u32) -> Ptr<BloomFilter> {
+pub fn rb_tree_num_entries(mut tree: Ptr<RBTree>) -> i32 {
     unimplemented!();
 }

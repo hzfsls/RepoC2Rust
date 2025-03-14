@@ -1,3 +1,3 @@
-pub fn binary_heap_cmp(mut heap: Ptr<BinaryHeap>, mut data1: BinaryHeapValue, mut data2: BinaryHeapValue) -> i32 {
+pub fn binomial_heap_new(mut heap_type: BinomialHeapType, mut compare_func: BinomialHeapCompareFunc) -> Ptr<BinomialHeap> {
     unimplemented!();
 }

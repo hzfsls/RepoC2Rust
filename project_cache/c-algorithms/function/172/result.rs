@@ -1,16 +1,11 @@
-pub fn rb_tree_insert_case4(mut tree: Ptr<RBTree>, mut node: Ptr<RBTreeNode>) {
-    let mut next_node: Ptr<RBTreeNode> = Default::default();
-    let mut side: RBTreeNodeSide = Default::default();
-
-    side = rb_tree_node_side(node.cast());
-
-    if (side != rb_tree_node_side(node.parent)).as_bool() {
-        next_node = node.parent.cast();
-
-        rb_tree_rotate(tree.cast(), node.parent.cast(), (1 - side).cast());
-    } else {
-        next_node = node.cast();
-    }
-
-    rb_tree_insert_case5(tree.cast(), next_node.cast());
+pub fn list_nth_entry(mut list: Ptr<ListEntry>, mut n: u32) -> Ptr<ListEntry> {
+    let mut entry: Ptr<ListEntry> = list.cast();
+    let mut i: u32 = 0;
+    c_for!(; i < n; i.prefix_plus_plus(); {
+        if (entry == NULL!()).as_bool() {
+            return NULL!();
+        }
+        entry = entry.next.cast();
+    });
+    return entry.cast();
 }

@@ -1,3 +1,3 @@
-pub fn set_intersection(mut set1: Ptr<Set>, mut set2: Ptr<Set>) -> Ptr<Set> {
+pub fn string_hash(mut string: Ptr<Void>) -> u32 {
     unimplemented!();
 }

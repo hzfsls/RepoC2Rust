@@ -1,3 +1,3 @@
-pub fn slist_sort_internal(mut list: Ptr<Ptr<SListEntry>>, mut compare_func: SListCompareFunc) -> Ptr<SListEntry> {
+pub fn avl_tree_to_array_add_subtree(mut subtree: Ptr<AVLTreeNode>, mut array: Ptr<AVLTreeValue>, mut index: Ptr<i32>) {
     unimplemented!();
 }

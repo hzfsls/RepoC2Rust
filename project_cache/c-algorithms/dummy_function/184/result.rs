@@ -1,3 +1,3 @@
-pub fn rb_tree_to_array(mut tree: Ptr<RBTree>) -> Ptr<RBTreeValue> {
+pub fn list_iter_remove(mut iter: Ptr<ListIterator>) {
     unimplemented!();
 }

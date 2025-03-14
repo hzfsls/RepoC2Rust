@@ -1,3 +1,3 @@
-pub fn trie_insert_binary(mut trie: Ptr<Trie>, mut key: Ptr<u8>, mut key_length: i32, mut value: TrieValue) -> i32 {
+pub fn hash_table_lookup(mut hash_table: Ptr<HashTable>, mut key: HashTableKey) -> HashTableValue {
     unimplemented!();
 }

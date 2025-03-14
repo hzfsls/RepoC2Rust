@@ -1,3 +1,3 @@
-pub fn VosAVLSearchReplaceNodeInRTree(mut pstTree: Ptr<AVLBASE_TREE_S>, mut pstNode: Ptr<AVLBASE_NODE_S>) -> Ptr<AVLBASE_NODE_S> {
+pub fn VOS_AVL3_Find(mut pstTree: Ptr<AVL3_TREE>, mut pstKey: Ptr<Void>, mut pstTreeInfo: Ptr<AVL3_TREE_INFO>) -> Ptr<Void> {
     unimplemented!();
 }

@@ -1,3 +1,3 @@
-pub fn list_length(mut list: Ptr<ListEntry>) -> u32 {
+pub fn queue_is_empty(mut queue: Ptr<Queue>) -> i32 {
     unimplemented!();
 }

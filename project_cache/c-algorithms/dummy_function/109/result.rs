@@ -1,3 +1,3 @@
-pub fn set_query(mut set: Ptr<Set>, mut data: SetValue) -> i32 {
+pub fn bloom_filter_read(mut bloomfilter: Ptr<BloomFilter>, mut array: Ptr<u8>) {
     unimplemented!();
 }

@@ -1,2 +1,2 @@
-macro_rules! SET_NULL { () => { NULL!() } }
-pub(crate) use SET_NULL;
+macro_rules! ALGORITHM_HASH_STRING_H { () => { } }
+pub(crate) use ALGORITHM_HASH_STRING_H;

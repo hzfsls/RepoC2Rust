@@ -1,3 +1,3 @@
-pub fn binomial_tree_merge(mut heap: Ptr<BinomialHeap>, mut tree1: Ptr<BinomialTree>, mut tree2: Ptr<BinomialTree>) -> Ptr<BinomialTree> {
+pub fn rb_tree_lookup_node(mut tree: Ptr<RBTree>, mut key: RBTreeKey) -> Ptr<RBTreeNode> {
     unimplemented!();
 }

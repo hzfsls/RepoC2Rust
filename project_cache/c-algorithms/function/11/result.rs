@@ -1,7 +1,15 @@
-pub fn binomial_heap_cmp(mut heap: Ptr<BinomialHeap>, mut data1: BinomialHeapValue, mut data2: BinomialHeapValue) -> i32 {
-    if (heap.heap_type == BINOMIAL_HEAP_TYPE_MIN!()).as_bool() {
-        return (heap.compare_func)(data1.cast(), data2.cast()).cast();
+pub fn rb_tree_insert_case4(mut tree: Ptr<RBTree>, mut node: Ptr<RBTreeNode>) {
+    let mut next_node: Ptr<RBTreeNode> = Default::default();
+    let mut side: RBTreeNodeSide = Default::default();
+
+    side = rb_tree_node_side(node.cast());
+
+    if (side != rb_tree_node_side(node.parent)).as_bool() {
+        next_node = node.parent.cast();
+        rb_tree_rotate(tree.cast(), node.parent.cast(), (1 - side).cast());
     } else {
-        return (-(heap.compare_func)(data1.cast(), data2.cast())).cast();
+        next_node = node.cast();
     }
+
+    rb_tree_insert_case5(tree.cast(), next_node.cast());
 }

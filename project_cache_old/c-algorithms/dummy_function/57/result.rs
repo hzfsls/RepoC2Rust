@@ -1,3 +1,3 @@
-pub fn list_prev(mut listentry: Ptr<ListEntry>) -> Ptr<ListEntry> {
+pub fn queue_peek_head(mut queue: Ptr<Queue>) -> QueueValue {
     unimplemented!();
 }

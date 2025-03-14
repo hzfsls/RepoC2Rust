@@ -1,9 +1,19 @@
-pub fn arraylist_index_of(mut arraylist: Ptr<ArrayList>, mut callback: ArrayListEqualFunc, mut data: ArrayListValue) -> i32 {
-    let mut i: u32 = 0;
-    c_for!(i = 0; i < arraylist.length; i.prefix_plus_plus(); {
-        if (callback(arraylist.data[i].cast(), data.cast()) != 0).as_bool() {
-            return i.cast::<i32>();
-        }
-    });
-    return -1;
+pub fn binomial_tree_unref(mut tree: Ptr<BinomialTree>) {
+    let mut i: i32 = Default::default();
+
+    if (tree == NULL!()) {
+        return;
+    }
+
+    tree.refcount.suffix_minus_minus();
+
+    if (tree.refcount == 0) {
+
+        c_for!(let mut i: i32 = 0; i < tree.order.cast(); i.prefix_plus_plus(); {
+            binomial_tree_unref(tree.subtrees[i]);
+        });
+
+        c_free!(tree.subtrees);
+        c_free!(tree);
+    }
 }

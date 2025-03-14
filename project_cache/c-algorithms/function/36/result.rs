@@ -1,3 +1,3 @@
-pub fn arraylist_append(mut arraylist: Ptr<ArrayList>, mut data: ArrayListValue) -> i32 {
-    return arraylist_insert(arraylist.cast(), arraylist.length.cast(), data.cast()).cast();
+pub fn arraylist_sort(mut arraylist: Ptr<ArrayList>, mut compare_func: ArrayListCompareFunc) {
+    arraylist_sort_internal(arraylist.data.cast(), arraylist.length.cast(), compare_func.cast());
 }

@@ -1,1 +1,1 @@
-pub type TrieValue = VoidPtr;
+pub type SortedArrayValue = VoidPtr;

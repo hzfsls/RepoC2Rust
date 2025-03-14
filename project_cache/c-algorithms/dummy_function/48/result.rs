@@ -1,3 +1,3 @@
-pub fn binary_heap_pop(mut heap: Ptr<BinaryHeap>) -> BinaryHeapValue {
+pub fn binomial_heap_num_entries(mut heap: Ptr<BinomialHeap>) -> u32 {
     unimplemented!();
 }

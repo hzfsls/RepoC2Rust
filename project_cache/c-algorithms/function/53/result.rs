@@ -1,24 +1,12 @@
-pub fn list_prepend(mut list: Ptr<Ptr<ListEntry>>, mut data: ListValue) -> Ptr<ListEntry> {
-    let mut newentry: Ptr<ListEntry> = Default::default();
+pub fn queue_new() -> Ptr<Queue> {
+    let mut queue: Ptr<Queue> = c_malloc!(c_sizeof!(Queue));
 
-    if (list == NULL!()) {
+    if (queue == NULL!()).as_bool() {
         return NULL!();
     }
 
-    newentry = c_malloc!(c_sizeof!(ListEntry));
+    queue.head = NULL!();
+    queue.tail = NULL!();
 
-    if (newentry == NULL!()) {
-        return NULL!();
-    }
-
-    newentry.data = data;
-
-    if (*list != NULL!()) {
-        (*list).prev = newentry;
-    }
-    newentry.prev = NULL!();
-    newentry.next = *list;
-    *list = newentry;
-
-    return newentry;
+    return queue.cast();
 }

@@ -1,3 +1,3 @@
-pub fn set_allocate_table(mut set: Ptr<Set>) -> i32 {
+pub fn slist_iterate(mut list: Ptr<Ptr<SListEntry>>, mut iter: Ptr<SListIterator>) {
     unimplemented!();
 }

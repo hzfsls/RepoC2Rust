@@ -1,3 +1,3 @@
-pub fn rb_tree_remove_node(mut tree: Ptr<RBTree>, mut node: Ptr<RBTreeNode>) {
+pub fn list_remove_data(mut list: Ptr<Ptr<ListEntry>>, mut callback: ListEqualFunc, mut data: ListValue) -> u32 {
     unimplemented!();
 }

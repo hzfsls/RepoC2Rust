@@ -1,3 +1,3 @@
-pub fn slist_data(mut listentry: Ptr<SListEntry>) -> SListValue {
+pub fn avl_tree_remove(mut tree: Ptr<AVLTree>, mut key: AVLTreeKey) -> i32 {
     unimplemented!();
 }

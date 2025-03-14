@@ -1,36 +1,11 @@
-pub fn set_iter_next(mut iterator: Ptr<SetIterator>) -> SetValue {
-    let mut set: Ptr<Set> = Default::default();
-    let mut result: SetValue = Default::default();
-    let mut current_entry: Ptr<SetEntry> = Default::default();
-    let mut chain: u32 = Default::default();
+pub fn trie_new() -> Ptr<Trie> {
+    let mut new_trie: Ptr<Trie> = c_malloc!(c_sizeof!(Trie));
 
-    set = iterator.set.cast();
-
-    if (iterator.next_entry == NULL!()).as_bool() {
-        return SET_NULL!();
+    if (new_trie == NULL!()).as_bool() {
+        return NULL!();
     }
 
-    current_entry = iterator.next_entry.cast();
-    result = current_entry.data.cast();
+    new_trie.root_node = NULL!();
 
-    if (current_entry.next != NULL!()).as_bool() {
-        iterator.next_entry = current_entry.next.cast();
-    } else {
-        iterator.next_entry = NULL!();
-
-        chain = (iterator.next_chain + 1).cast();
-
-        while (chain < set.table_size).as_bool() {
-            if (set.table[chain] != NULL!()).as_bool() {
-                iterator.next_entry = set.table[chain].cast();
-                break;
-            }
-
-            chain.prefix_plus_plus();
-        }
-
-        iterator.next_chain = chain.cast();
-    }
-
-    return result.cast();
+    return new_trie.cast();
 }

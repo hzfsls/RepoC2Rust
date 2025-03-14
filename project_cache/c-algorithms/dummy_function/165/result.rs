@@ -1,3 +1,3 @@
-pub fn rb_tree_rotate(mut tree: Ptr<RBTree>, mut node: Ptr<RBTreeNode>, mut direction: RBTreeNodeSide) -> Ptr<RBTreeNode> {
+pub fn list_free(mut list: Ptr<ListEntry>) {
     unimplemented!();
 }

@@ -1,3 +1,3 @@
-pub fn set_num_entries(mut set: Ptr<Set>) -> u32 {
+pub fn bloom_filter_load(mut bloomfilter: Ptr<BloomFilter>, mut array: Ptr<u8>) {
     unimplemented!();
 }

@@ -1,3 +1,3 @@
-pub fn trie_remove(mut trie: Ptr<Trie>, mut key: Ptr<u8>) -> i32 {
+pub fn hash_table_num_entries(mut hash_table: Ptr<HashTable>) -> u32 {
     unimplemented!();
 }

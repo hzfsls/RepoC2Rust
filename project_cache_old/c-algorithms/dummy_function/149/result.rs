@@ -1,3 +1,3 @@
-pub fn avl_tree_root_node(mut tree: Ptr<AVLTree>) -> Ptr<AVLTreeNode> {
+pub fn binary_heap_new(mut heap_type: BinaryHeapType, mut compare_func: BinaryHeapCompareFunc) -> Ptr<BinaryHeap> {
     unimplemented!();
 }

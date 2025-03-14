@@ -1,3 +1,3 @@
-pub fn set_enlarge(mut set: Ptr<Set>) -> i32 {
+pub fn bloom_filter_free(mut bloomfilter: Ptr<BloomFilter>) {
     unimplemented!();
 }

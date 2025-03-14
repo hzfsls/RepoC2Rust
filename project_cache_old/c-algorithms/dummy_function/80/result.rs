@@ -1,3 +1,3 @@
-pub fn slist_length(mut list: Ptr<SListEntry>) -> u32 {
+pub fn avl_tree_node_value(mut node: Ptr<AVLTreeNode>) -> AVLTreeValue {
     unimplemented!();
 }

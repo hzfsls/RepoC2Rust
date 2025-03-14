@@ -1,3 +1,7 @@
-pub fn sortedarray_remove(mut sortedarray: Ptr<SortedArray>, mut index: u32) {
-    sortedarray_remove_range(sortedarray.cast(), index.cast(), 1);
+pub fn rb_tree_free_subtree(mut node: Ptr<RBTreeNode>) {
+    if (node != NULL!()).as_bool() {
+        rb_tree_free_subtree(node.children[RB_TREE_NODE_LEFT!()].cast());
+        rb_tree_free_subtree(node.children[RB_TREE_NODE_RIGHT!()].cast());
+        c_free!(node);
+    }
 }

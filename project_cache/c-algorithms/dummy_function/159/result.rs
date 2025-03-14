@@ -1,3 +1,3 @@
-pub fn string_nocase_equal(mut string1: Ptr<Void>, mut string2: Ptr<Void>) -> i32 {
+pub fn sortedarray_free(mut sortedarray: Ptr<SortedArray>) {
     unimplemented!();
 }

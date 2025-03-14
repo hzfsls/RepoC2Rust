@@ -1,2 +1,2 @@
-macro_rules! TRIE_NULL { () => { NULL!() } }
-pub(crate) use TRIE_NULL;
+macro_rules! ALGORITHM_SORTEDARRAY_H { () => { } }
+pub(crate) use ALGORITHM_SORTEDARRAY_H;

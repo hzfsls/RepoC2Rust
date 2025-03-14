@@ -1,11 +1,7 @@
-pub fn avl_tree_lookup(mut tree: Ptr<AVLTree>, mut key: AVLTreeKey) -> AVLTreeValue {
-    let mut node: Ptr<AVLTreeNode> = Default::default();
-
-    node = avl_tree_lookup_node(tree.cast(), key.cast());
-
-    if (node == NULL!()).as_bool() {
-        return AVL_TREE_NULL!();
+pub fn binary_heap_cmp(mut heap: Ptr<BinaryHeap>, mut data1: BinaryHeapValue, mut data2: BinaryHeapValue) -> i32 {
+    if (heap.heap_type == BINARY_HEAP_TYPE_MIN!()).as_bool() {
+        return (heap.compare_func)(data1.cast(), data2.cast()).cast();
     } else {
-        return node.value.cast();
+        return (-(heap.compare_func)(data1.cast(), data2.cast())).cast();
     }
 }

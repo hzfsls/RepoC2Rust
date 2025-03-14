@@ -1,3 +1,3 @@
-pub fn trie_lookup(mut trie: Ptr<Trie>, mut key: Ptr<u8>) -> TrieValue {
+pub fn hash_table_iterate(mut hash_table: Ptr<HashTable>, mut iterator: Ptr<HashTableIterator>) {
     unimplemented!();
 }

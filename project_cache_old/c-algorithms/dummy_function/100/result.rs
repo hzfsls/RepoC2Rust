@@ -1,3 +1,3 @@
-pub fn pointer_hash(mut location: Ptr<Void>) -> u32 {
+pub fn slist_find_data(mut list: Ptr<SListEntry>, mut callback: SListEqualFunc, mut data: SListValue) -> Ptr<SListEntry> {
     unimplemented!();
 }

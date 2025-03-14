@@ -1,2 +1,2 @@
-macro_rules! BINARY_HEAP_NULL { () => { NULL!() } }
-pub(crate) use BINARY_HEAP_NULL;
+macro_rules! ALGORITHM_AVLTREE_H { () => { } }
+pub(crate) use ALGORITHM_AVLTREE_H;

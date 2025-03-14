@@ -1,37 +1,23 @@
-pub fn set_union(mut set1: Ptr<Set>, mut set2: Ptr<Set>) -> Ptr<Set> {
-    let mut iterator: SetIterator = Default::default();
-    let mut new_set: Ptr<Set> = Default::default();
-    let mut value: SetValue = Default::default();
+pub fn bloom_filter_intersection(mut filter1: Ptr<BloomFilter>, mut filter2: Ptr<BloomFilter>) -> Ptr<BloomFilter> {
+    let mut result: Ptr<BloomFilter> = Default::default();
+    let mut i: u32 = Default::default();
+    let mut array_size: u32 = Default::default();
 
-    new_set = set_new(set1.hash_func, set1.equal_func);
-
-    if (new_set == NULL!()).as_bool() {
+    if (filter1.table_size != filter2.table_size || filter1.num_functions != filter2.num_functions || filter1.hash_func != filter2.hash_func).as_bool() {
         return NULL!();
     }
 
-    set_iterate(set1.cast(), c_ref!(iterator).cast());
+    result = bloom_filter_new(filter1.table_size.cast(), filter1.hash_func.cast(), filter1.num_functions.cast());
 
-    while (set_iter_has_more(c_ref!(iterator).cast())).as_bool() {
-        value = set_iter_next(c_ref!(iterator).cast());
-
-        if !set_insert(new_set.cast(), value.cast()).as_bool() {
-            set_free(new_set.cast());
-            return NULL!();
-        }
+    if (result == NULL!()).as_bool() {
+        return NULL!();
     }
 
-    set_iterate(set2.cast(), c_ref!(iterator).cast());
+    array_size = (filter1.table_size + 7) / 8;
 
-    while (set_iter_has_more(c_ref!(iterator).cast())).as_bool() {
-        value = set_iter_next(c_ref!(iterator).cast());
+    c_for!(let mut i: u32 = 0; i < array_size; i.prefix_plus_plus(); {
+        result.table[i] = (filter1.table[i] & filter2.table[i]).cast();
+    });
 
-        if (set_query(new_set.cast(), value.cast()) == 0).as_bool() {
-            if !set_insert(new_set.cast(), value.cast()).as_bool() {
-                set_free(new_set.cast());
-                return NULL!();
-            }
-        }
-    }
-
-    return new_set.cast();
+    return result.cast();
 }

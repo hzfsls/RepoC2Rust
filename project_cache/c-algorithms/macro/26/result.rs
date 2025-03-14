@@ -1,2 +1,2 @@
-macro_rules! RB_TREE_NULL { () => { NULL!() } }
-pub(crate) use RB_TREE_NULL;
+macro_rules! ALGORITHM_QUEUE_H { () => { } }
+pub(crate) use ALGORITHM_QUEUE_H;

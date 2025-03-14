@@ -1,3 +1,3 @@
-pub fn queue_push_head(mut queue: Ptr<Queue>, mut data: QueueValue) -> i32 {
+pub fn slist_nth_data(mut list: Ptr<SListEntry>, mut n: u32) -> SListValue {
     unimplemented!();
 }

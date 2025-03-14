@@ -1,2 +1,2 @@
-macro_rules! ALGORITHM_HASH_POINTER_H { () => { } }
-pub(crate) use ALGORITHM_HASH_POINTER_H;
+macro_rules! ALGORITHM_SET_H { () => { } }
+pub(crate) use ALGORITHM_SET_H;

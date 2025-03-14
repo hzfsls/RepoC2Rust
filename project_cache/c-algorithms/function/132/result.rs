@@ -1,12 +1,21 @@
-pub fn int_compare(mut vlocation1: Ptr<Void>, mut vlocation2: Ptr<Void>) -> i32 {
-    let mut location1: Ptr<i32> = vlocation1.cast::<Ptr<i32>>();
-    let mut location2: Ptr<i32> = vlocation2.cast::<Ptr<i32>>();
+pub fn set_free(mut set: Ptr<Set>) {
+    let mut rover: Ptr<SetEntry> = Default::default();
+    let mut next: Ptr<SetEntry> = Default::default();
+    let mut i: u32 = Default::default();
 
-    if (*location1 < *location2).as_bool() {
-        return -1;
-    } else if (*location1 > *location2).as_bool() {
-        return 1;
-    } else {
-        return 0;
-    }
+    c_for!(let mut i = 0; i < set.table_size; i.prefix_plus_plus(); {
+        rover = set.table[i];
+
+        while (rover != NULL!()) {
+            next = rover.next;
+
+            set_free_entry(set, rover);
+
+            rover = next;
+        }
+    });
+
+    c_free!(set.table);
+
+    c_free!(set);
 }

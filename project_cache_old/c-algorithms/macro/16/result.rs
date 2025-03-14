@@ -1,2 +1,2 @@
-macro_rules! HASH_TABLE_NULL { () => { NULL!() } }
-pub(crate) use HASH_TABLE_NULL;
+macro_rules! ALGORITHM_TRIE_H { () => { } }
+pub(crate) use ALGORITHM_TRIE_H;

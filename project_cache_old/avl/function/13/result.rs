@@ -1,11 +1,17 @@
-pub fn VOS_AVL3_Last(mut pstTree: Ptr<AVL3_TREE>, mut pstTreeInfo: Ptr<AVL3_TREE_INFO>) -> Ptr<Void> {
-    let mut pstNode: Ptr<AVL3_NODE> = Default::default();
+pub fn VosAvlMoveNodeToNewPos(mut pstNode: Ptr<AVLBASE_NODE_S>, mut pstNewParent: Ptr<AVLBASE_NODE_S>, mut pstNewLeftSon: Ptr<AVLBASE_NODE_S>, mut pstNewRightSon: Ptr<AVLBASE_NODE_S>) {
+    pstNode.pstParent = pstNewParent.cast();
+    pstNode.pstLeft = pstNewLeftSon.cast();
+    pstNode.pstRight = pstNewRightSon.cast();
+    pstNode.sLHeight = 0;
+    pstNode.sRHeight = 0;
 
-    if TREE_OR_TREEINFO_IS_NULL!(pstTree, pstTreeInfo).as_bool() {
-        return AVL_NULL_PTR!();
+    if (pstNewLeftSon != AVL_NULL_PTR!()).as_bool() {
+        pstNode.pstLeft.pstParent = pstNode.cast();
+        pstNode.sLHeight = 1;
     }
 
-    pstNode = pstTree.pstLast.cast();
-
-    return GET_NODE_START_ADDRESS!(pstNode, pstTreeInfo.usNodeOffset);
+    if (pstNewRightSon != AVL_NULL_PTR!()).as_bool() {
+        pstNode.pstRight.pstParent = pstNode.cast();
+        pstNode.sRHeight = 1;
+    }
 }

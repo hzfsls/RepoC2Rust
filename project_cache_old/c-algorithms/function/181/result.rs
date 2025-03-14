@@ -1,3 +1,4 @@
-pub fn rb_tree_node_value(mut node: Ptr<RBTreeNode>) -> RBTreeValue {
-    return node.value.cast();
+pub fn list_iterate(mut list: Ptr<Ptr<ListEntry>>, mut iter: Ptr<ListIterator>) {
+    iter.prev_next = list.cast();
+    iter.current = NULL!();
 }

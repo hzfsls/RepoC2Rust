@@ -1,1 +1,1 @@
-pub type Queue = _Queue;
+pub type HashTable = _HashTable;

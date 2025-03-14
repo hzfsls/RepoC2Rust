@@ -1,3 +1,3 @@
-pub fn hash_table_insert(mut hash_table: Ptr<HashTable>, mut key: HashTableKey, mut value: HashTableValue) -> i32 {
+pub fn trie_remove_binary(mut trie: Ptr<Trie>, mut key: Ptr<u8>, mut key_length: i32) -> i32 {
     unimplemented!();
 }

@@ -1,3 +1,3 @@
-pub fn string_equal(mut string1: Ptr<Void>, mut string2: Ptr<Void>) -> i32 {
+pub fn sortedarray_length(mut array: Ptr<SortedArray>) -> u32 {
     unimplemented!();
 }

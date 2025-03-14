@@ -1,3 +1,3 @@
-pub fn sortedarray_insert(mut sortedarray: Ptr<SortedArray>, mut data: SortedArrayValue) -> i32 {
+pub fn rb_tree_insert_case1(mut tree: Ptr<RBTree>, mut node: Ptr<RBTreeNode>) {
     unimplemented!();
 }

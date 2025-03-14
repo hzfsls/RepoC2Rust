@@ -1,3 +1,3 @@
-pub fn rb_tree_node_sibling(mut node: Ptr<RBTreeNode>) -> Ptr<RBTreeNode> {
+pub fn sortedarray_insert(mut sortedarray: Ptr<SortedArray>, mut data: SortedArrayValue) -> i32 {
     unimplemented!();
 }

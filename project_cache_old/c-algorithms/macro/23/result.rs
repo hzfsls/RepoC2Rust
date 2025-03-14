@@ -1,2 +1,2 @@
-macro_rules! ALGORITHM_BLOOM_FILTER_H { () => { } }
-pub(crate) use ALGORITHM_BLOOM_FILTER_H;
+macro_rules! ALGORITHM_COMPARE_STRING_H { () => { } }
+pub(crate) use ALGORITHM_COMPARE_STRING_H;

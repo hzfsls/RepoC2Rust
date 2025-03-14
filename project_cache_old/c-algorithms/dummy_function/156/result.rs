@@ -1,3 +1,3 @@
-pub fn avl_tree_to_array(mut tree: Ptr<AVLTree>) -> Ptr<AVLTreeValue> {
+pub fn sortedarray_get(mut array: Ptr<SortedArray>, mut i: u32) -> Ptr<SortedArrayValue> {
     unimplemented!();
 }

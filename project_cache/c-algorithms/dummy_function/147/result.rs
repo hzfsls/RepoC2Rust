@@ -1,3 +1,3 @@
-pub fn avl_tree_lookup_node(mut tree: Ptr<AVLTree>, mut key: AVLTreeKey) -> Ptr<AVLTreeNode> {
+pub fn pointer_hash(mut location: Ptr<Void>) -> u32 {
     unimplemented!();
 }

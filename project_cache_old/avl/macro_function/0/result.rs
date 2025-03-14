@@ -1,9 +1,9 @@
-macro_rules! VOS_AVLL_INIT_TREE {
-    ($TREE:expr, $COMPARE:expr, $KEY_OFF:expr, $NODE_OFF:expr) => {
-        $TREE.stTreeInfo.pfCompare = $COMPARE;
-        $TREE.stTreeInfo.usKeyOffset = $KEY_OFF;
-        $TREE.stTreeInfo.usNodeOffset = $NODE_OFF;
-        VOS_AVL3_INIT_TREE!($TREE.stTree, $TREE.stTreeInfo);
+macro_rules! VOS_AVL_INIT_TREE {
+    ($TREE:expr, $COMPARE:expr) => {
+        $TREE.pfnCompare = $COMPARE;
+        $TREE.pstFirst = AVL_NULL_PTR!().cast::<Ptr<AVL_NODE>>();
+        $TREE.pstLast = AVL_NULL_PTR!().cast::<Ptr<AVL_NODE>>();
+        $TREE.pstRoot = AVL_NULL_PTR!().cast::<Ptr<AVL_NODE>>();
     }
 }
-pub(crate) use VOS_AVLL_INIT_TREE;
+pub(crate) use VOS_AVL_INIT_TREE;

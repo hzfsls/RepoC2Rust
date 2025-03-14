@@ -1,3 +1,3 @@
-pub fn binomial_heap_cmp(mut heap: Ptr<BinomialHeap>, mut data1: BinomialHeapValue, mut data2: BinomialHeapValue) -> i32 {
+pub fn rb_tree_insert_case4(mut tree: Ptr<RBTree>, mut node: Ptr<RBTreeNode>) {
     unimplemented!();
 }

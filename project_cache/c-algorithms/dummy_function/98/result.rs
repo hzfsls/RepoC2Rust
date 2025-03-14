@@ -1,3 +1,3 @@
-pub fn queue_peek_tail(mut queue: Ptr<Queue>) -> QueueValue {
+pub fn slist_sort_internal(mut list: Ptr<Ptr<SListEntry>>, mut compare_func: SListCompareFunc) -> Ptr<SListEntry> {
     unimplemented!();
 }

@@ -1,15 +1,23 @@
-pub fn hash_table_allocate_table(mut hash_table: Ptr<HashTable>) -> i32 {
-    let mut new_table_size: u32 = Default::default();
+pub fn trie_free(mut trie: Ptr<Trie>) {
+    let mut free_list: Ptr<TrieNode> = NULL!();
+    let mut node: Ptr<TrieNode> = Default::default();
+    let mut i: i32 = Default::default();
 
-    if (hash_table.prime_index < hash_table_num_primes!()).as_bool() {
-        new_table_size = hash_table_primes[hash_table.prime_index].cast();
-    } else {
-        new_table_size = (hash_table.entries * 10).cast();
+    if (trie.root_node != NULL!()).as_bool() {
+        trie_free_list_push(c_ref!(free_list).cast(), trie.root_node.cast());
     }
 
-    hash_table.table_size = new_table_size.cast();
+    while (free_list != NULL!()).as_bool() {
+        node = trie_free_list_pop(c_ref!(free_list).cast());
 
-    hash_table.table = c_calloc!(hash_table.table_size, c_sizeof!(Ptr<HashTableEntry>));
+        c_for!(let mut i: i32 = 0; i < 256; i.prefix_plus_plus(); {
+            if (node.next[i] != NULL!()).as_bool() {
+                trie_free_list_push(c_ref!(free_list).cast(), node.next[i].cast());
+            }
+        });
 
-    return (hash_table.table != NULL!()).as_bool() as i32;
+        c_free!(node);
+    }
+
+    c_free!(trie);
 }

@@ -1,1 +1,1 @@
-pub type TrieNode = _TrieNode;
+pub type SortedArray = _SortedArray;

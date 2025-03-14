@@ -1,1 +1,1 @@
-pub type SListValue = VoidPtr;
+pub type HashTableHashFunc = FuncPtr<fn(HashTableKey) -> u32>;

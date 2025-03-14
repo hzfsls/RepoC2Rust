@@ -1,11 +1,7 @@
-pub fn arraylist_remove_range(mut arraylist: Ptr<ArrayList>, mut index: u32, mut length: u32) {
-    if (index > arraylist.length || index + length > arraylist.length).as_bool() {
-        return;
+pub fn binomial_heap_cmp(mut heap: Ptr<BinomialHeap>, mut data1: BinomialHeapValue, mut data2: BinomialHeapValue) -> i32 {
+    if (heap.heap_type == BINOMIAL_HEAP_TYPE_MIN!()).as_bool() {
+        return (heap.compare_func)(data1.cast(), data2.cast()).cast();
+    } else {
+        return (-(heap.compare_func)(data1.cast(), data2.cast())).cast();
     }
-    c_memmove!(
-        c_ref!(arraylist.data[index]).cast(),
-        c_ref!(arraylist.data[index + length]).cast(),
-        (arraylist.length - (index + length)) * c_sizeof!(ArrayListValue)
-    );
-    arraylist.length -= length;
 }

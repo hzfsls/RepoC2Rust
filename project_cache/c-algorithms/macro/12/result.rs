@@ -1,2 +1,2 @@
-macro_rules! AVL_TREE_NULL { () => { NULL!() } }
-pub(crate) use AVL_TREE_NULL;
+macro_rules! ALGORITHM_HASH_INT_H { () => { } }
+pub(crate) use ALGORITHM_HASH_INT_H;

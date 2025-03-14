@@ -1,3 +1,3 @@
-pub fn set_iterate(mut set: Ptr<Set>, mut iter: Ptr<SetIterator>) {
+pub fn string_nocase_hash(mut string: Ptr<Void>) -> u32 {
     unimplemented!();
 }

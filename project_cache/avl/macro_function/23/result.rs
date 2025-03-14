@@ -1,2 +1,2 @@
-macro_rules! VOS_AVL3_IN_TREE { ($NODE:expr) => { ($NODE.sLHeight != -1) && ($NODE.sRHeight != -1) } }
-pub(crate) use VOS_AVL3_IN_TREE;
+macro_rules! VOS_AVLL_LAST { ($TREE:expr) => { VOS_AVL3_LAST!($TREE.stTree, $TREE.stTreeInfo) } }
+pub(crate) use VOS_AVLL_LAST;

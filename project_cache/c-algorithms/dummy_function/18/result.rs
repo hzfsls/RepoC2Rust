@@ -1,3 +1,3 @@
-pub fn binomial_heap_free(mut heap: Ptr<BinomialHeap>) {
+pub fn rb_tree_root_node(mut tree: Ptr<RBTree>) -> Ptr<RBTreeNode> {
     unimplemented!();
 }

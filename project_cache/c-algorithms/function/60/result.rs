@@ -1,9 +1,7 @@
-pub fn list_nth_data(mut list: Ptr<ListEntry>, mut n: u32) -> ListValue {
-    let mut entry: Ptr<ListEntry> = Default::default();
-    entry = list_nth_entry(list.cast(), n.cast());
-    if (entry == NULL!()).as_bool() {
-        return LIST_NULL!();
+pub fn queue_peek_tail(mut queue: Ptr<Queue>) -> QueueValue {
+    if queue_is_empty(queue.cast()).as_bool() {
+        return QUEUE_NULL!();
     } else {
-        return entry.data.cast();
+        return queue.tail.data.cast();
     }
 }

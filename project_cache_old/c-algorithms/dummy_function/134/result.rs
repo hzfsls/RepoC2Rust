@@ -1,3 +1,3 @@
-pub fn avl_tree_free_subtree(mut tree: Ptr<AVLTree>, mut node: Ptr<AVLTreeNode>) {
+pub fn set_enlarge(mut set: Ptr<Set>) -> i32 {
     unimplemented!();
 }

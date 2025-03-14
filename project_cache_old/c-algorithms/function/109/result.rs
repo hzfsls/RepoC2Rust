@@ -1,18 +1,5 @@
-pub fn set_query(mut set: Ptr<Set>, mut data: SetValue) -> i32 {
-    let mut rover: Ptr<SetEntry> = Default::default();
-    let mut index: u32 = Default::default();
-
-    index = (set.hash_func(data) % set.table_size).cast();
-
-    rover = set.table[index].cast();
-
-    while (rover != NULL!()).as_bool() {
-        if (set.equal_func(data, rover.data) != 0).as_bool() {
-            return 1;
-        }
-
-        rover = rover.next.cast();
-    }
-
-    return 0;
+pub fn bloom_filter_read(mut bloomfilter: Ptr<BloomFilter>, mut array: Ptr<u8>) {
+    let mut array_size: u32 = Default::default();
+    array_size = (bloomfilter.table_size + 7) / 8;
+    c_memcpy!(array, bloomfilter.table, array_size);
 }

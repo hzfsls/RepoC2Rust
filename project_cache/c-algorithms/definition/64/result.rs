@@ -1,1 +1,1 @@
-pub type HashTableKey = VoidPtr;
+pub type SetEntry = _SetEntry;

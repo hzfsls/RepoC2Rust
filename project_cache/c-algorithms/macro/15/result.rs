@@ -1,2 +1,2 @@
-macro_rules! ALGORITHM_HASH_TABLE_H { () => { } }
-pub(crate) use ALGORITHM_HASH_TABLE_H;
+macro_rules! BINOMIAL_HEAP_NULL { () => { NULL!() } }
+pub(crate) use BINOMIAL_HEAP_NULL;

@@ -1,38 +1,16 @@
-pub fn set_insert(mut set: Ptr<Set>, mut data: SetValue) -> i32 {
-    let mut newentry: Ptr<SetEntry> = Default::default();
-    let mut rover: Ptr<SetEntry> = Default::default();
+pub fn bloom_filter_insert(mut bloomfilter: Ptr<BloomFilter>, mut value: BloomFilterValue) {
+    let mut hash: u32 = Default::default();
+    let mut subhash: u32 = Default::default();
     let mut index: u32 = Default::default();
+    let mut i: u32 = Default::default();
+    let mut b: u8 = Default::default();
 
-    if ((set.entries * 3) / set.table_size > 0).as_bool() {
-        if !set_enlarge(set.cast()).as_bool() {
-            return 0;
-        }
-    }
+    hash = (bloomfilter.hash_func)(value);
 
-    index = (set.hash_func(data) % set.table_size).cast();
-
-    rover = set.table[index].cast();
-
-    while (rover != NULL!()).as_bool() {
-        if (set.equal_func(data, rover.data) != 0).as_bool() {
-            return 0;
-        }
-
-        rover = rover.next.cast();
-    }
-
-    newentry = c_malloc!(c_sizeof!(SetEntry));
-
-    if (newentry == NULL!()).as_bool() {
-        return 0;
-    }
-
-    newentry.data = data.cast();
-
-    newentry.next = set.table[index].cast();
-    set.table[index] = newentry.cast();
-
-    set.entries.prefix_plus_plus();
-
-    return 1;
+    c_for!(let mut i: u32 = 0; i < bloomfilter.num_functions; i.prefix_plus_plus(); {
+        subhash = (hash ^ salts[i]);
+        index = (subhash % bloomfilter.table_size);
+        b = (1 << (index % 8)).cast::<u8>();
+        bloomfilter.table[index / 8] |= b;
+    });
 }

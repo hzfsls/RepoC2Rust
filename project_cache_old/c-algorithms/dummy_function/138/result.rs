@@ -1,3 +1,3 @@
-pub fn avl_tree_node_parent_side(mut node: Ptr<AVLTreeNode>) -> AVLTreeNodeSide {
+pub fn set_num_entries(mut set: Ptr<Set>) -> u32 {
     unimplemented!();
 }

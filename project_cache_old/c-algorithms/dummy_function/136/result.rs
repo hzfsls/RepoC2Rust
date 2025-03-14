@@ -1,3 +1,3 @@
-pub fn avl_tree_subtree_height(mut node: Ptr<AVLTreeNode>) -> i32 {
+pub fn set_remove(mut set: Ptr<Set>, mut data: SetValue) -> i32 {
     unimplemented!();
 }

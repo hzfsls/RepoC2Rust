@@ -1,21 +1,37 @@
-pub fn avl_tree_rotate(mut tree: Ptr<AVLTree>, mut node: Ptr<AVLTreeNode>, mut direction: AVLTreeNodeSide) -> Ptr<AVLTreeNode> {
-    let mut new_root: Ptr<AVLTreeNode> = Default::default();
+pub fn set_union(mut set1: Ptr<Set>, mut set2: Ptr<Set>) -> Ptr<Set> {
+    let mut iterator: SetIterator = Default::default();
+    let mut new_set: Ptr<Set> = Default::default();
+    let mut value: SetValue = Default::default();
 
-    new_root = node.children[1 - direction].cast();
+    new_set = set_new(set1.hash_func.cast(), set1.equal_func.cast());
 
-    avl_tree_node_replace(tree.cast(), node.cast(), new_root.cast());
-
-    node.children[1 - direction] = new_root.children[direction].cast();
-    new_root.children[direction] = node.cast();
-
-    node.parent = new_root.cast();
-
-    if (node.children[1 - direction] != NULL!()).as_bool() {
-        node.children[1 - direction].parent = node.cast();
+    if (new_set == NULL!()).as_bool() {
+        return NULL!();
     }
 
-    avl_tree_update_height(new_root.cast());
-    avl_tree_update_height(node.cast());
+    set_iterate(set1.cast(), c_ref!(iterator).cast());
 
-    return new_root.cast();
+    while (set_iter_has_more(c_ref!(iterator).cast()).as_bool() {
+        value = set_iter_next(c_ref!(iterator).cast()).cast();
+
+        if !set_insert(new_set.cast(), value.cast()).as_bool() {
+            set_free(new_set.cast());
+            return NULL!();
+        }
+    }
+
+    set_iterate(set2.cast(), c_ref!(iterator).cast());
+
+    while (set_iter_has_more(c_ref!(iterator).cast()).as_bool() {
+        value = set_iter_next(c_ref!(iterator).cast()).cast();
+
+        if (set_query(new_set.cast(), value.cast()) == 0).as_bool() {
+            if !set_insert(new_set.cast(), value.cast()).as_bool() {
+                set_free(new_set.cast());
+                return NULL!();
+            }
+        }
+    }
+
+    return new_set.cast();
 }

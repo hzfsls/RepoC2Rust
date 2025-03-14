@@ -1,2 +1,2 @@
-macro_rules! VOS_AVLL_NEXT { ($TREE:expr, $NODE:expr) => { VOS_AVL3_NEXT!($NODE, $TREE.stTreeInfo) } }
-pub(crate) use VOS_AVLL_NEXT;
+macro_rules! VOS_AVL_NEXT { ($NODE:expr) => { VOS_AVL_Next(c_ref!($NODE)) } }
+pub(crate) use VOS_AVL_NEXT;

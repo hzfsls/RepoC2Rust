@@ -1,3 +1,3 @@
-pub fn slist_to_array(mut list: Ptr<SListEntry>) -> Ptr<SListValue> {
+pub fn avl_tree_node_child(mut node: Ptr<AVLTreeNode>, mut side: AVLTreeNodeSide) -> Ptr<AVLTreeNode> {
     unimplemented!();
 }

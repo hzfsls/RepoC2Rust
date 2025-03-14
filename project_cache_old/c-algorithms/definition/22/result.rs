@@ -1,1 +1,1 @@
-pub type QueueEntry = _QueueEntry;
+pub type SListValue = VoidPtr;

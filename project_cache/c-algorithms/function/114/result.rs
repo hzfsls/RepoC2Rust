@@ -1,15 +1,11 @@
-pub fn set_iterate(mut set: Ptr<Set>, mut iter: Ptr<SetIterator>) {
-    let mut chain: u32 = Default::default();
+pub fn string_nocase_hash(mut string: Ptr<Void>) -> u32 {
+    let mut result: u32 = 5381;
+    let mut p: Ptr<u8> = string.cast::<Ptr<u8>>();
 
-    iter.set = set.cast();
-    iter.next_entry = NULL!();
+    while (*p != '\0').as_bool() {
+        result = (result << 5) + result + c_tolower!(*p).cast::<u32>();
+        p += 1;
+    }
 
-    c_for!(chain = 0; chain < set.table_size; chain.prefix_plus_plus(); {
-        if (set.table[chain] != NULL!()).as_bool() {
-            iter.next_entry = set.table[chain].cast();
-            break;
-        }
-    });
-
-    iter.next_chain = chain.cast();
+    return result.cast();
 }

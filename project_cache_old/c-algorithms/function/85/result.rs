@@ -1,3 +1,16 @@
-pub fn slist_sort(mut list: Ptr<Ptr<SListEntry>>, mut compare_func: SListCompareFunc) {
-    slist_sort_internal(list.cast(), compare_func.cast());
+pub fn avl_tree_to_array(mut tree: Ptr<AVLTree>) -> Ptr<AVLTreeValue> {
+    let mut array: Ptr<AVLTreeValue> = Default::default();
+    let mut index: i32 = Default::default();
+
+    array = c_malloc!(c_sizeof!(AVLTreeValue) * tree.num_nodes);
+
+    if (array == NULL!()).as_bool() {
+        return NULL!();
+    }
+
+    index = 0;
+
+    avl_tree_to_array_add_subtree(tree.root_node.cast(), array.cast(), c_ref!(index).cast());
+
+    return array.cast();
 }

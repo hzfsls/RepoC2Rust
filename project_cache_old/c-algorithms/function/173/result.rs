@@ -1,15 +1,11 @@
-pub fn rb_tree_insert_case5(mut tree: Ptr<RBTree>, mut node: Ptr<RBTreeNode>) {
-    let mut parent: Ptr<RBTreeNode> = Default::default();
-    let mut grandparent: Ptr<RBTreeNode> = Default::default();
-    let mut side: RBTreeNodeSide = Default::default();
+pub fn list_nth_data(mut list: Ptr<ListEntry>, mut n: u32) -> ListValue {
+    let mut entry: Ptr<ListEntry> = Default::default();
 
-    parent = node.parent.cast();
-    grandparent = parent.parent.cast();
+    entry = list_nth_entry(list.cast(), n.cast());
 
-    side = rb_tree_node_side(node.cast());
-
-    rb_tree_rotate(tree.cast(), grandparent.cast(), (1 - side).cast());
-
-    parent.color = RB_TREE_NODE_BLACK!();
-    grandparent.color = RB_TREE_NODE_RED!();
+    if (entry == NULL!()).as_bool() {
+        return LIST_NULL!();
+    } else {
+        return entry.data.cast();
+    }
 }

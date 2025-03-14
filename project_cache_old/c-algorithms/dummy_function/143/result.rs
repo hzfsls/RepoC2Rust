@@ -1,3 +1,3 @@
-pub fn avl_tree_insert(mut tree: Ptr<AVLTree>, mut key: AVLTreeKey, mut value: AVLTreeValue) -> Ptr<AVLTreeNode> {
+pub fn set_iter_next(mut iterator: Ptr<SetIterator>) -> SetValue {
     unimplemented!();
 }

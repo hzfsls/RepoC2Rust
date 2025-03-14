@@ -1,2 +1,2 @@
-macro_rules! ALGORITHM_LIST_H { () => { } }
-pub(crate) use ALGORITHM_LIST_H;
+macro_rules! ALGORITHM_COMPARE_POINTER_H { () => { } }
+pub(crate) use ALGORITHM_COMPARE_POINTER_H;

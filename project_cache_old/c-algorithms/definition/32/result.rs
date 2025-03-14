@@ -1,1 +1,9 @@
-pub const set_num_primes: u32 = set_primes.len() as u32;
+#[repr(C)]
+#[derive(Default)]
+pub struct _AVLTreeNode {
+    pub children: Array<Ptr<AVLTreeNode>, 2>,
+    pub parent: Ptr<AVLTreeNode>,
+    pub key: AVLTreeKey,
+    pub value: AVLTreeValue,
+    pub height: i32,
+}

@@ -1,13 +1,3 @@
-pub fn slist_nth_entry(mut list: Ptr<SListEntry>, mut n: u32) -> Ptr<SListEntry> {
-    let mut entry: Ptr<SListEntry> = list.cast();
-    let mut i: u32 = 0;
-
-    c_for!(; i < n; i.prefix_plus_plus(); {
-        if (entry == NULL!()).as_bool() {
-            return NULL!();
-        }
-        entry = entry.next.cast();
-    });
-
-    return entry.cast();
+pub fn avl_tree_root_node(mut tree: Ptr<AVLTree>) -> Ptr<AVLTreeNode> {
+    return tree.root_node.cast();
 }

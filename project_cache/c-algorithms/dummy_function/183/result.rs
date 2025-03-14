@@ -1,3 +1,3 @@
-pub fn rb_tree_node_parent(mut node: Ptr<RBTreeNode>) -> Ptr<RBTreeNode> {
+pub fn list_iter_next(mut iter: Ptr<ListIterator>) -> ListValue {
     unimplemented!();
 }

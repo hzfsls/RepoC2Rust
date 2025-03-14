@@ -1,3 +1,3 @@
-pub fn slist_prepend(mut list: Ptr<Ptr<SListEntry>>, mut data: SListValue) -> Ptr<SListEntry> {
+pub fn avl_tree_node_get_replacement(mut tree: Ptr<AVLTree>, mut node: Ptr<AVLTreeNode>) -> Ptr<AVLTreeNode> {
     unimplemented!();
 }

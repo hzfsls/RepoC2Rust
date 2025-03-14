@@ -1,6 +1,2 @@
-macro_rules! VOS_AVLL_FIND {
-    ($TREE:expr, $KEY:expr) => {
-        VOS_AVL3_FIND!($TREE.stTree, $KEY, $TREE.stTreeInfo)
-    }
-}
-pub(crate) use VOS_AVLL_FIND;
+macro_rules! VOS_AVL_FIND { ($TREE:expr, $KEY:expr) => { VOS_AVL_Find(c_ref!($TREE), $KEY) } }
+pub(crate) use VOS_AVL_FIND;

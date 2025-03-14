@@ -1,3 +1,3 @@
-pub fn bloom_filter_read(mut bloomfilter: Ptr<BloomFilter>, mut array: Ptr<u8>) {
+pub fn arraylist_insert(mut arraylist: Ptr<ArrayList>, mut index: u32, mut data: ArrayListValue) -> i32 {
     unimplemented!();
 }

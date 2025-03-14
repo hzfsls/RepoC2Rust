@@ -29,6 +29,7 @@ project_template_dir = ""
 created_project_dir = ""
 global_cache_dir = ""
 
+
 def implicit_casting_removal(code):
     ret = []
     sub = ".cast()"
@@ -37,7 +38,7 @@ def implicit_casting_removal(code):
         start = code.find(sub, start)
         if start == -1:
             break
-        new_code = code[:start] + code[start + len(sub) :]
+        new_code = code[:start] + code[start + len(sub):]
         ret.append(new_code)
         start += len(sub)
     return ret
@@ -51,7 +52,7 @@ def as_bool_removal(code):
         start = code.find(sub, start)
         if start == -1:
             break
-        new_code = code[:start] + code[start + len(sub) :]
+        new_code = code[:start] + code[start + len(sub):]
         ret.append(new_code)
         start += len(sub)
     return ret
@@ -82,7 +83,8 @@ def struct_index_advancement(code):
             new_line += line[curr_start:]
             new_code_lines.append(new_line)
             ret.append(
-                "\n".join(code_lines[:i1] + new_code_lines + code_lines[i1 + 1 :])
+                "\n".join(code_lines[:i1] +
+                          new_code_lines + code_lines[i1 + 1:])
             )
     return ret
 
@@ -139,6 +141,7 @@ class RustProjectCompilationFailedError(Exception):
 class CallLLMTimeoutError(Exception):
     pass
 
+
 global_cache_dict = {
     "macro": None,
     "macro_function": None,
@@ -146,6 +149,7 @@ global_cache_dict = {
     "dummy_function": None,
     "function": None
 }
+
 
 def update_codes(type, codes: list[RustCode]):
     llm_functions = {
@@ -176,7 +180,6 @@ def update_codes(type, codes: list[RustCode]):
                     cache.update(c.c_code, c.rust_code)
                 except Exception as e:
                     raise CallLLMTimeoutError(e)
-
 
 
 def extract_c_metadata_from_project(proj_name, src_folders, macros, replacements):
@@ -237,7 +240,8 @@ def c_metadata_to_rust_metadata(proj_name):
     print(f"Create rust project `{proj_name}` at {proj.dir_path}")
     success, error_msg = proj.build_project()
     if success:
-        print(f"Rust skeleton project {proj_name}(at {proj.dir_path}) build succeeded!")
+        print(
+            f"Rust skeleton project {proj_name}(at {proj.dir_path}) build succeeded!")
     else:
         raise RustProjectCompilationFailedError(error_msg)
     return metadata
@@ -250,8 +254,7 @@ def code_filling(
     fast=False,
     fast_end_idx=-1,
     optimizations=[],
-    allow_error=False,
-    output_information=False,
+    allow_error=False
 ):
     get_name = {
         "macro": "macro",
@@ -282,17 +285,16 @@ def code_filling(
                 if not status:
                     if not allow_error:
                         raise RustProjectCompilationFailedError(
-                            "Error at:" + curr_cache_path + "\n" + error_msg
+                            error_msg + "\n" + "Error at:" + curr_cache_path
                         )
                     else:
-                        if output_information:
-                            tuple = {
-                                "c_code": c.c_code,
-                                "rust_code": c.rust_code,
-                                "error_msg": original_error_msg,
-                            }
-                            output.append(tuple)
-                        print("Error at:" + curr_cache_path + "\n" + error_msg)
+                        tuple = {
+                            "c_code": c.c_code,
+                            "rust_code": c.rust_code,
+                            "error_msg": original_error_msg,
+                        }
+                        output.append(tuple)
+                        print(error_msg + "\n" + "Error at:" + curr_cache_path)
                         c.rust_code = original_code
                 else:
                     c.rust_code = curr_code
@@ -306,7 +308,8 @@ def code_filling(
                 if not allow_error:
                     raise RustProjectCompilationFailedError(error_msg)
                 else:
-                    print(error_msg)
+                    pass
+                    # print(error_msg)
         else:
             fast_filling_codes = codes[:fast_end_idx]
             update_codes(type, fast_filling_codes)
@@ -316,7 +319,8 @@ def code_filling(
                 if not allow_error:
                     raise RustProjectCompilationFailedError(error_msg)
                 else:
-                    print(error_msg)
+                    pass
+                    # print(error_msg)
             remaining_codes = codes[fast_end_idx:]
             for c in tqdm(remaining_codes):
                 update_codes(type, [c])
@@ -331,159 +335,50 @@ def code_filling(
                     if not status:
                         if not allow_error:
                             raise RustProjectCompilationFailedError(
-                                "Error at:" + curr_cache_path + "\n" + error_msg
+                                error_msg + "\n" + "Error at:" + curr_cache_path
                             )
                         else:
-                            print("Error at:" + curr_cache_path + "\n" + error_msg)
+                            pass
+                            # print(error_msg + "\n" + "Error at:" + curr_cache_path)
                     else:
                         c.rust_code = curr_code
                         cache.update(c.c_code, c.rust_code)
-    if output_information:
-        return output
+    return output
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--project_name",
-        type=str,
-        default="c-algorithms",
-        help="Name of your project folder.",
-    )
-    parser.add_argument(
-        "--project_dir",
-        type=str,
-        default="./data",
-        help="Parent directory of your project folder.",
-    )
-    parser.add_argument(
-        "--project_src_folders",
-        type=str,
-        default="include, src",
-        help="Source file folder of your project.",
-    )
-    parser.add_argument(
-        "--c_metadata_dir",
-        type=str,
-        default="./c_metadata",
-        help="Folder that stores c project metadata.",
-    )
-    parser.add_argument(
-        "--macro_dict_path",
-        type=str,
-        default="./config/macro.json",
-        help="Json config file that declare the special macros in C projects to be replaced",
-    )
+    parser.add_argument("--project_name",        type=str,
+                        default="c-algorithms",        help="Name of your project folder.")
+    parser.add_argument("--project_dir",        type=str,        default="./data",
+                        help="Parent directory of your project folder.")
+    parser.add_argument("--project_src_folders",        type=str,
+                        default="include, src",        help="Source file folder of your project.")
+    parser.add_argument("--c_metadata_dir",        type=str,
+                        default="./c_metadata",        help="Folder that stores c project metadata.")
+    parser.add_argument("--macro_dict_path",        type=str,        default="./config/macro.json",
+                        help="Json config file that declare the special macros in C projects to be replaced")
+    parser.add_argument("--replacement_dict_path",        type=str,        default="./config/replacement.json",
+                        help="Json config file that declare the special strings in C projects to be replaced")
+    parser.add_argument("--rust_metadata_dir",        type=str,
+                        default="./rust_metadata",        help="Folder that stores rust project metadata.")
+    parser.add_argument("--project_template_dir",        type=str,        default="./project_template",
+                        help="Folder that stores the template of Rust projects.")
+    parser.add_argument("--created_project_dir",        type=str,
+                        default="./created_project",        help="Folder that stores created Rust projects.")
+    parser.add_argument("--cache_dir",        type=str,        default="./cache",
+                        help="Folder that stores translation cache.")
+    parser.add_argument("--generation_only",        action=argparse.BooleanOptionalAction,        default=False,
+                        help="Parallel generation without checking.")
 
-    parser.add_argument(
-        "--replacement_dict_path",
-        type=str,
-        default="./config/replacement.json",
-        help="Json config file that declare the special strings in C projects to be replaced",
-    )
+    parser.add_argument("--post_fixing",        action=argparse.BooleanOptionalAction,        default=True,
+                        help="Try to fix code to pass the compilation.")
 
-    parser.add_argument(
-        "--rust_metadata_dir",
-        type=str,
-        default="./rust_metadata",
-        help="Folder that stores rust project metadata.",
-    )
+    parser.add_argument("--output_path",        type=str,
+                        default="./output.json",        help="Output information path")
 
-    parser.add_argument(
-        "--project_template_dir",
-        type=str,
-        default="./project_template",
-        help="Folder that stores the template of Rust projects.",
-    )
-
-    parser.add_argument(
-        "--created_project_dir",
-        type=str,
-        default="./created_project",
-        help="Folder that stores created Rust projects.",
-    )
-
-    parser.add_argument(
-        "--cache_dir",
-        type=str,
-        default="./cache",
-        help="Folder that stores translation cache.",
-    )
-
-    parser.add_argument(
-        "--fast_macro_filling",
-        action=argparse.BooleanOptionalAction,
-        default=False,
-        help="Fill all LLM-generated macros at once.",
-    )
-    parser.add_argument(
-        "--fast_macro_function_filling",
-        action=argparse.BooleanOptionalAction,
-        default=False,
-        help="Fill all LLM-generated macro functions at once.",
-    )
-    parser.add_argument(
-        "--fast_definition_filling",
-        action=argparse.BooleanOptionalAction,
-        default=False,
-        help="Fill all LLM-generated definitions at once.",
-    )
-    parser.add_argument(
-        "--fast_dummy_function_filling",
-        action=argparse.BooleanOptionalAction,
-        default=True,
-        help="Fill all LLM-generated dummy functions at once.",
-    )
-    parser.add_argument(
-        "--fast_function_filling",
-        action=argparse.BooleanOptionalAction,
-        default=False,
-        help="Fill all LLM-generated functions at once.",
-    )
-
-    parser.add_argument(
-        "--fast_macro_filling_end_idx",
-        type=int,
-        default=-1,
-        help="Last index during fast macro filling.",
-    )
-    parser.add_argument(
-        "--fast_macro_function_filling_end_idx",
-        type=int,
-        default=-1,
-        help="Last index during fast macro function filling.",
-    )
-    parser.add_argument(
-        "--fast_definition_filling_end_idx",
-        type=int,
-        default=-1,
-        help="Last index during fast definition filling.",
-    )
-    parser.add_argument(
-        "--fast_dummy_function_filling_end_idx",
-        type=int,
-        default=-1,
-        help="Last index during fast dummy function filling.",
-    )
-    parser.add_argument(
-        "--fast_function_filling_end_idx",
-        type=int,
-        default=-1,
-        help="Last index during fast function filling.",
-    )
-
-    parser.add_argument(
-        "--output_path",
-        type=str,
-        default="./output.json",
-        help="Output information path",
-    )
-
-    parser.add_argument(
-        "--output_project_path",
-        type=str,
-        default="./final_project",
-        help="Output rust project path",
-    )
+    parser.add_argument("--output_project_path",        type=str,
+                        default="./final_project",        help="Output rust project path")
 
     args = parser.parse_args()
     project_dir = os.path.join(PARENT_DIR, args.project_dir)
@@ -501,96 +396,89 @@ if __name__ == "__main__":
         "function": Cache(global_cache_dir, "function"),
     }
 
-    with open(
-        os.path.join(PARENT_DIR, args.macro_dict_path),
-        "r",
-        encoding="utf-8",
-    ) as f:
+    with open(os.path.join(PARENT_DIR, args.macro_dict_path), "r", encoding="utf-8",) as f:
         macro_dict = json.load(f)
 
-    with open(
-        os.path.join(PARENT_DIR, args.replacement_dict_path),
-        "r",
-        encoding="utf-8",
-    ) as f:
+    with open(os.path.join(PARENT_DIR, args.replacement_dict_path), "r", encoding="utf-8",) as f:
         replacement_dict = json.load(f)
 
     proj_name = args.project_name
-    project_src_folders = [k.strip() for k in args.project_src_folders.split(",")]
+    project_src_folders = [k.strip()
+                           for k in args.project_src_folders.split(",")]
+
     extract_c_metadata_from_project(
-        proj_name, project_src_folders, macro_dict, replacement_dict
-    )
+        proj_name, project_src_folders, macro_dict, replacement_dict)
 
     metadata = c_metadata_to_rust_metadata(proj_name)
 
-    print("Try Build After Updating Macros:")
-    code_filling(
-        "macro",
-        proj_name,
-        metadata,
-        fast=args.fast_macro_filling,
-        fast_end_idx=args.fast_macro_filling_end_idx,
-        optimizations=[],
-        allow_error=False,
-    )
-    print("Try Build After Updating Macro Functions:")
-    code_filling(
-        "macro_function",
-        proj_name,
-        metadata,
-        fast=args.fast_macro_function_filling,
-        fast_end_idx=args.fast_macro_function_filling_end_idx,
-        optimizations=[],
-        allow_error=False,
-    )
-    print("Try Build After Updating Definition:")
-    code_filling(
-        "definition",
-        proj_name,
-        metadata,
-        fast=args.fast_definition_filling,
-        fast_end_idx=args.fast_definition_filling_end_idx,
-        optimizations=[
-            OptimizationAgent(proj_name, metadata, definition_replace, override=False)
-        ],
-        allow_error=False,
-    )
-    print("Try Build After Updating Dummy Functions:")
-    code_filling(
-        "dummy_function",
-        proj_name,
-        metadata,
-        fast=args.fast_dummy_function_filling,
-        fast_end_idx=args.fast_dummy_function_filling_end_idx,
-        optimizations=[],
-        allow_error=False,
-    )
-    print("Try Build After Updating Functions:")
-    output = code_filling(
-        "function",
-        proj_name,
-        metadata,
-        fast=args.fast_function_filling,
-        fast_end_idx=args.fast_function_filling_end_idx,
-        optimizations=[
-            OptimizationAgent(
-                proj_name, metadata, struct_index_advancement, override=False
-            ),
-            OptimizationAgent(
-                proj_name, metadata, implicit_casting_removal, override=True
-            ),
-            OptimizationAgent(proj_name, metadata, as_bool_removal, override=True),
-        ],
-        allow_error=True,
-        output_information=True,
-    )
-    with open(
-        os.path.join(PARENT_DIR, args.output_path),
-        "w",
-        encoding="utf-8",
-    ) as f:
-        json.dump(output, f)
-    print("Error Num:" + str(len(output)))
-    output_project_dir = os.path.join(PARENT_DIR, args.output_project_path)
+    if args.generation_only:
+        print("Generating Macros:")
+        code_filling("macro", proj_name, metadata, fast=True, allow_error=True)
+        print("Generating Macro Functions:")
+        code_filling("macro_function", proj_name,
+                     metadata, fast=True, allow_error=True)
+        print("Generating Definitions:")
+        code_filling("definition", proj_name, metadata,
+                     fast=True, allow_error=True)
+        print("Generating Dummy Functions:")
+        code_filling("dummy_function", proj_name,
+                     metadata, fast=True, allow_error=True)
+        print("Generating Functions:")
+        code_filling("function", proj_name, metadata,
+                     fast=True, allow_error=True)
+    else:
+        if not args.post_fixing:
+            print("Generating Macros:")
+            code_filling("macro", proj_name, metadata,
+                         fast=False, allow_error=False)
+            print("Generating Macro Functions:")
+            code_filling("macro_function", proj_name, metadata,
+                         fast=False, allow_error=False)
+            print("Generating Definitions:")
+            code_filling("definition", proj_name, metadata,
+                         fast=False, allow_error=False)
+            print("Generating Dummy Functions:")
+            code_filling("dummy_function", proj_name, metadata,
+                         fast=False, allow_error=False)
+            print("Generating Functions:")
+            output = code_filling("function", proj_name,
+                                  metadata, fast=False, allow_error=True)
+        else:
+            print("Generating Macros:")
+            code_filling("macro", proj_name, metadata,
+                         fast=True, allow_error=False)
+            print("Generating Macro Functions:")
+            code_filling("macro_function", proj_name, metadata,
+                         fast=True, allow_error=False)
+            print("Generating Definitions:")
+            code_filling("definition", proj_name, metadata, fast=True, optimizations=[
+                OptimizationAgent(proj_name, metadata,
+                                  definition_replace, override=False)
+            ], allow_error=False)
+            print("Generating Dummy Functions:")
+            code_filling("dummy_function", proj_name, metadata,
+                         fast=True, allow_error=False)
+            print("Generating Functions:")
+            output = code_filling("function", proj_name, metadata, fast=False, optimizations=[
+                OptimizationAgent(proj_name, metadata,
+                                  struct_index_advancement, override=False),
+                OptimizationAgent(proj_name, metadata,
+                                  implicit_casting_removal, override=True),
+                OptimizationAgent(proj_name, metadata,
+                                  as_bool_removal, override=True),
+            ], allow_error=True)
 
-    proj = RustProject(proj_name, metadata, output_project_dir, no_timestamp=True)
+        error_cnt = len(output)
+        all_cnt = len(metadata.get_all("function"))
+        report = {
+            "All": all_cnt,
+            "Compilation Pass": all_cnt - error_cnt,
+            "Compilation Error": error_cnt,
+            "Pass Rate": 1 - error_cnt / all_cnt,
+            "Error Information": output
+        }
+        with open(os.path.join(PARENT_DIR, args.output_path), "w", encoding="utf-8",) as f:
+            json.dump(report, f)
+        output_project_dir = os.path.join(PARENT_DIR, args.output_project_path)
+        proj = RustProject(proj_name, metadata,
+                           output_project_dir, no_timestamp=True)

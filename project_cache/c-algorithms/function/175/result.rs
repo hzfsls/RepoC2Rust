@@ -1,23 +1,23 @@
-pub fn rb_tree_lookup_node(mut tree: Ptr<RBTree>, mut key: RBTreeKey) -> Ptr<RBTreeNode> {
-    let mut node: Ptr<RBTreeNode> = Default::default();
-    let mut side: RBTreeNodeSide = Default::default();
-    let mut diff: i32 = Default::default();
+pub fn list_to_array(mut list: Ptr<ListEntry>) -> Ptr<ListValue> {
+    let mut rover: Ptr<ListEntry> = Default::default();
+    let mut array: Ptr<ListValue> = Default::default();
+    let mut length: u32 = Default::default();
+    let mut i: u32 = Default::default();
 
-    node = tree.root_node.cast();
+    length = list_length(list.cast()).cast();
 
-    while (node != NULL!()).as_bool() {
-        diff = (tree.compare_func)(key.cast(), node.key.cast()).cast();
+    array = c_malloc!(c_sizeof!(ListValue) * length);
 
-        if diff == 0 {
-            return node.cast();
-        } else if diff < 0 {
-            side = RB_TREE_NODE_LEFT!();
-        } else {
-            side = RB_TREE_NODE_RIGHT!();
-        }
-
-        node = node.children[side].cast();
+    if (array == NULL!()).as_bool() {
+        return NULL!();
     }
 
-    return NULL!();
+    rover = list.cast();
+
+    c_for!(let mut i: u32 = 0; i < length; i.prefix_plus_plus(); {
+        array[i] = rover.data.cast();
+        rover = rover.next.cast();
+    });
+
+    return array.cast();
 }

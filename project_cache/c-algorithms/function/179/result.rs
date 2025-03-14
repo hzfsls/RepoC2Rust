@@ -1,3 +1,3 @@
-pub fn rb_tree_root_node(mut tree: Ptr<RBTree>) -> Ptr<RBTreeNode> {
-    return tree.root_node.cast();
+pub fn list_sort(mut list: Ptr<Ptr<ListEntry>>, mut compare_func: ListCompareFunc) {
+    list_sort_internal(list.cast(), compare_func.cast());
 }

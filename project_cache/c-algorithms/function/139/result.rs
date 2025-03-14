@@ -1,16 +1,27 @@
-pub fn avl_tree_node_replace(mut tree: Ptr<AVLTree>, mut node1: Ptr<AVLTreeNode>, mut node2: Ptr<AVLTreeNode>) {
-    let mut side: i32 = Default::default();
+pub fn set_to_array(mut set: Ptr<Set>) -> Ptr<SetValue> {
+    let mut array: Ptr<SetValue> = Default::default();
+    let mut array_counter: i32 = Default::default();
+    let mut i: u32 = Default::default();
+    let mut rover: Ptr<SetEntry> = Default::default();
 
-    if (node2 != NULL!()).as_bool() {
-        node2.parent = node1.parent.cast();
+    array = c_malloc!(c_sizeof!(SetValue) * set.entries);
+
+    if (array == NULL!()).as_bool() {
+        return NULL!();
     }
 
-    if (node1.parent == NULL!()).as_bool() {
-        tree.root_node = node2.cast();
-    } else {
-        side = avl_tree_node_parent_side(node1.cast()).cast();
-        node1.parent.children[side] = node2.cast();
+    array_counter = 0;
 
-        avl_tree_update_height(node1.parent.cast());
-    }
+    c_for!(i = 0; i < set.table_size; i.prefix_plus_plus(); {
+        rover = set.table[i].cast();
+
+        while (rover != NULL!()).as_bool() {
+            array[array_counter] = rover.data.cast();
+            array_counter.suffix_plus_plus();
+
+            rover = rover.next.cast();
+        }
+    });
+
+    return array.cast();
 }

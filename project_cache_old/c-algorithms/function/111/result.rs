@@ -1,27 +1,24 @@
-pub fn set_to_array(mut set: Ptr<Set>) -> Ptr<SetValue> {
-    let mut array: Ptr<SetValue> = Default::default();
-    let mut array_counter: i32 = Default::default();
+pub fn bloom_filter_union(mut filter1: Ptr<BloomFilter>, mut filter2: Ptr<BloomFilter>) -> Ptr<BloomFilter> {
+    let mut result: Ptr<BloomFilter> = Default::default();
     let mut i: u32 = Default::default();
-    let mut rover: Ptr<SetEntry> = Default::default();
+    let mut array_size: u32 = Default::default();
 
-    array = c_malloc!(c_sizeof!(SetValue) * set.entries);
-
-    if (array == NULL!()).as_bool() {
+    if (filter1.table_size != filter2.table_size || filter1.num_functions != filter2.num_functions ||
+        filter1.hash_func != filter2.hash_func).as_bool() {
         return NULL!();
     }
 
-    array_counter = 0;
+    result = bloom_filter_new(filter1.table_size.cast(), filter1.hash_func.cast(), filter1.num_functions.cast());
 
-    c_for!(i = 0; i < set.table_size; i.prefix_plus_plus(); {
-        rover = set.table[i].cast();
+    if (result == NULL!()).as_bool() {
+        return NULL!();
+    }
 
-        while (rover != NULL!()).as_bool() {
-            array[array_counter] = rover.data.cast();
-            array_counter.suffix_plus_plus();
+    array_size = (filter1.table_size + 7) / 8;
 
-            rover = rover.next.cast();
-        }
+    c_for!(let mut i: u32 = 0; i < array_size; i.prefix_plus_plus(); {
+        result.table[i] = (filter1.table[i] | filter2.table[i]).cast();
     });
 
-    return array.cast();
+    return result.cast();
 }

@@ -1,3 +1,3 @@
-pub fn trie_lookup_binary(mut trie: Ptr<Trie>, mut key: Ptr<u8>, mut key_length: i32) -> TrieValue {
+pub fn hash_table_iter_has_more(mut iterator: Ptr<HashTableIterator>) -> i32 {
     unimplemented!();
 }

@@ -1,3 +1,3 @@
-pub fn avl_tree_node_parent(mut node: Ptr<AVLTreeNode>) -> Ptr<AVLTreeNode> {
-    return node.parent.cast();
+pub fn binary_heap_num_entries(mut heap: Ptr<BinaryHeap>) -> u32 {
+    return heap.num_values.cast();
 }

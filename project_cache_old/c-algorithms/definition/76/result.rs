@@ -1,1 +1,1 @@
-pub type BinomialHeapCompareFunc = FuncPtr<fn(BinomialHeapValue, BinomialHeapValue) -> i32>;
+pub type RBTreeCompareFunc = FuncPtr<fn(RBTreeValue, RBTreeValue) -> i32>;

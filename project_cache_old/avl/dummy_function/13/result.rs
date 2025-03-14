@@ -1,3 +1,3 @@
-pub fn VOS_AVL3_Last(mut pstTree: Ptr<AVL3_TREE>, mut pstTreeInfo: Ptr<AVL3_TREE_INFO>) -> Ptr<Void> {
+pub fn VosAvlMoveNodeToNewPos(mut pstNode: Ptr<AVLBASE_NODE_S>, mut pstNewParent: Ptr<AVLBASE_NODE_S>, mut pstNewLeftSon: Ptr<AVLBASE_NODE_S>, mut pstNewRightSon: Ptr<AVLBASE_NODE_S>) {
     unimplemented!();
 }

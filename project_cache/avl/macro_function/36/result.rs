@@ -1,10 +1,6 @@
-macro_rules! VOS_AVL_LAST {
-    ($TREE:expr) => {
-        if c_ref!($TREE).pstLast != AVL_NULL_PTR!().cast::<Ptr<AVL_NODE>>() {
-            c_ref!($TREE).pstLast.pSelf
-        } else {
-            AVL_NULL_PTR!()
-        }
+macro_rules! VOS_AVL3_LAST { ($TREE:expr, $TREE_INFO:expr) => 
+    {
+        VOS_AVL3_Last(c_ref!($TREE), c_ref!($TREE_INFO))
     }
 }
-pub(crate) use VOS_AVL_LAST;
+pub(crate) use VOS_AVL3_LAST;

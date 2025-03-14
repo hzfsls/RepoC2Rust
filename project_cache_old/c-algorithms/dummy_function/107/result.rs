@@ -1,3 +1,3 @@
-pub fn set_insert(mut set: Ptr<Set>, mut data: SetValue) -> i32 {
+pub fn bloom_filter_insert(mut bloomfilter: Ptr<BloomFilter>, mut value: BloomFilterValue) {
     unimplemented!();
 }

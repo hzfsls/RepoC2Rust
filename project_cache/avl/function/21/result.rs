@@ -1,18 +1,30 @@
-pub fn VosAvlRotateLeft(mut ppstSubTree: Ptr<Ptr<AVLBASE_NODE_S>>) {
-    let mut pstRightSon: Ptr<AVLBASE_NODE_S> = (*ppstSubTree).pstRight.cast();
+pub fn VosAvlDeleteCheck(mut pstTree: Ptr<AVLBASE_TREE_S>, mut pstNode: Ptr<AVLBASE_NODE_S>) -> Ptr<AVLBASE_NODE_S> {
+    let mut pstReplaceNode: Ptr<AVLBASE_NODE_S> = Default::default();
 
-    (*ppstSubTree).pstRight = pstRightSon.pstLeft.cast();
-    if ((*ppstSubTree).pstRight != AVL_NULL_PTR!()).as_bool() {
-        (*ppstSubTree).pstRight.pstParent = (*ppstSubTree).cast();
+    if (pstNode.pstLeft == AVL_NULL_PTR!() && pstNode.pstRight == AVL_NULL_PTR!()).as_bool() {
+        pstReplaceNode = AVL_NULL_PTR!();
+
+        if (pstTree.pstFirst == pstNode).as_bool() {
+            pstTree.pstFirst = pstNode.pstParent.cast();
+        }
+
+        if (pstTree.pstLast == pstNode).as_bool() {
+            pstTree.pstLast = pstNode.pstParent.cast();
+        }
+    } else if (pstNode.pstLeft == AVL_NULL_PTR!()).as_bool() {
+        pstReplaceNode = pstNode.pstRight.cast();
+
+        if (pstTree.pstFirst == pstNode).as_bool() {
+            pstTree.pstFirst = pstReplaceNode.cast();
+        }
+    } else if (pstNode.pstRight == AVL_NULL_PTR!()).as_bool() {
+        pstReplaceNode = pstNode.pstLeft.cast();
+
+        if (pstTree.pstLast == pstNode).as_bool() {
+            pstTree.pstLast = pstReplaceNode.cast();
+        }
+    } else {
+        pstReplaceNode = VosAvlSearchReplaceNode(pstTree.cast(), pstNode.cast());
     }
-
-    (*ppstSubTree).sRHeight = pstRightSon.sLHeight.cast();
-    pstRightSon.pstParent = (*ppstSubTree).pstParent.cast();
-    pstRightSon.pstLeft = (*ppstSubTree).cast();
-    pstRightSon.pstLeft.pstParent = pstRightSon.cast();
-    pstRightSon.sLHeight = (1 + VOS_V2_AVL_MAX!((*ppstSubTree).sRHeight, (*ppstSubTree).sLHeight)).cast();
-
-    *ppstSubTree = pstRightSon.cast();
-
-    return;
+    return pstReplaceNode.cast();
 }

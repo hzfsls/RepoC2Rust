@@ -1,9 +1,8 @@
 #[repr(C)]
 #[derive(Default, Clone, Copy)]
-pub struct avl3_tree_info {
-    pub pfCompare: AVL3_COMPARE,
-    pub usKeyOffset: u16,
-    pub usNodeOffset: u16,
+pub struct avll_tree {
+    pub stTree: AVL3_TREE,
+    pub stTreeInfo: AVL3_TREE_INFO,
 }
 
-pub type AVL3_TREE_INFO = avl3_tree_info;
+pub type AVLL_TREE = avll_tree;

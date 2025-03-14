@@ -1,3 +1,3 @@
-pub fn rb_tree_new(mut compare_func: RBTreeCompareFunc) -> Ptr<RBTree> {
+pub fn list_prepend(mut list: Ptr<Ptr<ListEntry>>, mut data: ListValue) -> Ptr<ListEntry> {
     unimplemented!();
 }

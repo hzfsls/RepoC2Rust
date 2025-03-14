@@ -1,5 +1,3 @@
-pub fn bloom_filter_load(mut bloomfilter: Ptr<BloomFilter>, mut array: Ptr<u8>) {
-    let mut array_size: u32 = Default::default();
-    array_size = (bloomfilter.table_size + 7) / 8;
-    c_memcpy!(bloomfilter.table, array, array_size);
+pub fn arraylist_append(mut arraylist: Ptr<ArrayList>, mut data: ArrayListValue) -> i32 {
+    return arraylist_insert(arraylist.cast(), arraylist.length.cast(), data.cast()).cast();
 }

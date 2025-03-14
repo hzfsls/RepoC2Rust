@@ -1,1 +1,1 @@
-pub type ArrayListValue = VoidPtr;
+pub type BloomFilter = _BloomFilter;

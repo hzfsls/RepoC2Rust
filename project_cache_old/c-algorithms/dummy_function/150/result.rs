@@ -1,3 +1,3 @@
-pub fn avl_tree_node_key(mut node: Ptr<AVLTreeNode>) -> AVLTreeKey {
+pub fn binary_heap_free(mut heap: Ptr<BinaryHeap>) {
     unimplemented!();
 }

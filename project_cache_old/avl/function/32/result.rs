@@ -1,36 +1,21 @@
-pub fn VosAvlDelete(mut pstBaseNode: Ptr<AVLBASE_NODE_S>, mut pstBaseTree: Ptr<AVLBASE_TREE_S>) {
-    let mut pstReplaceNode: Ptr<AVLBASE_NODE_S> = Default::default();
-    let mut pstParentNode: Ptr<AVLBASE_NODE_S> = Default::default();
-    let mut sNewHeight: i16 = 0;
-
-    pstReplaceNode = VosAvlDeleteCheck(pstBaseTree.cast(), pstBaseNode.cast()).cast();
-
-    pstParentNode = pstBaseNode.pstParent.cast();
-
-    pstBaseNode.pstParent = AVL_NULL_PTR!();
-    pstBaseNode.pstRight = AVL_NULL_PTR!();
-    pstBaseNode.pstLeft = AVL_NULL_PTR!();
-    pstBaseNode.sRHeight = -1;
-    pstBaseNode.sLHeight = -1;
-
-    if (pstReplaceNode != AVL_NULL_PTR!()).as_bool() {
-        pstReplaceNode.pstParent = pstParentNode.cast();
-        sNewHeight = (1 + VOS_V2_AVL_MAX!(pstReplaceNode.sLHeight, pstReplaceNode.sRHeight)).cast();
+pub fn VOS_AVL3_Prev(mut pstNode: Ptr<AVL3_NODE>, mut pstTreeInfo: Ptr<AVL3_TREE_INFO>) -> Ptr<Void> {
+    let mut pstNodeTmp: Ptr<AVL3_NODE> = pstNode.cast();
+    if (pstNodeTmp == AVL_NULL_PTR!()).as_bool() || (pstTreeInfo == AVL_NULL_PTR!()).as_bool() {
+        return AVL_NULL_PTR!();
     }
 
-    if (pstParentNode != AVL_NULL_PTR!()).as_bool() {
-        if (pstParentNode.pstRight == pstBaseNode).as_bool() {
-            pstParentNode.pstRight = pstReplaceNode.cast();
-            pstParentNode.sRHeight = sNewHeight.cast();
-        } else {
-            pstParentNode.pstLeft = pstReplaceNode.cast();
-            pstParentNode.sLHeight = sNewHeight.cast();
-        }
-
-        VosAvlBalanceTree(pstBaseTree.cast(), pstParentNode.cast());
+    if (pstNodeTmp.pstLeft != AVL_NULL_PTR!()).as_bool() {
+        pstNodeTmp = pstNodeTmp.pstLeft.cast();
+        FIND_RIGHTMOST_NODE!(pstNodeTmp);
     } else {
-        pstBaseTree.pstRoot = pstReplaceNode.cast();
+        while (pstNodeTmp != AVL_NULL_PTR!()).as_bool() {
+            if (pstNodeTmp.pstParent == AVL_NULL_PTR!()).as_bool() || (pstNodeTmp.pstParent.pstRight == pstNodeTmp).as_bool() {
+                pstNodeTmp = pstNodeTmp.pstParent.cast();
+                break;
+            }
+            pstNodeTmp = pstNodeTmp.pstParent.cast();
+        }
     }
 
-    return;
+    return GET_NODE_START_ADDRESS!(pstNodeTmp, pstTreeInfo.usNodeOffset);
 }

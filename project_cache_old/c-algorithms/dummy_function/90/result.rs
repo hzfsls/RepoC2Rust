@@ -1,3 +1,3 @@
-pub fn slist_iter_remove(mut iter: Ptr<SListIterator>) {
+pub fn slist_set_data(mut listentry: Ptr<SListEntry>, mut data: SListValue) {
     unimplemented!();
 }

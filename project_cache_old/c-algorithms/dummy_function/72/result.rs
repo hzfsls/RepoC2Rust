@@ -1,3 +1,3 @@
-pub fn slist_free(mut list: Ptr<SListEntry>) {
+pub fn avl_tree_insert(mut tree: Ptr<AVLTree>, mut key: AVLTreeKey, mut value: AVLTreeValue) -> Ptr<AVLTreeNode> {
     unimplemented!();
 }

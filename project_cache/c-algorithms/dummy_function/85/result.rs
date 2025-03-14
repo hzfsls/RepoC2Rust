@@ -1,3 +1,3 @@
-pub fn slist_sort(mut list: Ptr<Ptr<SListEntry>>, mut compare_func: SListCompareFunc) {
+pub fn avl_tree_to_array(mut tree: Ptr<AVLTree>) -> Ptr<AVLTreeValue> {
     unimplemented!();
 }

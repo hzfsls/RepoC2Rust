@@ -1,3 +1,3 @@
-pub fn trie_free_list_push(mut list: Ptr<Ptr<TrieNode>>, mut node: Ptr<TrieNode>) {
+pub fn hash_table_allocate_table(mut hash_table: Ptr<HashTable>) -> i32 {
     unimplemented!();
 }

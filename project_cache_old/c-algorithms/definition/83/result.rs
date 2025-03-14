@@ -1,1 +1,1 @@
-pub type RBTreeValue = VoidPtr;
+pub type ListEntry = _ListEntry;

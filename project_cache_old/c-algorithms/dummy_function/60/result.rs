@@ -1,3 +1,3 @@
-pub fn list_nth_data(mut list: Ptr<ListEntry>, mut n: u32) -> ListValue {
+pub fn queue_peek_tail(mut queue: Ptr<Queue>) -> QueueValue {
     unimplemented!();
 }

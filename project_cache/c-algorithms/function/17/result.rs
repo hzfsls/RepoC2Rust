@@ -1,12 +1,13 @@
-pub fn binomial_heap_new(mut heap_type: BinomialHeapType, mut compare_func: BinomialHeapCompareFunc) -> Ptr<BinomialHeap> {
-    let mut new_heap: Ptr<BinomialHeap> = c_calloc!(1, c_sizeof!(BinomialHeap));
+pub fn rb_tree_remove(mut tree: Ptr<RBTree>, mut key: RBTreeKey) -> i32 {
+    let mut node: Ptr<RBTreeNode> = Default::default();
 
-    if (new_heap == NULL!()).as_bool() {
-        return NULL!();
+    node = rb_tree_lookup_node(tree.cast(), key.cast());
+
+    if (node == NULL!()).as_bool() {
+        return 0;
     }
 
-    new_heap.heap_type = heap_type.cast();
-    new_heap.compare_func = compare_func.cast();
+    rb_tree_remove_node(tree.cast(), node.cast());
 
-    return new_heap.cast();
+    return 1;
 }

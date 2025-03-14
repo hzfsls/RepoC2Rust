@@ -1,2 +1,2 @@
-macro_rules! AVL_PACKEND_ZERO { () => { 1 } }
-pub(crate) use AVL_PACKEND_ZERO;
+macro_rules! VOS_PACKEND_ZERO { () => { 1 } }
+pub(crate) use VOS_PACKEND_ZERO;

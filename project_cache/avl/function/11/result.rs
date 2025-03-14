@@ -1,25 +1,18 @@
-pub fn VOS_AVL3_Find(mut pstTree: Ptr<AVL3_TREE>, mut pstKey: Ptr<Void>, mut pstTreeInfo: Ptr<AVL3_TREE_INFO>) -> Ptr<Void> {
-    let mut pstNode: Ptr<AVL3_NODE> = Default::default();
-    let mut iResult: i32 = Default::default();
-    let mut iKeyOffset: i32 = Default::default();
+pub fn VosAvlRotateLeft(mut ppstSubTree: Ptr<Ptr<AVLBASE_NODE_S>>) {
+    let mut pstRightSon: Ptr<AVLBASE_NODE_S> = (*ppstSubTree).pstRight.cast();
 
-    if TREE_OR_TREEINFO_IS_NULL!(pstTree, pstTreeInfo).as_bool() {
-        return AVL_NULL_PTR!();
+    (*ppstSubTree).pstRight = pstRightSon.pstLeft.cast();
+    if ((*ppstSubTree).pstRight != AVL_NULL_PTR!()).as_bool() {
+        (*ppstSubTree).pstRight.pstParent = (*ppstSubTree).cast();
     }
 
-    pstNode = pstTree.pstRoot.cast();
-    iKeyOffset = GET_KEYOFFSET!(pstTreeInfo).cast();
+    (*ppstSubTree).sRHeight = pstRightSon.sLHeight.cast();
+    pstRightSon.pstParent = (*ppstSubTree).pstParent.cast();
+    pstRightSon.pstLeft = (*ppstSubTree).cast();
+    pstRightSon.pstLeft.pstParent = pstRightSon.cast();
+    pstRightSon.sLHeight = (1 + VOS_V2_AVL_MAX!((*ppstSubTree).sRHeight, (*ppstSubTree).sLHeight)).cast();
 
-    while (pstNode != AVL_NULL_PTR!()).as_bool() {
-        iResult = (pstTreeInfo.pfCompare)(pstKey.cast(), (pstNode.cast::<Ptr<u8>>() + iKeyOffset).cast::<Ptr<Void>>()).cast();
-        if iResult > 0 {
-            pstNode = pstNode.pstRight.cast();
-        } else if iResult < 0 {
-            pstNode = pstNode.pstLeft.cast();
-        } else {
-            break;
-        }
-    }
+    *ppstSubTree = pstRightSon.cast();
 
-    return GET_NODE_START_ADDRESS!(pstNode, pstTreeInfo.usNodeOffset).cast();
+    return;
 }

@@ -1,27 +1,22 @@
-pub fn set_remove(mut set: Ptr<Set>, mut data: SetValue) -> i32 {
-    let mut rover: Ptr<Ptr<SetEntry>> = Default::default();
-    let mut entry: Ptr<SetEntry> = Default::default();
+pub fn bloom_filter_query(mut bloomfilter: Ptr<BloomFilter>, mut value: BloomFilterValue) -> i32 {
+    let mut hash: u32 = Default::default();
+    let mut subhash: u32 = Default::default();
     let mut index: u32 = Default::default();
+    let mut i: u32 = Default::default();
+    let mut b: u8 = Default::default();
+    let mut bit: i32 = Default::default();
 
-    index = (set.hash_func)(data.cast()) % set.table_size;
+    hash = (bloomfilter.hash_func)(value.cast()).cast();
 
-    rover = c_ref!(set.table[index]).cast();
-
-    while (*rover != NULL!()).as_bool() {
-        if ((set.equal_func)(data.cast(), (*rover).data.cast()) != 0).as_bool() {
-            entry = *rover;
-
-            *rover = entry.next.cast();
-
-            set.entries.prefix_minus_minus();
-
-            set_free_entry(set.cast(), entry.cast());
-
-            return 1;
+    c_for!(let mut i: u32 = 0; i < bloomfilter.num_functions.cast(); i.prefix_plus_plus(); {
+        subhash = (hash ^ salts[i]).cast();
+        index = (subhash % bloomfilter.table_size).cast();
+        b = bloomfilter.table[(index / 8).cast()].cast();
+        bit = (1 << (index % 8)).cast();
+        if ((b & bit.cast::<u8>()) == 0).as_bool() {
+            return 0;
         }
+    });
 
-        rover = c_ref!((*rover).next).cast();
-    }
-
-    return 0;
+    return 1;
 }

@@ -211,81 +211,13 @@ Translation:
 macro_rules! MY_VARGS_M {
     ($fmt:expr) => {
         MyVargsFunction(MYFILENAME!().cast(), __LINE__!().cast(), $fmt.cast(), &[]);
-    }
+    };
     ($fmt:expr, $($args:expr),*) => {
         MyVargsFunction(MYFILENAME!().cast(), __LINE__!().cast(), $fmt.cast(), &[$(&$args), *]);
     }
 }
 pub(crate) use MY_VARGS_M;
 """
-# Source:
-# ```c
-# #define PTR_PLUSPLUS(dst) (dst)++
-# ```
-
-# Translation:
-# ```rust
-# macro_rules! PTR_PLUSPLUS { ($dst:expr) => { $dst.plus_plus() } }
-# pub(crate) use PTR_PLUSPLUS;
-# ```
-
-# Source:
-# ```c
-# #define PTR_SUB(dst, src) ((dst) - (src))
-# ```
-
-# Translation:
-# ```rust
-# macro_rules! PTR_SUB { ($dst:expr, $src:expr) => { $dst - $src } }
-# pub(crate) use PTR_SUB;
-# ```
-
-# Source:
-# ```c
-# #define PTR_COMPLEX(ptr1, var, ptr2, var2)      \
-#     do                                          \
-#     {                                           \
-#         *(ptr1)++ = (int32_t)(var);             \
-#         (ptr2) = (uint16_t *)((ptr1) + 8);      \
-#         (var2) = (ptr2) - (ptr1)                \
-#         (ptr1) = &(ptr)[(var2) * 2];            \
-#     } while (0)
-# ```
-
-# Translation:
-# ```rust
-# macro_rules! PTR_COMPLEX { ($ptr1:expr, $var:expr, $ptr2:expr, $var2:expr) => {
-#     *$ptr1.plus_plus() = $var.cast::<i32>();
-#     $ptr2 = ($ptr1 + 8).cast::<Ptr<u16>>();
-#     $var2 = $ptr2 - $ptr1;
-#     $ptr1 = c_ref!(($ptr)[($var2 * 2)]);
-# }}
-# ```
-
-
-# Source:
-# ```c
-# #define MY_VARGS_M(error_code, fmt, args...)                                                                           \
-#     do                                                                                                                 \
-#     {                                                                                                                  \
-#         MyVargsFunc(error_code, fmt, ##args);                                                                           \
-#     } while (0)
-# ```
-
-# Translation:
-# ```rust
-# // when translate a variadic macro, you need to use the following pattern
-# macro_rules! MY_VARGS_M {
-#     ($error_code:expr, $fmt:expr) => {
-#         MyVargsFunc($error_code, $fmt, &[]);
-#     }
-#     ($error_code:expr, $fmt:expr, $($args:expr),*) => {
-#         MyVargsFunc($error_code, $fmt, &[$(&$args), *]);
-#     }
-# }
-# ```
-# """
-
 
 def macro_function_prompt(c_code):
     return (

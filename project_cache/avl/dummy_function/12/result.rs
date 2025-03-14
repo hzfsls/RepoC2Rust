@@ -1,3 +1,3 @@
-pub fn VOS_AVL3_First(mut pstTree: Ptr<AVL3_TREE>, mut pstTreeInfo: Ptr<AVL3_TREE_INFO>) -> Ptr<Void> {
+pub fn VosAvlUpdateSwapNode(mut pstTree: Ptr<AVLBASE_TREE_S>, mut pstSwapNode: Ptr<AVLBASE_NODE_S>, mut pstBaseNode: Ptr<AVLBASE_NODE_S>) {
     unimplemented!();
 }

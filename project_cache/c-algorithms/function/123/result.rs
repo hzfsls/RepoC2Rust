@@ -1,45 +1,50 @@
-pub fn hash_table_enlarge(mut hash_table: Ptr<HashTable>) -> i32 {
-    let mut old_table: Ptr<Ptr<HashTableEntry>> = Default::default();
-    let mut old_table_size: u32 = Default::default();
-    let mut old_prime_index: u32 = Default::default();
-    let mut rover: Ptr<HashTableEntry> = Default::default();
-    let mut pair: Ptr<HashTablePair> = Default::default();
-    let mut next: Ptr<HashTableEntry> = Default::default();
-    let mut index: u32 = Default::default();
-    let mut i: u32 = Default::default();
+pub fn trie_insert_binary(mut trie: Ptr<Trie>, mut key: Ptr<u8>, mut key_length: i32, mut value: TrieValue) -> i32 {
+    let mut rover: Ptr<Ptr<TrieNode>> = Default::default();
+    let mut node: Ptr<TrieNode> = Default::default();
+    let mut p: i32 = Default::default();
+    let mut c: i32 = Default::default();
 
-    old_table = hash_table.table.cast();
-    old_table_size = hash_table.table_size.cast();
-    old_prime_index = hash_table.prime_index.cast();
-
-    hash_table.prime_index.prefix_plus_plus();
-
-    if !hash_table_allocate_table(hash_table.cast()).as_bool() {
-        hash_table.table = old_table.cast();
-        hash_table.table_size = old_table_size.cast();
-        hash_table.prime_index = old_prime_index.cast();
-
+    if (value == TRIE_NULL!()).as_bool() {
         return 0;
     }
 
-    c_for!(let mut i: u32 = 0; i < old_table_size; i.prefix_plus_plus(); {
-        rover = old_table[i].cast();
+    node = trie_find_end_binary(trie.cast(), key.cast(), key_length.cast()).cast();
 
-        while (rover != NULL!()).as_bool() {
-            next = rover.next.cast();
+    if (node != NULL!()).as_bool() && (node.data != TRIE_NULL!()).as_bool() {
+        node.data = value.cast();
+        return 1;
+    }
 
-            pair = c_ref!(rover.pair).cast();
+    rover = c_ref!(trie.root_node).cast();
+    p = 0;
 
-            index = (hash_table.hash_func)(pair.key.cast()) % hash_table.table_size;
+    loop {
+        node = *rover;
 
-            rover.next = hash_table.table[index].cast();
-            hash_table.table[index] = rover.cast();
+        if (node == NULL!()).as_bool() {
+            node = c_calloc!(1, c_sizeof!(TrieNode)).cast::<Ptr<TrieNode>>();
 
-            rover = next.cast();
+            if (node == NULL!()).as_bool() {
+                trie_insert_rollback(trie.cast(), key.cast());
+                return 0;
+            }
+
+            node.data = TRIE_NULL!();
+            *rover = node.cast();
         }
-    });
 
-    c_free!(old_table);
+        node.use_count.prefix_plus_plus();
+
+        c = key[p].cast::<u8>().cast::<i32>();
+
+        if (p == key_length).as_bool() {
+            node.data = value.cast();
+            break;
+        }
+
+        rover = c_ref!(node.next[c]).cast();
+        p.prefix_plus_plus();
+    }
 
     return 1;
 }

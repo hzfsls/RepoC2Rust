@@ -1,3 +1,3 @@
-pub fn slist_remove_entry(mut list: Ptr<Ptr<SListEntry>>, mut entry: Ptr<SListEntry>) -> i32 {
+pub fn avl_tree_node_parent(mut node: Ptr<AVLTreeNode>) -> Ptr<AVLTreeNode> {
     unimplemented!();
 }

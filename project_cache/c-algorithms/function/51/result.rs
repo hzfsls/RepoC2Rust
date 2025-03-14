@@ -1,11 +1,3 @@
-pub fn string_nocase_hash(mut string: Ptr<Void>) -> u32 {
-    let mut result: u32 = 5381;
-    let mut p: Ptr<u8> = string.cast::<Ptr<u8>>();
-
-    while (*p != '\0').as_bool() {
-        result = (result << 5) + result + c_tolower!(*p).cast::<u32>();
-        p += 1;
-    }
-
-    return result.cast();
+pub fn string_nocase_equal(mut string1: Ptr<Void>, mut string2: Ptr<Void>) -> i32 {
+    return (string_nocase_compare(string1.cast::<Ptr<u8>>(), string2.cast::<Ptr<u8>>()) == 0).cast();
 }

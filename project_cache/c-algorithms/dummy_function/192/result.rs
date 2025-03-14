@@ -1,3 +1,3 @@
-pub fn trie_insert_rollback(mut trie: Ptr<Trie>, mut key: Ptr<u8>) {
+pub fn hash_table_enlarge(mut hash_table: Ptr<HashTable>) -> i32 {
     unimplemented!();
 }

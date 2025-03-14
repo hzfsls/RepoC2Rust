@@ -1,3 +1,3 @@
-pub fn rb_tree_root_node(mut tree: Ptr<RBTree>) -> Ptr<RBTreeNode> {
+pub fn list_sort(mut list: Ptr<Ptr<ListEntry>>, mut compare_func: ListCompareFunc) {
     unimplemented!();
 }

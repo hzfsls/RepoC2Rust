@@ -1,3 +1,3 @@
-pub fn set_free(mut set: Ptr<Set>) {
+pub fn slist_iter_remove(mut iter: Ptr<SListIterator>) {
     unimplemented!();
 }

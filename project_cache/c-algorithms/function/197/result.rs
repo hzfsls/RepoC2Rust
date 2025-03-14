@@ -1,11 +1,15 @@
-pub fn trie_lookup(mut trie: Ptr<Trie>, mut key: Ptr<u8>) -> TrieValue {
-    let mut node: Ptr<TrieNode> = Default::default();
+pub fn hash_table_iterate(mut hash_table: Ptr<HashTable>, mut iterator: Ptr<HashTableIterator>) {
+    let mut chain: u32 = Default::default();
 
-    node = trie_find_end(trie.cast(), key.cast());
+    iterator.hash_table = hash_table.cast();
 
-    if (node != NULL!()).as_bool() {
-        return node.data.cast();
-    } else {
-        return TRIE_NULL!();
-    }
+    iterator.next_entry = NULL!();
+
+    c_for!(chain = 0; chain < hash_table.table_size; chain.prefix_plus_plus(); {
+        if (hash_table.table[chain] != NULL!()).as_bool() {
+            iterator.next_entry = hash_table.table[chain].cast();
+            iterator.next_chain = chain.cast();
+            break;
+        }
+    });
 }

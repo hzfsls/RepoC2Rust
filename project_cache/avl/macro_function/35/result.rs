@@ -1,10 +1,6 @@
-macro_rules! VOS_AVL_FIRST {
-    ($TREE:expr) => {
-        if c_ref!($TREE).pstFirst != AVL_NULL_PTR!() {
-            c_ref!(c_ref!($TREE).pstFirst).pSelf
-        } else {
-            AVL_NULL_PTR!()
-        }
+macro_rules! VOS_AVL3_FIRST {
+    ($TREE:expr, $TREE_INFO:expr) => {
+        VOS_AVL3_First(c_ref!($TREE), c_ref!($TREE_INFO))
     }
 }
-pub(crate) use VOS_AVL_FIRST;
+pub(crate) use VOS_AVL3_FIRST;

@@ -1,3 +1,3 @@
-pub fn sortedarray_free(mut sortedarray: Ptr<SortedArray>) {
+pub fn rb_tree_new(mut compare_func: RBTreeCompareFunc) -> Ptr<RBTree> {
     unimplemented!();
 }

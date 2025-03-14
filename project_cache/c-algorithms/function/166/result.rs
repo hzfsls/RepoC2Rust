@@ -1,13 +1,24 @@
-pub fn rb_tree_new(mut compare_func: RBTreeCompareFunc) -> Ptr<RBTree> {
-    let mut new_tree: Ptr<RBTree> = c_malloc!(c_sizeof!(RBTree));
+pub fn list_prepend(mut list: Ptr<Ptr<ListEntry>>, mut data: ListValue) -> Ptr<ListEntry> {
+    let mut newentry: Ptr<ListEntry> = Default::default();
 
-    if (new_tree == NULL!()).as_bool() {
+    if (list == NULL!()) {
         return NULL!();
     }
 
-    new_tree.root_node = NULL!();
-    new_tree.num_nodes = 0;
-    new_tree.compare_func = compare_func.cast();
+    newentry = c_malloc!(c_sizeof!(ListEntry));
 
-    return new_tree.cast();
+    if (newentry == NULL!()) {
+        return NULL!();
+    }
+
+    newentry.data = data;
+
+    if (*list != NULL!()) {
+        (*list).prev = newentry;
+    }
+    newentry.prev = NULL!();
+    newentry.next = *list;
+    *list = newentry;
+
+    return newentry;
 }

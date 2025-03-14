@@ -1,35 +1,29 @@
-pub fn avl_tree_node_balance(mut tree: Ptr<AVLTree>, mut node: Ptr<AVLTreeNode>) -> Ptr<AVLTreeNode> {
-    let mut left_subtree: Ptr<AVLTreeNode> = Default::default();
-    let mut right_subtree: Ptr<AVLTreeNode> = Default::default();
-    let mut child: Ptr<AVLTreeNode> = Default::default();
-    let mut diff: i32 = Default::default();
+pub fn set_intersection(mut set1: Ptr<Set>, mut set2: Ptr<Set>) -> Ptr<Set> {
+    let mut new_set: Ptr<Set> = Default::default();
+    let mut iterator: SetIterator = Default::default();
+    let mut value: SetValue = Default::default();
 
-    left_subtree = node.children[AVL_TREE_NODE_LEFT!()].cast();
-    right_subtree = node.children[AVL_TREE_NODE_RIGHT!()].cast();
+    new_set = set_new(set1.hash_func.cast(), set2.equal_func.cast());
 
-    diff = (avl_tree_subtree_height(right_subtree.cast()) - avl_tree_subtree_height(left_subtree.cast())).cast();
-
-    if (diff >= 2).as_bool() {
-        child = right_subtree.cast();
-
-        if (avl_tree_subtree_height(child.children[AVL_TREE_NODE_RIGHT!()].cast()) <
-            avl_tree_subtree_height(child.children[AVL_TREE_NODE_LEFT!()].cast())).as_bool() {
-            avl_tree_rotate(tree.cast(), right_subtree.cast(), AVL_TREE_NODE_RIGHT!().cast());
-        }
-
-        node = avl_tree_rotate(tree.cast(), node.cast(), AVL_TREE_NODE_LEFT!().cast());
-    } else if (diff <= -2).as_bool() {
-        child = node.children[AVL_TREE_NODE_LEFT!()].cast();
-
-        if (avl_tree_subtree_height(child.children[AVL_TREE_NODE_LEFT!()].cast()) <
-            avl_tree_subtree_height(child.children[AVL_TREE_NODE_RIGHT!()].cast())).as_bool() {
-            avl_tree_rotate(tree.cast(), left_subtree.cast(), AVL_TREE_NODE_LEFT!().cast());
-        }
-
-        node = avl_tree_rotate(tree.cast(), node.cast(), AVL_TREE_NODE_RIGHT!().cast());
+    if (new_set == NULL!()).as_bool() {
+        return NULL!();
     }
 
-    avl_tree_update_height(node.cast());
+    set_iterate(set1.cast(), c_ref!(iterator).cast());
 
-    return node.cast();
+    while (set_iter_has_more(c_ref!(iterator).cast()).as_bool()) {
+
+        value = set_iter_next(c_ref!(iterator).cast()).cast();
+
+        if (set_query(set2.cast(), value.cast()) != 0).as_bool() {
+
+            if !set_insert(new_set.cast(), value.cast()).as_bool() {
+                set_free(new_set.cast());
+
+                return NULL!();
+            }
+        }
+    }
+
+    return new_set.cast();
 }

@@ -1,21 +1,10 @@
-pub fn binary_heap_new(mut heap_type: BinaryHeapType, mut compare_func: BinaryHeapCompareFunc) -> Ptr<BinaryHeap> {
-    let mut heap: Ptr<BinaryHeap> = c_malloc!(c_sizeof!(BinaryHeap));
+pub fn binomial_heap_free(mut heap: Ptr<BinomialHeap>) {
+    let mut i: u32 = Default::default();
 
-    if (heap == NULL!()).as_bool() {
-        return NULL!();
-    }
+    c_for!(let mut i = 0; i < heap.roots_length; i.suffix_plus_plus(); {
+        binomial_tree_unref(heap.roots[i]);
+    });
 
-    heap.heap_type = heap_type.cast();
-    heap.num_values = 0;
-    heap.compare_func = compare_func.cast();
-
-    heap.alloced_size = 16;
-    heap.values = c_malloc!(c_sizeof!(BinaryHeapValue) * heap.alloced_size);
-
-    if (heap.values == NULL!()).as_bool() {
-        c_free!(heap);
-        return NULL!();
-    }
-
-    return heap.cast();
+    c_free!(heap.roots);
+    c_free!(heap);
 }

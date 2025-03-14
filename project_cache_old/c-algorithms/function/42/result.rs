@@ -1,35 +1,7 @@
-pub fn arraylist_sort_internal(mut list_data: Ptr<ArrayListValue>, mut list_length: u32, mut compare_func: ArrayListCompareFunc) {
-    let mut pivot: ArrayListValue = Default::default();
-    let mut tmp: ArrayListValue = Default::default();
+pub fn binomial_heap_merge_undo(mut new_roots: Ptr<Ptr<BinomialTree>>, mut count: u32) {
     let mut i: u32 = Default::default();
-    let mut list1_length: u32 = Default::default();
-    let mut list2_length: u32 = Default::default();
-
-    if (list_length <= 1).as_bool() {
-        return;
-    }
-
-    pivot = list_data[list_length - 1].cast();
-
-    list1_length = 0;
-
-    c_for!(let mut i: u32 = 0; i < list_length - 1; i.prefix_plus_plus(); {
-        if (compare_func(list_data[i].cast(), pivot.cast()) < 0 {
-            tmp = list_data[i].cast();
-            list_data[i] = list_data[list1_length].cast();
-            list_data[list1_length] = tmp.cast();
-
-            list1_length += 1;
-        } else {
-        }
+    c_for!(let mut i = 0; i <= count; i.prefix_plus_plus(); {
+        binomial_tree_unref(new_roots[i].cast());
     });
-
-    list2_length = list_length - list1_length - 1;
-
-    list_data[list_length - 1] = list_data[list1_length].cast();
-    list_data[list1_length] = pivot.cast();
-
-    arraylist_sort_internal(list_data.cast(), list1_length.cast(), compare_func.cast());
-
-    arraylist_sort_internal((list_data.cast::<Ptr<ArrayListValue>>() + list1_length + 1).cast(), list2_length.cast(), compare_func.cast());
+    c_free!(new_roots);
 }

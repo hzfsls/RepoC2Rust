@@ -1,12 +1,10 @@
-macro_rules! VOS_AVL_INIT_NODE {
-    ($NODE:expr, $SELF:expr, $KEY:expr) => {
-        $NODE.pstParent = AVL_NULL_PTR!().cast::<Ptr<AVL_NODE>>();
-        $NODE.pstLeft = AVL_NULL_PTR!().cast::<Ptr<AVL_NODE>>();
-        $NODE.pstRight = AVL_NULL_PTR!().cast::<Ptr<AVL_NODE>>();
-        $NODE.pSelf = $SELF;
-        $NODE.pKey = $KEY;
+macro_rules! VOS_AVL3_INIT_NODE {
+    ($NODE:expr) => {
+        $NODE.pstParent = AVL_NULL_PTR!().cast::<Ptr<AVL3_NODE>>();
+        $NODE.pstLeft = AVL_NULL_PTR!().cast::<Ptr<AVL3_NODE>>();
+        $NODE.pstRight = AVL_NULL_PTR!().cast::<Ptr<AVL3_NODE>>();
         $NODE.sLHeight = -1;
         $NODE.sRHeight = -1;
     }
 }
-pub(crate) use VOS_AVL_INIT_NODE;
+pub(crate) use VOS_AVL3_INIT_NODE;

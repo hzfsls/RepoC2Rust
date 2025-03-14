@@ -1,3 +1,3 @@
-pub fn pointer_compare(mut location1: Ptr<Void>, mut location2: Ptr<Void>) -> i32 {
+pub fn rb_tree_to_array(mut tree: Ptr<RBTree>) -> Ptr<RBTreeValue> {
     unimplemented!();
 }

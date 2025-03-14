@@ -1,3 +1,3 @@
-pub fn bloom_filter_query(mut bloomfilter: Ptr<BloomFilter>, mut value: BloomFilterValue) -> i32 {
+pub fn arraylist_enlarge(mut arraylist: Ptr<ArrayList>) -> i32 {
     unimplemented!();
 }

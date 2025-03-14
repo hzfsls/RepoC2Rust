@@ -1,1 +1,1 @@
-pub type ArrayListCompareFunc = FuncPtr<fn(ArrayListValue, ArrayListValue) -> i32>;
+pub type SListIterator = _SListIterator;

@@ -173,7 +173,7 @@ pub struct MySimpleStruct {
 }
 ```
 
-If a struct is defined with `typedef struct A { ... } A1;`, add an additional `pub type A1 = A;` in Rust Translation. 
+If a struct is defined with `typedef struct PreviousName { ... } PostName;`, add an additional type alias in Rust Translation: `// some declarations\npub struct PreviousName { ... }\n pub type PostName = PreviousName;`. If no `PreviousName` provided, like `typedef struct { ... } PostName;`, just translate with `// some declarations\npub struct PostName { ... }`.
 
 Source:
 ```c
@@ -207,21 +207,21 @@ pub type MY_Com_Struct = _MyComplexStruct;
 
 Source:
 ```c
-typedef struct {
+typedef struct _MySimpleStruct {
     int arr[2];
     unsigned int length;
     MySimpleStruct* ss; 
-} MySimpleStruct;
+};
 ```
 
 Translation:
 ```rust
 #[repr(C)]
 #[derive(Default, Clone, Copy)]
-pub struct MySimpleStruct {
+pub struct _MySimpleStruct {
     pub arr: Array<i32, 2>,
     pub length: u32,
-    pub ss: MySimpleStruct,
+    pub ss: Ptr<MySimpleStruct>,
 }
 ```
 """

@@ -1,1 +1,1 @@
-pub type HashTableEntry = _HashTableEntry;
+pub type SetIterator = _SetIterator;

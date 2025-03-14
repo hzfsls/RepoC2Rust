@@ -1,3 +1,3 @@
-pub fn queue_peek_head(mut queue: Ptr<Queue>) -> QueueValue {
+pub fn slist_to_array(mut list: Ptr<SListEntry>) -> Ptr<SListValue> {
     unimplemented!();
 }

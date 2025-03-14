@@ -1,3 +1,3 @@
-pub fn bloom_filter_free(mut bloomfilter: Ptr<BloomFilter>) {
+pub fn arraylist_new(mut length: u32) -> Ptr<ArrayList> {
     unimplemented!();
 }

@@ -1,3 +1,3 @@
-pub fn avl_tree_new(mut compare_func: AVLTreeCompareFunc) -> Ptr<AVLTree> {
+pub fn set_register_free_function(mut set: Ptr<Set>, mut free_func: SetFreeFunc) {
     unimplemented!();
 }

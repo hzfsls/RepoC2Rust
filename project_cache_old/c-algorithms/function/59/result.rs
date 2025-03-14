@@ -1,13 +1,22 @@
-pub fn list_nth_entry(mut list: Ptr<ListEntry>, mut n: u32) -> Ptr<ListEntry> {
-    let mut entry: Ptr<ListEntry> = list.cast();
-    let mut i: u32 = 0;
+pub fn queue_pop_tail(mut queue: Ptr<Queue>) -> QueueValue {
+    let mut entry: Ptr<QueueEntry> = Default::default();
+    let mut result: QueueValue = Default::default();
 
-    c_for!(; i < n; i.prefix_plus_plus(); {
-        if (entry == NULL!()).as_bool() {
-            return NULL!();
-        }
-        entry = entry.next.cast();
-    });
+    if queue_is_empty(queue.cast()).as_bool() {
+        return QUEUE_NULL!();
+    }
 
-    return entry.cast();
+    entry = queue.tail.cast();
+    queue.tail = entry.prev.cast();
+    result = entry.data.cast();
+
+    if (queue.tail == NULL!()).as_bool() {
+        queue.head = NULL!();
+    } else {
+        queue.tail.next = NULL!();
+    }
+
+    c_free!(entry);
+
+    return result.cast();
 }

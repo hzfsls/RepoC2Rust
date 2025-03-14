@@ -1,3 +1,3 @@
-pub fn rb_tree_free(mut tree: Ptr<RBTree>) {
+pub fn list_data(mut listentry: Ptr<ListEntry>) -> ListValue {
     unimplemented!();
 }

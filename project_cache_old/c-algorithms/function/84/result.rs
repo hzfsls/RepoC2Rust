@@ -1,51 +1,12 @@
-pub fn slist_sort_internal(mut list: Ptr<Ptr<SListEntry>>, mut compare_func: SListCompareFunc) -> Ptr<SListEntry> {
-    let mut pivot: Ptr<SListEntry> = Default::default();
-    let mut rover: Ptr<SListEntry> = Default::default();
-    let mut less_list: Ptr<SListEntry> = Default::default();
-    let mut more_list: Ptr<SListEntry> = Default::default();
-    let mut less_list_end: Ptr<SListEntry> = Default::default();
-    let mut more_list_end: Ptr<SListEntry> = Default::default();
-
-    if (*list == NULL!()).as_bool() || ((*list).next == NULL!()).as_bool() {
-        return *list;
+pub fn avl_tree_to_array_add_subtree(mut subtree: Ptr<AVLTreeNode>, mut array: Ptr<AVLTreeValue>, mut index: Ptr<i32>) {
+    if (subtree == NULL!()).as_bool() {
+        return;
     }
 
-    pivot = *list;
+    avl_tree_to_array_add_subtree(subtree.children[AVL_TREE_NODE_LEFT!()].cast(), array.cast(), index.cast());
 
-    less_list = NULL!();
-    more_list = NULL!();
-    rover = (*list).next;
+    array[*index] = subtree.key.cast();
+    (*index).prefix_plus_plus();
 
-    while (rover != NULL!()).as_bool() {
-        let mut next: Ptr<SListEntry> = rover.next;
-
-        if (compare_func(rover.data.cast(), pivot.data.cast()) < 0).as_bool() {
-            rover.next = less_list;
-            less_list = rover;
-        } else {
-            rover.next = more_list;
-            more_list = rover;
-        }
-
-        rover = next;
-    }
-
-    less_list_end = slist_sort_internal(c_ref!(less_list).cast(), compare_func);
-    more_list_end = slist_sort_internal(c_ref!(more_list).cast(), compare_func);
-
-    *list = less_list;
-
-    if (less_list == NULL!()).as_bool() {
-        *list = pivot;
-    } else {
-        less_list_end.next = pivot;
-    }
-
-    pivot.next = more_list;
-
-    if (more_list == NULL!()).as_bool() {
-        return pivot;
-    } else {
-        return more_list_end;
-    }
+    avl_tree_to_array_add_subtree(subtree.children[AVL_TREE_NODE_RIGHT!()].cast(), array.cast(), index.cast());
 }

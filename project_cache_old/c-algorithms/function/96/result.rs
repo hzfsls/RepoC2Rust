@@ -1,21 +1,27 @@
-pub fn queue_push_tail(mut queue: Ptr<Queue>, mut data: QueueValue) -> i32 {
-    let mut new_entry: Ptr<QueueEntry> = c_malloc!(c_sizeof!(QueueEntry));
+pub fn slist_remove_entry(mut list: Ptr<Ptr<SListEntry>>, mut entry: Ptr<SListEntry>) -> i32 {
+    let mut rover: Ptr<SListEntry> = Default::default();
 
-    if (new_entry == NULL!()).as_bool() {
+    if (*list == NULL!() || entry == NULL!()).as_bool() {
         return 0;
     }
 
-    new_entry.data = data.cast();
-    new_entry.prev = queue.tail.cast();
-    new_entry.next = NULL!();
-
-    if (queue.tail == NULL!()).as_bool() {
-        queue.head = new_entry.cast();
-        queue.tail = new_entry.cast();
+    if (*list == entry).as_bool() {
+        *list = entry.next.cast();
     } else {
-        queue.tail.next = new_entry.cast();
-        queue.tail = new_entry.cast();
+        rover = *list.cast();
+
+        while (rover != NULL!() && rover.next != entry).as_bool() {
+            rover = rover.next.cast();
+        }
+
+        if (rover == NULL!()).as_bool() {
+            return 0;
+        } else {
+            rover.next = entry.next.cast();
+        }
     }
+
+    c_free!(entry);
 
     return 1;
 }

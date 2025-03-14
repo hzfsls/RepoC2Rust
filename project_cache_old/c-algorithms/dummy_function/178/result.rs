@@ -1,3 +1,3 @@
-pub fn rb_tree_remove(mut tree: Ptr<RBTree>, mut key: RBTreeKey) -> i32 {
+pub fn list_sort_internal(mut list: Ptr<Ptr<ListEntry>>, mut compare_func: ListCompareFunc) -> Ptr<ListEntry> {
     unimplemented!();
 }

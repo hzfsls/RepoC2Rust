@@ -1,2 +1,2 @@
-macro_rules! ALGORITHM_TRIE_H { () => { } }
-pub(crate) use ALGORITHM_TRIE_H;
+macro_rules! QUEUE_NULL { () => { NULL!() } }
+pub(crate) use QUEUE_NULL;

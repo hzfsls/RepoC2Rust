@@ -1,1 +1,1 @@
-pub type HashTable = _HashTable;
+pub type TrieValue = VoidPtr;

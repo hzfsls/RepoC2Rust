@@ -1,1 +1,1 @@
-pub type QueueValue = VoidPtr;
+pub type HashTableIterator = _HashTableIterator;

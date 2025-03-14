@@ -1,3 +1,3 @@
-pub fn slist_iter_next(mut iter: Ptr<SListIterator>) -> SListValue {
+pub fn slist_data(mut listentry: Ptr<SListEntry>) -> SListValue {
     unimplemented!();
 }

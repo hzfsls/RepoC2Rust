@@ -1,3 +1,3 @@
-pub fn list_to_array(mut list: Ptr<ListEntry>) -> Ptr<ListValue> {
+pub fn avl_tree_new(mut compare_func: AVLTreeCompareFunc) -> Ptr<AVLTree> {
     unimplemented!();
 }

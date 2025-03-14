@@ -1,1 +1,1 @@
-pub type RBTreeCompareFunc = FuncPtr<fn(RBTreeValue, RBTreeValue) -> i32>;
+pub type ListValue = VoidPtr;

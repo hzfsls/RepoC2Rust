@@ -1,3 +1,3 @@
-pub fn arraylist_remove(mut arraylist: Ptr<ArrayList>, mut index: u32) {
+pub fn binomial_tree_ref(mut tree: Ptr<BinomialTree>) {
     unimplemented!();
 }

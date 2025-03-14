@@ -1,1 +1,1 @@
-pub type AVLTreeKey = VoidPtr;
+pub type BinomialHeapCompareFunc = FuncPtr<fn(BinomialHeapValue, BinomialHeapValue) -> i32>;

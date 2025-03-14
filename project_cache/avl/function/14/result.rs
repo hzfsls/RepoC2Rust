@@ -1,21 +1,21 @@
-pub fn VOS_AVL3_Next(mut pstNode: Ptr<AVL3_NODE>, mut pstTreeInfo: Ptr<AVL3_TREE_INFO>) -> Ptr<Void> {
-    let mut pstNodeTmp: Ptr<AVL3_NODE> = pstNode.cast();
-    if (pstNodeTmp == AVL_NULL_PTR!()).as_bool() || (pstTreeInfo == AVL_NULL_PTR!()).as_bool() {
-        return AVL_NULL_PTR!();
+pub fn VosAvlSwapRightMost(mut pstTree: Ptr<AVLBASE_TREE_S>, mut pstSubTree: Ptr<AVLBASE_NODE_S>, mut pstNode: Ptr<AVLBASE_NODE_S>) {
+    let mut pstSwapNode: Ptr<AVLBASE_NODE_S> = pstSubTree.cast();
+    let mut pstSwapParent: Ptr<AVLBASE_NODE_S> = Default::default();
+    let mut pstSwapLeft: Ptr<AVLBASE_NODE_S> = Default::default();
+
+    FIND_RIGHTMOST_NODE!(pstSwapNode);
+
+    if ((pstSwapNode.sRHeight != 0).as_bool() || (pstSwapNode.sLHeight > 1).as_bool() {
+        return;
     }
 
-    if (pstNodeTmp.pstRight != AVL_NULL_PTR!()).as_bool() {
-        pstNodeTmp = pstNodeTmp.pstRight.cast();
-        FIND_LEFTMOST_NODE!(pstNodeTmp);
-    } else {
-        while (pstNodeTmp != AVL_NULL_PTR!()).as_bool() {
-            if (pstNodeTmp.pstParent == AVL_NULL_PTR!()).as_bool() || (pstNodeTmp.pstParent.pstLeft == pstNodeTmp).as_bool() {
-                pstNodeTmp = pstNodeTmp.pstParent.cast();
-                break;
-            }
-            pstNodeTmp = pstNodeTmp.pstParent.cast();
-        }
-    }
+    pstSwapParent = pstSwapNode.pstParent.cast();
+    pstSwapLeft = pstSwapNode.pstLeft.cast();
 
-    return GET_NODE_START_ADDRESS!(pstNodeTmp, pstTreeInfo.usNodeOffset);
+    VosAvlUpdateSwapNode(pstTree.cast(), pstSwapNode.cast(), pstNode.cast());
+    VosAvlMoveNodeToNewPos(pstNode.cast(), pstSwapParent.cast(), pstSwapLeft.cast(), AVL_NULL_PTR!());
+
+    pstNode.pstParent.pstRight = pstNode.cast();
+
+    return;
 }

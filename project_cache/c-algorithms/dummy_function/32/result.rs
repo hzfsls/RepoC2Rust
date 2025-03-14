@@ -1,3 +1,3 @@
-pub fn arraylist_new(mut length: u32) -> Ptr<ArrayList> {
+pub fn arraylist_remove(mut arraylist: Ptr<ArrayList>, mut index: u32) {
     unimplemented!();
 }

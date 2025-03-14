@@ -1,16 +1,7 @@
-pub fn sortedarray_first_index(mut sortedarray: Ptr<SortedArray>, mut data: SortedArrayValue, mut left: u32, mut right: u32) -> u32 {
-    let mut index: u32 = left.cast();
-
-    while (left < right).as_bool() {
-        index = (left + right) / 2;
-
-        let mut order: i32 = (sortedarray.cmp_func)(data.cast(), sortedarray.data[index].cast()).cast();
-        if order > 0 {
-            left = index + 1;
-        } else {
-            right = index;
-        }
+pub fn rb_tree_node_side(mut node: Ptr<RBTreeNode>) -> RBTreeNodeSide {
+    if (node.parent.children[RB_TREE_NODE_LEFT!()] == node).as_bool() {
+        return RB_TREE_NODE_LEFT!();
+    } else {
+        return RB_TREE_NODE_RIGHT!();
     }
-
-    return index.cast();
 }

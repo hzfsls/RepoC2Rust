@@ -1,3 +1,3 @@
-pub fn trie_insert(mut trie: Ptr<Trie>, mut key: Ptr<u8>, mut value: TrieValue) -> i32 {
+pub fn hash_table_insert(mut hash_table: Ptr<HashTable>, mut key: HashTableKey, mut value: HashTableValue) -> i32 {
     unimplemented!();
 }

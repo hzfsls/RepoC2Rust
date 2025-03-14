@@ -77,11 +77,11 @@ extern "C" {
 
 /**/
 
-#if defined(__GNUC__) && (__GNUC__ >= 4)
-#define RAPIDLZ_ALWAYS_INLINE inline __attribute__((always_inline))
-#else
-#define RAPIDLZ_ALWAYS_INLINE inline
-#endif
+// #if defined(__GNUC__) && (__GNUC__ >= 4)
+// #define RAPIDLZ_ALWAYS_INLINE inline __attribute__((always_inline))
+// #else
+// #define RAPIDLZ_ALWAYS_INLINE inline
+// #endif
 
 /**
  * @ingroup rapidlz
@@ -99,16 +99,16 @@ extern "C" {
 * @ingroup rapidlz
  * @brief struct to read or write unaligned addr
 */
-#if defined(_MSC_VER) || (defined(__INTEL_COMPILER) && defined(WIN32))
-typedef struct { uint16_t v; } RapidlzUnalignU16;
-    typedef struct { uint32_t v; } RapidlzUnalignU32;
-    typedef struct { uint64_t v; } RapidlzUnalignU64;
-    typedef struct { int64_t v; } RapidlzUnalign64;
-#else
+// #if defined(_MSC_VER) || (defined(__INTEL_COMPILER) && defined(WIN32))
+// typedef struct { uint16_t v; } RapidlzUnalignU16;
+//     typedef struct { uint32_t v; } RapidlzUnalignU32;
+//     typedef struct { uint64_t v; } RapidlzUnalignU64;
+//     typedef struct { int64_t v; } RapidlzUnalign64;
+// #else
 typedef struct { uint16_t v; } __attribute__((packed)) RapidlzUnalignU16;
 typedef struct { uint32_t v; } __attribute__((packed)) RapidlzUnalignU32;
 typedef struct { uint64_t v; } __attribute__((packed)) RapidlzUnalignU64;
-#endif
+// #endif
 
 #define RAPIDLZ_READ16BIT(ptr) (((const RapidlzUnalignU16 *)(ptr))->v)
 #define RAPIDLZ_READ32BIT(ptr) (((const RapidlzUnalignU32 *)(ptr))->v)

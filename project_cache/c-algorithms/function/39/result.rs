@@ -1,3 +1,5 @@
-pub fn arraylist_remove(mut arraylist: Ptr<ArrayList>, mut index: u32) {
-    arraylist_remove_range(arraylist.cast(), index.cast(), 1);
+pub fn binomial_tree_ref(mut tree: Ptr<BinomialTree>) {
+    if (tree != NULL!()).as_bool() {
+        tree.refcount.prefix_plus_plus();
+    }
 }

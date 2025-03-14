@@ -1,1 +1,1 @@
-pub type AVLL_COMPARE = AVL3_COMPARE;
+pub type AVL_V2_COMPARE_FUNC = FuncPtr<fn(VoidPtr, VoidPtr) -> i64>;

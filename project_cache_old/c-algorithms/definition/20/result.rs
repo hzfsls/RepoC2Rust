@@ -1,1 +1,1 @@
-pub type ArrayListEqualFunc = FuncPtr<fn(ArrayListValue, ArrayListValue) -> i32>;
+pub type SListEntry = _SListEntry;

@@ -1,3 +1,3 @@
-pub fn list_next(mut listentry: Ptr<ListEntry>) -> Ptr<ListEntry> {
+pub fn queue_push_tail(mut queue: Ptr<Queue>, mut data: QueueValue) -> i32 {
     unimplemented!();
 }

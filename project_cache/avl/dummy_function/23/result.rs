@@ -1,3 +1,3 @@
-pub fn VosAvlMoveNodeToNewPos(mut pstNode: Ptr<AVLBASE_NODE_S>, mut pstNewParent: Ptr<AVLBASE_NODE_S>, mut pstNewLeftSon: Ptr<AVLBASE_NODE_S>, mut pstNewRightSon: Ptr<AVLBASE_NODE_S>) {
+pub fn VOS_V_AVL3Init(mut pscKey: Ptr<u8>) -> u32 {
     unimplemented!();
 }

@@ -1,3 +1,3 @@
-pub fn avl_tree_node_get_replacement(mut tree: Ptr<AVLTree>, mut node: Ptr<AVLTreeNode>) -> Ptr<AVLTreeNode> {
+pub fn set_iter_has_more(mut iterator: Ptr<SetIterator>) -> i32 {
     unimplemented!();
 }

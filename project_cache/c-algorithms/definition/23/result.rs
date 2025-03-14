@@ -1,7 +1,6 @@
 #[repr(C)]
 #[derive(Default, Clone, Copy)]
-pub struct _QueueEntry {
-    pub data: QueueValue,
-    pub prev: Ptr<QueueEntry>,
-    pub next: Ptr<QueueEntry>,
+pub struct _SListIterator {
+    pub prev_next: Ptr<Ptr<SListEntry>>,
+    pub current: Ptr<SListEntry>,
 }

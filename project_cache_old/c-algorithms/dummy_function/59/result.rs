@@ -1,3 +1,3 @@
-pub fn list_nth_entry(mut list: Ptr<ListEntry>, mut n: u32) -> Ptr<ListEntry> {
+pub fn queue_pop_tail(mut queue: Ptr<Queue>) -> QueueValue {
     unimplemented!();
 }

@@ -1,14 +1,38 @@
-pub fn slist_prepend(mut list: Ptr<Ptr<SListEntry>>, mut data: SListValue) -> Ptr<SListEntry> {
-    let mut newentry: Ptr<SListEntry> = c_malloc!(c_sizeof!(SListEntry));
+pub fn avl_tree_node_get_replacement(mut tree: Ptr<AVLTree>, mut node: Ptr<AVLTreeNode>) -> Ptr<AVLTreeNode> {
+    let mut left_subtree: Ptr<AVLTreeNode> = Default::default();
+    let mut right_subtree: Ptr<AVLTreeNode> = Default::default();
+    let mut result: Ptr<AVLTreeNode> = Default::default();
+    let mut child: Ptr<AVLTreeNode> = Default::default();
+    let mut left_height: i32 = Default::default();
+    let mut right_height: i32 = Default::default();
+    let mut side: i32 = Default::default();
 
-    if (newentry == NULL!()) {
+    left_subtree = node.children[AVL_TREE_NODE_LEFT!()].cast();
+    right_subtree = node.children[AVL_TREE_NODE_RIGHT!()].cast();
+
+    if (left_subtree == NULL!() && right_subtree == NULL!()).as_bool() {
         return NULL!();
     }
 
-    newentry.data = data;
+    left_height = avl_tree_subtree_height(left_subtree.cast()).cast();
+    right_height = avl_tree_subtree_height(right_subtree.cast()).cast();
 
-    newentry.next = *list;
-    *list = newentry;
+    if (left_height < right_height).as_bool() {
+        side = AVL_TREE_NODE_RIGHT!();
+    } else {
+        side = AVL_TREE_NODE_LEFT!();
+    }
 
-    return newentry;
+    result = node.children[side].cast();
+
+    while (result.children[1 - side] != NULL!()).as_bool() {
+        result = result.children[1 - side].cast();
+    }
+
+    child = result.children[side].cast();
+    avl_tree_node_replace(tree.cast(), result.cast(), child.cast());
+
+    avl_tree_update_height(result.parent.cast());
+
+    return result.cast();
 }

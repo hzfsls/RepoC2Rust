@@ -1,1 +1,1 @@
-pub type ListEqualFunc = FuncPtr<fn(ListValue, ListValue) -> i32>;
+pub type Trie = _Trie;

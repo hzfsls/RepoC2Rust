@@ -1,1 +1,1 @@
-pub type BinomialHeapValue = VoidPtr;
+pub type RBTreeNode = _RBTreeNode;

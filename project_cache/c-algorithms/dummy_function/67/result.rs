@@ -1,3 +1,3 @@
-pub fn list_find_data(mut list: Ptr<ListEntry>, mut callback: ListEqualFunc, mut data: ListValue) -> Ptr<ListEntry> {
+pub fn avl_tree_node_parent_side(mut node: Ptr<AVLTreeNode>) -> AVLTreeNodeSide {
     unimplemented!();
 }

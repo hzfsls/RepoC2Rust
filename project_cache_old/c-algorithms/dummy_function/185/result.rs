@@ -1,3 +1,3 @@
-pub fn rb_tree_num_entries(mut tree: Ptr<RBTree>) -> i32 {
+pub fn int_equal(mut vlocation1: Ptr<Void>, mut vlocation2: Ptr<Void>) -> i32 {
     unimplemented!();
 }

@@ -1,3 +1,4 @@
-pub fn avl_tree_node_key(mut node: Ptr<AVLTreeNode>) -> AVLTreeKey {
-    return node.key.cast();
+pub fn binary_heap_free(mut heap: Ptr<BinaryHeap>) {
+    c_free!(heap.values);
+    c_free!(heap);
 }

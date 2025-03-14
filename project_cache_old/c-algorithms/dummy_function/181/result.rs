@@ -1,3 +1,3 @@
-pub fn rb_tree_node_value(mut node: Ptr<RBTreeNode>) -> RBTreeValue {
+pub fn list_iterate(mut list: Ptr<Ptr<ListEntry>>, mut iter: Ptr<ListIterator>) {
     unimplemented!();
 }

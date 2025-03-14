@@ -1,1 +1,1 @@
-pub type SListCompareFunc = FuncPtr<fn(SListValue, SListValue) -> i32>;
+pub type HashTableKeyFreeFunc = FuncPtr<fn(HashTableKey)>;

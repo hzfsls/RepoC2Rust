@@ -1,27 +1,11 @@
-pub fn set_intersection(mut set1: Ptr<Set>, mut set2: Ptr<Set>) -> Ptr<Set> {
-    let mut new_set: Ptr<Set> = Default::default();
-    let mut iterator: SetIterator = Default::default();
-    let mut value: SetValue = Default::default();
+pub fn string_hash(mut string: Ptr<Void>) -> u32 {
+    let mut result: u32 = 5381;
+    let mut p: Ptr<u8> = string.cast::<Ptr<u8>>();
 
-    new_set = set_new(set1.hash_func.cast(), set2.equal_func.cast());
-
-    if (new_set == NULL!()).as_bool() {
-        return NULL!();
+    while (*p != '\0').as_bool() {
+        result = (result << 5) + result + (*p).cast::<u32>();
+        p = p + 1;
     }
 
-    set_iterate(set1.cast(), c_ref!(iterator).cast());
-
-    while (set_iter_has_more(c_ref!(iterator).cast()).as_bool()) {
-        value = set_iter_next(c_ref!(iterator).cast()).cast();
-
-        if (set_query(set2.cast(), value.cast()) != 0).as_bool() {
-            if !set_insert(new_set.cast(), value.cast()).as_bool() {
-                set_free(new_set.cast());
-
-                return NULL!();
-            }
-        }
-    }
-
-    return new_set.cast();
+    return result.cast();
 }

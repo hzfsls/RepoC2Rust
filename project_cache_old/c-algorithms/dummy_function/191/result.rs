@@ -1,3 +1,3 @@
-pub fn trie_find_end_binary(mut trie: Ptr<Trie>, mut key: Ptr<u8>, mut key_length: i32) -> Ptr<TrieNode> {
+pub fn hash_table_register_free_functions(mut hash_table: Ptr<HashTable>, mut key_free_func: HashTableKeyFreeFunc, mut value_free_func: HashTableValueFreeFunc) {
     unimplemented!();
 }

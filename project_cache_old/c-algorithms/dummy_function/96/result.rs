@@ -1,3 +1,3 @@
-pub fn queue_push_tail(mut queue: Ptr<Queue>, mut data: QueueValue) -> i32 {
+pub fn slist_remove_entry(mut list: Ptr<Ptr<SListEntry>>, mut entry: Ptr<SListEntry>) -> i32 {
     unimplemented!();
 }

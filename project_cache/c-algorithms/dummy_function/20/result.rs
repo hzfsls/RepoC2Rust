@@ -1,3 +1,3 @@
-pub fn binomial_heap_pop(mut heap: Ptr<BinomialHeap>) -> BinomialHeapValue {
+pub fn rb_tree_node_value(mut node: Ptr<RBTreeNode>) -> RBTreeValue {
     unimplemented!();
 }

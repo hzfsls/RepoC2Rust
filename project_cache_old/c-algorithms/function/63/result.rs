@@ -1,23 +1,10 @@
-pub fn list_remove_entry(mut list: Ptr<Ptr<ListEntry>>, mut entry: Ptr<ListEntry>) -> i32 {
-    if (list == NULL!() || *list == NULL!() || entry == NULL!()).as_bool() {
-        return 0;
+pub fn avl_tree_free_subtree(mut tree: Ptr<AVLTree>, mut node: Ptr<AVLTreeNode>) {
+    if (node == NULL!()).as_bool() {
+        return;
     }
 
-    if (entry.prev == NULL!()).as_bool() {
-        *list = entry.next.cast();
+    avl_tree_free_subtree(tree.cast(), node.children[AVL_TREE_NODE_LEFT!()].cast());
+    avl_tree_free_subtree(tree.cast(), node.children[AVL_TREE_NODE_RIGHT!()].cast());
 
-        if (entry.next != NULL!()).as_bool() {
-            entry.next.prev = NULL!();
-        }
-    } else {
-        entry.prev.next = entry.next.cast();
-
-        if (entry.next != NULL!()).as_bool() {
-            entry.next.prev = entry.prev.cast();
-        }
-    }
-
-    c_free!(entry);
-
-    return 1;
+    c_free!(node);
 }

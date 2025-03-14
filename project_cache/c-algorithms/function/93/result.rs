@@ -1,21 +1,11 @@
-pub fn queue_push_head(mut queue: Ptr<Queue>, mut data: QueueValue) -> i32 {
-    let mut new_entry: Ptr<QueueEntry> = c_malloc!(c_sizeof!(QueueEntry));
+pub fn slist_nth_data(mut list: Ptr<SListEntry>, mut n: u32) -> SListValue {
+    let mut entry: Ptr<SListEntry> = Default::default();
 
-    if (new_entry == NULL!()).as_bool() {
-        return 0;
-    }
+    entry = slist_nth_entry(list.cast(), n.cast());
 
-    new_entry.data = data.cast();
-    new_entry.prev = NULL!();
-    new_entry.next = queue.head.cast();
-
-    if (queue.head == NULL!()).as_bool() {
-        queue.head = new_entry.cast();
-        queue.tail = new_entry.cast();
+    if (entry == NULL!()).as_bool() {
+        return SLIST_NULL!();
     } else {
-        queue.head.prev = new_entry.cast();
-        queue.head = new_entry.cast();
+        return entry.data.cast();
     }
-
-    return 1;
 }

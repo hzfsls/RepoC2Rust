@@ -1,7 +1,11 @@
-pub fn binomial_heap_merge_undo(mut new_roots: Ptr<Ptr<BinomialTree>>, mut count: u32) {
-    let mut i: u32 = Default::default();
-    c_for!(let mut i = 0; i <= count; i.prefix_plus_plus(); {
-        binomial_tree_unref(new_roots[i].cast());
-    });
-    c_free!(new_roots);
+pub fn rb_tree_lookup(mut tree: Ptr<RBTree>, mut key: RBTreeKey) -> RBTreeValue {
+    let mut node: Ptr<RBTreeNode> = Default::default();
+
+    node = rb_tree_lookup_node(tree.cast(), key.cast());
+
+    if (node == NULL!()).as_bool() {
+        return RB_TREE_NULL!();
+    } else {
+        return node.value.cast();
+    }
 }

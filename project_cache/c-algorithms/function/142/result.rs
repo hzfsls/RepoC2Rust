@@ -1,8 +1,15 @@
-pub fn avl_tree_balance_to_root(mut tree: Ptr<AVLTree>, mut node: Ptr<AVLTreeNode>) {
-    let mut rover: Ptr<AVLTreeNode> = node.cast();
+pub fn set_iterate(mut set: Ptr<Set>, mut iter: Ptr<SetIterator>) {
+    let mut chain: u32 = Default::default();
 
-    while (rover != NULL!()).as_bool() {
-        rover = avl_tree_node_balance(tree.cast(), rover.cast()).cast();
-        rover = rover.parent.cast();
-    }
+    iter.set = set.cast();
+    iter.next_entry = NULL!();
+
+    c_for!(chain = 0; chain < set.table_size; chain.prefix_plus_plus(); {
+        if (set.table[chain] != NULL!()).as_bool() {
+            iter.next_entry = set.table[chain].cast();
+            break;
+        }
+    });
+
+    iter.next_chain = chain.cast();
 }

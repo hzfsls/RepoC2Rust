@@ -1,21 +1,49 @@
-pub fn hash_table_lookup(mut hash_table: Ptr<HashTable>, mut key: HashTableKey) -> HashTableValue {
-    let mut rover: Ptr<HashTableEntry> = Default::default();
-    let mut pair: Ptr<HashTablePair> = Default::default();
-    let mut index: u32 = Default::default();
+pub fn trie_remove(mut trie: Ptr<Trie>, mut key: Ptr<u8>) -> i32 {
+    let mut node: Ptr<TrieNode> = Default::default();
+    let mut next: Ptr<TrieNode> = Default::default();
+    let mut last_next_ptr: Ptr<Ptr<TrieNode>> = Default::default();
+    let mut p: Ptr<u8> = Default::default();
+    let mut c: u8 = Default::default();
 
-    index = (hash_table.hash_func(key) % hash_table.table_size).cast();
+    node = trie_find_end(trie.cast(), key.cast()).cast();
 
-    rover = hash_table.table[index].cast();
-
-    while (rover != NULL!()).as_bool() {
-        pair = c_ref!(rover.pair).cast();
-
-        if (hash_table.equal_func(key, pair.key) != 0 {
-            return pair.value.cast();
-        }
-
-        rover = rover.next.cast();
+    if (node != NULL!()).as_bool() && (node.data != TRIE_NULL!()).as_bool() {
+        node.data = TRIE_NULL!();
+    } else {
+        return 0;
     }
 
-    return HASH_TABLE_NULL!();
+    node = trie.root_node.cast();
+    last_next_ptr = c_ref!(trie.root_node).cast();
+    p = key.cast();
+
+    loop {
+        c = (*p).cast();
+        next = node.next[c].cast();
+
+        node.use_count -= 1;
+
+        if (node.use_count <= 0).as_bool() {
+            c_free!(node.cast());
+
+            if (last_next_ptr != NULL!()).as_bool() {
+                *last_next_ptr = NULL!();
+                last_next_ptr = NULL!();
+            }
+        }
+
+        if (c == '\0').as_bool() {
+            break;
+        } else {
+            p += 1;
+        }
+
+        if (last_next_ptr != NULL!()).as_bool() {
+            last_next_ptr = c_ref!(node.next[c]).cast();
+        }
+
+        node = next.cast();
+    }
+
+    return 1;
 }

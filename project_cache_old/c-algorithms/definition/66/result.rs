@@ -1,8 +1,7 @@
 #[repr(C)]
 #[derive(Default, Clone, Copy)]
-pub struct _HashTablePair {
-    pub key: HashTableKey,
-    pub value: HashTableValue,
+pub struct _SetIterator {
+    pub set: Ptr<Set>,
+    pub next_entry: Ptr<SetEntry>,
+    pub next_chain: u32,
 }
-
-pub type HashTablePair = _HashTablePair;

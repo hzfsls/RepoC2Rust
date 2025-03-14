@@ -1,17 +1,18 @@
-pub fn avl_tree_update_height(mut node: Ptr<AVLTreeNode>) {
-    let mut left_subtree: Ptr<AVLTreeNode> = Default::default();
-    let mut right_subtree: Ptr<AVLTreeNode> = Default::default();
-    let mut left_height: i32 = Default::default();
-    let mut right_height: i32 = Default::default();
+pub fn set_query(mut set: Ptr<Set>, mut data: SetValue) -> i32 {
+    let mut rover: Ptr<SetEntry> = Default::default();
+    let mut index: u32 = Default::default();
 
-    left_subtree = node.children[AVL_TREE_NODE_LEFT!()].cast();
-    right_subtree = node.children[AVL_TREE_NODE_RIGHT!()].cast();
-    left_height = avl_tree_subtree_height(left_subtree.cast()).cast();
-    right_height = avl_tree_subtree_height(right_subtree.cast()).cast();
+    index = (set.hash_func(data) % set.table_size).cast();
 
-    if (left_height > right_height).as_bool() {
-        node.height = (left_height + 1).cast();
-    } else {
-        node.height = (right_height + 1).cast();
+    rover = set.table[index].cast();
+
+    while (rover != NULL!()).as_bool() {
+        if (set.equal_func(data, rover.data) != 0).as_bool() {
+            return 1;
+        }
+
+        rover = rover.next.cast();
     }
+
+    return 0;
 }

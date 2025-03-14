@@ -1,9 +1,5 @@
-#[repr(C)]
-#[derive(Default, Clone, Copy)]
-pub struct _SortedArray {
-    pub data: Ptr<SortedArrayValue>,
-    pub length: u32,
-    pub _alloced: u32,
-    pub equ_func: SortedArrayEqualFunc,
-    pub cmp_func: SortedArrayCompareFunc,
-}
+pub type BinaryHeapType = i32;
+macro_rules! BINARY_HEAP_TYPE_MIN { () => { 0 } }
+pub(crate) use BINARY_HEAP_TYPE_MIN;
+macro_rules! BINARY_HEAP_TYPE_MAX { () => { 1 } }
+pub(crate) use BINARY_HEAP_TYPE_MAX;

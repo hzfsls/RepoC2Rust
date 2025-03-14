@@ -1,11 +1,13 @@
-pub fn string_hash(mut string: Ptr<Void>) -> u32 {
-    let mut result: u32 = 5381;
-    let mut p: Ptr<u8> = string.cast::<Ptr<u8>>();
+pub fn string_compare(mut string1: Ptr<Void>, mut string2: Ptr<Void>) -> i32 {
+    let mut result: i32 = Default::default();
 
-    while (*p != '\0').as_bool() {
-        result = (result << 5) + result + (*p).cast::<u32>();
-        p = p + 1;
+    result = c_strcmp!(string1.cast::<Ptr<u8>>(), string2.cast::<Ptr<u8>>());
+
+    if (result < 0).as_bool() {
+        return -1;
+    } else if (result > 0).as_bool() {
+        return 1;
+    } else {
+        return 0;
     }
-
-    return result.cast();
 }

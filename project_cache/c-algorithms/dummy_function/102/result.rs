@@ -1,3 +1,3 @@
-pub fn set_free_entry(mut set: Ptr<Set>, mut entry: Ptr<SetEntry>) {
+pub fn slist_iter_has_more(mut iter: Ptr<SListIterator>) -> i32 {
     unimplemented!();
 }

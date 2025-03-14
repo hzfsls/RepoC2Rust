@@ -1,6 +1,3 @@
-pub fn sortedarray_get(mut array: Ptr<SortedArray>, mut i: u32) -> Ptr<SortedArrayValue> {
-    if (array == NULL!()).as_bool() {
-        return NULL!();
-    }
-    return array.data[i].cast();
+pub fn rb_tree_node_uncle(mut node: Ptr<RBTreeNode>) -> Ptr<RBTreeNode> {
+    return rb_tree_node_sibling(node.parent.cast()).cast();
 }

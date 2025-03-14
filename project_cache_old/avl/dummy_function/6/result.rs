@@ -1,3 +1,3 @@
-pub fn VOS_V_AVL3Init(mut pscKey: Ptr<u8>) -> u32 {
+pub fn VOS_AVL_Prev(mut pstNode: Ptr<AVL_NODE>) -> Ptr<Void> {
     unimplemented!();
 }

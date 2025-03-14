@@ -1,3 +1,3 @@
-pub fn hash_table_allocate_table(mut hash_table: Ptr<HashTable>) -> i32 {
+pub fn trie_free(mut trie: Ptr<Trie>) {
     unimplemented!();
 }

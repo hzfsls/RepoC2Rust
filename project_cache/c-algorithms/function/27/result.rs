@@ -1,22 +1,17 @@
-pub fn bloom_filter_query(mut bloomfilter: Ptr<BloomFilter>, mut value: BloomFilterValue) -> i32 {
-    let mut hash: u32 = Default::default();
-    let mut subhash: u32 = Default::default();
-    let mut index: u32 = Default::default();
-    let mut i: u32 = Default::default();
-    let mut b: u8 = Default::default();
-    let mut bit: i32 = Default::default();
+pub fn arraylist_enlarge(mut arraylist: Ptr<ArrayList>) -> i32 {
+    let mut data: Ptr<ArrayListValue> = Default::default();
+    let mut newsize: u32 = Default::default();
 
-    hash = bloomfilter.hash_func(value).cast();
+    newsize = arraylist._alloced * 2;
 
-    c_for!(let mut i: u32 = 0; i < bloomfilter.num_functions.cast(); i.prefix_plus_plus(); {
-        subhash = (hash ^ salts[i]).cast();
-        index = (subhash % bloomfilter.table_size).cast();
-        b = bloomfilter.table[index / 8].cast();
-        bit = (1 << (index % 8)).cast();
-        if ((b & bit) == 0).as_bool() {
-            return 0;
-        }
-    });
+    data = c_realloc!(arraylist.data, c_sizeof!(ArrayListValue) * newsize);
 
-    return 1;
+    if (data == NULL!()).as_bool() {
+        return 0;
+    } else {
+        arraylist.data = data.cast();
+        arraylist._alloced = newsize.cast();
+
+        return 1;
+    }
 }

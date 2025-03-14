@@ -1,3 +1,3 @@
-pub fn slist_nth_entry(mut list: Ptr<SListEntry>, mut n: u32) -> Ptr<SListEntry> {
+pub fn avl_tree_root_node(mut tree: Ptr<AVLTree>) -> Ptr<AVLTreeNode> {
     unimplemented!();
 }

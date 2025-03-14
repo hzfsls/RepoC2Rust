@@ -1,3 +1,3 @@
-pub fn rb_tree_free_subtree(mut node: Ptr<RBTreeNode>) {
+pub fn list_append(mut list: Ptr<Ptr<ListEntry>>, mut data: ListValue) -> Ptr<ListEntry> {
     unimplemented!();
 }

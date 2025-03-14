@@ -1,1 +1,1 @@
-pub type AVLTree = _AVLTree;
+pub type BinomialHeapValue = VoidPtr;

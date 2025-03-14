@@ -1,3 +1,3 @@
-pub fn set_iter_has_more(mut iterator: Ptr<SetIterator>) -> i32 {
+pub fn trie_free_list_push(mut list: Ptr<Ptr<TrieNode>>, mut node: Ptr<TrieNode>) {
     unimplemented!();
 }

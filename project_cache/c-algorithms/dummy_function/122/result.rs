@@ -1,3 +1,3 @@
-pub fn hash_table_register_free_functions(mut hash_table: Ptr<HashTable>, mut key_free_func: HashTableKeyFreeFunc, mut value_free_func: HashTableValueFreeFunc) {
+pub fn trie_insert(mut trie: Ptr<Trie>, mut key: Ptr<u8>, mut value: TrieValue) -> i32 {
     unimplemented!();
 }

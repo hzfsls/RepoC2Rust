@@ -1,39 +1,23 @@
-pub fn binomial_tree_merge(mut heap: Ptr<BinomialHeap>, mut tree1: Ptr<BinomialTree>, mut tree2: Ptr<BinomialTree>) -> Ptr<BinomialTree> {
-    let mut new_tree: Ptr<BinomialTree> = Default::default();
-    let mut tmp: Ptr<BinomialTree> = Default::default();
-    let mut i: i32 = Default::default();
+pub fn rb_tree_lookup_node(mut tree: Ptr<RBTree>, mut key: RBTreeKey) -> Ptr<RBTreeNode> {
+    let mut node: Ptr<RBTreeNode> = Default::default();
+    let mut side: RBTreeNodeSide = Default::default();
+    let mut diff: i32 = Default::default();
 
-    if (binomial_heap_cmp(heap, tree1.value, tree2.value) > 0) {
-        tmp = tree1;
-        tree1 = tree2;
-        tree2 = tmp;
+    node = tree.root_node.cast();
+
+    while (node != NULL!()).as_bool() {
+        diff = (tree.compare_func)(key.cast(), node.key.cast()).cast();
+
+        if diff == 0 {
+            return node.cast();
+        } else if diff < 0 {
+            side = RB_TREE_NODE_LEFT!();
+        } else {
+            side = RB_TREE_NODE_RIGHT!();
+        }
+
+        node = node.children[side].cast();
     }
 
-    new_tree = c_malloc!(c_sizeof!(BinomialTree));
-
-    if (new_tree == NULL!()) {
-        return NULL!();
-    }
-
-    new_tree.refcount = 0;
-    new_tree.order = (tree1.order + 1).cast::<u16>();
-
-    new_tree.value = tree1.value;
-
-    new_tree.subtrees = c_malloc!(c_sizeof!(Ptr<BinomialTree>) * new_tree.order);
-
-    if (new_tree.subtrees == NULL!()) {
-        c_free!(new_tree);
-        return NULL!();
-    }
-
-    c_memcpy!(new_tree.subtrees, tree1.subtrees, c_sizeof!(Ptr<BinomialTree>) * tree1.order);
-    let tmp0 = new_tree.order - 1;
-    new_tree.subtrees[tmp0] = tree2;
-
-    c_for!(let mut i: i32 = 0; i < new_tree.order.cast(); i.prefix_plus_plus(); {
-        binomial_tree_ref(new_tree.subtrees[i]);
-    });
-
-    return new_tree;
+    return NULL!();
 }

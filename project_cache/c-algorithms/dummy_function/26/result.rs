@@ -1,3 +1,3 @@
-pub fn bloom_filter_insert(mut bloomfilter: Ptr<BloomFilter>, mut value: BloomFilterValue) {
+pub fn arraylist_free(mut arraylist: Ptr<ArrayList>) {
     unimplemented!();
 }

@@ -1,3 +1,3 @@
-pub fn list_sort(mut list: Ptr<Ptr<ListEntry>>, mut compare_func: ListCompareFunc) {
+pub fn avl_tree_update_height(mut node: Ptr<AVLTreeNode>) {
     unimplemented!();
 }

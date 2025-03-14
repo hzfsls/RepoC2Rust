@@ -1,3 +1,3 @@
-pub fn rb_tree_insert_case5(mut tree: Ptr<RBTree>, mut node: Ptr<RBTreeNode>) {
+pub fn list_nth_data(mut list: Ptr<ListEntry>, mut n: u32) -> ListValue {
     unimplemented!();
 }

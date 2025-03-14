@@ -1,3 +1,3 @@
-pub fn avl_tree_node_value(mut node: Ptr<AVLTreeNode>) -> AVLTreeValue {
+pub fn binary_heap_insert(mut heap: Ptr<BinaryHeap>, mut value: BinaryHeapValue) -> i32 {
     unimplemented!();
 }

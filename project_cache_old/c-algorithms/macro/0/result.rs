@@ -1,2 +1,2 @@
-macro_rules! ALGORITHM_COMPARE_INT_H { () => { } }
-pub(crate) use ALGORITHM_COMPARE_INT_H;
+macro_rules! ALGORITHM_BINARY_HEAP_H { () => { } }
+pub(crate) use ALGORITHM_BINARY_HEAP_H;

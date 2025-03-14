@@ -1,3 +1,3 @@
-pub fn sortedarray_remove_range(mut sortedarray: Ptr<SortedArray>, mut index: u32, mut length: u32) {
+pub fn rb_tree_free(mut tree: Ptr<RBTree>) {
     unimplemented!();
 }
