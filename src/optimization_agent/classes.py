@@ -11,20 +11,17 @@ from tqdm import tqdm
 
 import sys
 
-created_project_dir = os.path.join(
-    os.path.dirname(os.path.dirname(__file__)), "created_project"
-)
-
-
 class OptimizationAgent:
-    def __init__(self, proj_name, metadata, optimize_func, override=False):
+    def __init__(self, proj_name, metadata, optimize_func, override=False, created_project_dir="./created_project", template_project_dir="./project_template"):
         self.name = proj_name
         self.metadata = metadata
         self.optimize_func = optimize_func
         self.override = override
+        self.created_project_dir = created_project_dir
+        self.template_project_dir = template_project_dir
 
     def try_build(self):
-        proj = RustProject(self.name, self.metadata)
+        proj = RustProject(self.name, self.metadata, self.created_project_dir, self.template_project_dir)
         success, error_msg = proj.build_project()
         if success:
             return True, ""

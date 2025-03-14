@@ -17,7 +17,7 @@ import argparse
 
 PARENT_DIR = os.path.dirname(os.path.dirname(__file__))
 
-client = GenerationClient(api_key="sk-76da526dbd8b48c3954df9336a8a6592", base_url="https://api.deepseek.com/beta")
+client = GenerationClient(api_key="", base_url="")
 
 def implicit_casting_removal(code):
     ret = []
@@ -99,7 +99,9 @@ def code_filling(
     fast_end_idx=-1,
     optimizations=[],
     allow_error=False,
-    caches={}
+    caches={},
+    created_project_dir = "./created_project",
+    template_project_dir = "./template_project"
 ):
     get_name = {
         "macro": "macro",
@@ -120,7 +122,7 @@ def code_filling(
             curr_cache_path = os.path.join(
                 cache.path, cache.cache_index[c.c_code], "result.rs"
             )
-            proj = RustProject(proj_name, metadata, created_project_dir)
+            proj = RustProject(proj_name, metadata, created_project_dir, template_project_dir)
             success, error_msg = proj.build_project()
             original_error_msg = error_msg
             if not success:
@@ -147,7 +149,7 @@ def code_filling(
     else:
         if fast_end_idx == -1 or fast_end_idx >= len(codes):
             update_codes(type, client, prompts, codes, caches)
-            proj = RustProject(proj_name, metadata, created_project_dir)
+            proj = RustProject(proj_name, metadata, created_project_dir, template_project_dir)
             success, error_msg = proj.build_project()
             if not success:
                 if not allow_error:
@@ -158,7 +160,7 @@ def code_filling(
         else:
             fast_filling_codes = codes[:fast_end_idx]
             update_codes(type, client, prompts, fast_filling_codes, caches)
-            proj = RustProject(proj_name, metadata, created_project_dir)
+            proj = RustProject(proj_name, metadata, created_project_dir, template_project_dir)
             success, error_msg = proj.build_project()
             if not success:
                 if not allow_error:
@@ -172,7 +174,7 @@ def code_filling(
                 curr_cache_path = os.path.join(
                     cache.path, cache.cache_index[c.c_code], "result.rs"
                 )
-                proj = RustProject(proj_name, metadata, created_project_dir)
+                proj = RustProject(proj_name, metadata, created_project_dir, template_project_dir)
                 success, error_msg = proj.build_project()
                 if not success:
                     for o in optimizations:
@@ -227,7 +229,7 @@ if __name__ == "__main__":
     project_dir = os.path.join(PARENT_DIR, args.project_dir)
     c_metadata_dir = os.path.join(PARENT_DIR, args.c_metadata_dir)
     rust_metadata_dir = os.path.join(PARENT_DIR, args.rust_metadata_dir)
-    project_template_dir = os.path.join(PARENT_DIR, args.project_template_dir)
+    template_project_dir = os.path.join(PARENT_DIR, args.project_template_dir)
     created_project_dir = os.path.join(PARENT_DIR, args.created_project_dir)
     global_cache_dir = os.path.join(PARENT_DIR, args.cache_dir)
 
@@ -255,64 +257,64 @@ if __name__ == "__main__":
 
     extract_c_metadata_from_project(proj_name, project_dir=project_dir, c_metadata_dir=c_metadata_dir, src_folders=project_src_folders, macros=macro_dict, replacements=replacement_dict)
 
-    metadata = c_metadata_to_rust_metadata(proj_name, c_metadata_dir=c_metadata_dir, rust_metadata_dir=rust_metadata_dir, created_project_dir=created_project_dir)
+    metadata = c_metadata_to_rust_metadata(proj_name, c_metadata_dir=c_metadata_dir, rust_metadata_dir=rust_metadata_dir, created_project_dir=created_project_dir, template_project_dir=template_project_dir)
 
     if args.generation_only:
         print("Generating Macros:")
-        code_filling("macro", proj_name, metadata, prompts, fast=True, allow_error=True, caches=cache_dict)
+        code_filling("macro", proj_name, metadata, prompts, fast=True, allow_error=True, caches=cache_dict, created_project_dir=created_project_dir, template_project_dir=template_project_dir)
         print("Generating Macro Functions:")
         code_filling("macro_function", proj_name,
-                     metadata, prompts, fast=True, allow_error=True, caches=cache_dict)
+                     metadata, prompts, fast=True, allow_error=True, caches=cache_dict, created_project_dir=created_project_dir, template_project_dir=template_project_dir)
         print("Generating Definitions:")
         code_filling("definition", proj_name, metadata, prompts,
-                     fast=True, allow_error=True, caches=cache_dict)
+                     fast=True, allow_error=True, caches=cache_dict, created_project_dir=created_project_dir, template_project_dir=template_project_dir)
         print("Generating Dummy Functions:")
         code_filling("dummy_function", proj_name,
-                     metadata, prompts, fast=True, allow_error=True, caches=cache_dict)
+                     metadata, prompts, fast=True, allow_error=True, caches=cache_dict, created_project_dir=created_project_dir, template_project_dir=template_project_dir)
         print("Generating Functions:")
         code_filling("function", proj_name, metadata, prompts,
-                     fast=True, allow_error=True, caches=cache_dict)
+                     fast=True, allow_error=True, caches=cache_dict, created_project_dir=created_project_dir, template_project_dir=template_project_dir)
     else:
         if not args.post_fixing:
             print("Generating Macros:")
             code_filling("macro", proj_name, metadata, prompts,
-                         fast=False, allow_error=False, caches=cache_dict)
+                         fast=False, allow_error=False, caches=cache_dict, created_project_dir=created_project_dir, template_project_dir=template_project_dir)
             print("Generating Macro Functions:")
             code_filling("macro_function", proj_name, metadata, prompts,
-                         fast=False, allow_error=False, caches=cache_dict)
+                         fast=False, allow_error=False, caches=cache_dict, created_project_dir=created_project_dir, template_project_dir=template_project_dir)
             print("Generating Definitions:")
             code_filling("definition", proj_name, metadata, prompts,
-                         fast=False, allow_error=False, caches=cache_dict)
+                         fast=False, allow_error=False, caches=cache_dict, created_project_dir=created_project_dir, template_project_dir=template_project_dir)
             print("Generating Dummy Functions:")
             code_filling("dummy_function", proj_name, metadata, prompts,
-                         fast=False, allow_error=False, caches=cache_dict)
+                         fast=True, allow_error=False, caches=cache_dict, created_project_dir=created_project_dir, template_project_dir=template_project_dir)
             print("Generating Functions:")
             output = code_filling("function", proj_name,
-                                  metadata, prompts, fast=False, allow_error=True, caches=cache_dict)
+                                  metadata, prompts, fast=False, allow_error=True, caches=cache_dict, created_project_dir=created_project_dir, template_project_dir=template_project_dir)
         else:
             print("Generating Macros:")
             code_filling("macro", proj_name, metadata, prompts,
-                         fast=False, allow_error=False, caches=cache_dict)
+                         fast=False, allow_error=False, caches=cache_dict, created_project_dir=created_project_dir, template_project_dir=template_project_dir)
             print("Generating Macro Functions:")
             code_filling("macro_function", proj_name, metadata, prompts,
-                         fast=False, allow_error=False, caches=cache_dict)
+                         fast=False, allow_error=False, caches=cache_dict, created_project_dir=created_project_dir, template_project_dir=template_project_dir)
             print("Generating Definitions:")
             code_filling("definition", proj_name, metadata, prompts, fast=False, optimizations=[
                 OptimizationAgent(proj_name, metadata,
-                                  definition_replace, override=False)
-            ], allow_error=False, caches=cache_dict)
+                                  definition_replace, override=False, created_project_dir=created_project_dir, template_project_dir=template_project_dir)
+            ], allow_error=False, caches=cache_dict, created_project_dir=created_project_dir, template_project_dir=template_project_dir)
             print("Generating Dummy Functions:")
             code_filling("dummy_function", proj_name, metadata, prompts,
-                         fast=False, allow_error=False, caches=cache_dict)
+                         fast=True, allow_error=False, caches=cache_dict, created_project_dir=created_project_dir, template_project_dir=template_project_dir)
             print("Generating Functions:")
             output = code_filling("function", proj_name, metadata, prompts, fast=False, optimizations=[
                 OptimizationAgent(proj_name, metadata,
-                                  struct_index_advancement, override=False),
+                                  struct_index_advancement, override=False, created_project_dir=created_project_dir, template_project_dir=template_project_dir),
                 OptimizationAgent(proj_name, metadata,
-                                  implicit_casting_removal, override=True),
+                                  implicit_casting_removal, override=True, created_project_dir=created_project_dir, template_project_dir=template_project_dir),
                 OptimizationAgent(proj_name, metadata,
-                                  as_bool_removal, override=True),
-            ], allow_error=True, caches=cache_dict)
+                                  as_bool_removal, override=True, created_project_dir=created_project_dir, template_project_dir=template_project_dir),
+            ], allow_error=True, caches=cache_dict, created_project_dir=created_project_dir, template_project_dir=template_project_dir)
 
         error_cnt = len(output)
         all_cnt = len(metadata.get_all("function"))
@@ -326,5 +328,5 @@ if __name__ == "__main__":
         with open(os.path.join(PARENT_DIR, args.output_path), "w", encoding="utf-8",) as f:
             json.dump(report, f)
         output_project_dir = os.path.join(PARENT_DIR, args.output_project_path)
-        proj = RustProject(proj_name, metadata,
-                           output_project_dir, no_timestamp=True)
+        proj = RustProject(proj_name, metadata, 
+                           output_project_dir, template_project_dir, no_timestamp=True)

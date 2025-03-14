@@ -9,12 +9,6 @@ from rust_metadata.classes import *
 from rust_metadata.rust_metadata import resolve_metadata
 from misc.exceptions import RustProjectCompilationFailedError
 
-
-template_project_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "project_template")
-created_project_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "created_project")
-
-
-
 def create_under_current_dir(dir_path: str, rpath: RustPath):
     if rpath.type == "folder":
         os.makedirs(f"{dir_path}/{rpath.name}", exist_ok=True)
@@ -51,17 +45,18 @@ def create_under_current_dir_full(dir_path: str, rpath: RustPath):
 
 
 class RustProject:
-    def __init__(self, name: str, metadata: RustProjectMetadata, parent_dir=created_project_dir, no_timestamp=False):
+    def __init__(self, name: str, metadata: RustProjectMetadata, parent_dir="./created_project", template_project_dir="./template_project", no_timestamp=False):
         if no_timestamp:
             self.dir_path = os.path.join(parent_dir, f"{name}")
         else:
             self.dir_path = os.path.join(parent_dir, f"{name}_{int(time.time() * 1000)}")
+        self.template_project_dir = template_project_dir
         self.metadata = metadata
         self.create_project()    
     
     def create_project(self):
         os.makedirs(self.dir_path, exist_ok=True)
-        shutil.copytree(template_project_dir, self.dir_path, dirs_exist_ok=True)
+        shutil.copytree(self.template_project_dir, self.dir_path, dirs_exist_ok=True)
         paths = self.metadata.paths
         for k, v in paths.items():
             create_under_current_dir(os.path.join(self.dir_path, "src"), v)
@@ -75,7 +70,7 @@ class RustProject:
             error_msg = result.stderr.decode("utf-8")
             return False, error_msg
 
-def c_metadata_to_rust_metadata(proj_name, c_metadata_dir="./c_metadata", rust_metadata_dir="./rust_metadata", created_project_dir="./created_project"):
+def c_metadata_to_rust_metadata(proj_name, c_metadata_dir="./c_metadata", rust_metadata_dir="./rust_metadata", created_project_dir="./created_project", template_project_dir="./template_project"):
     with open(os.path.join(c_metadata_dir, proj_name, "files.json"), "r") as f:
         files_data = json.load(f)
     with open(
@@ -94,7 +89,7 @@ def c_metadata_to_rust_metadata(proj_name, c_metadata_dir="./c_metadata", rust_m
     print(
         f"Rust project `{proj_name}` metadata stored at {os.path.join(c_metadata_dir, proj_name)}"
     )
-    proj = RustProject(proj_name, metadata, created_project_dir)
+    proj = RustProject(proj_name, metadata, created_project_dir, template_project_dir)
     print(f"Create rust project `{proj_name}` at {proj.dir_path}")
     success, error_msg = proj.build_project()
     if success:

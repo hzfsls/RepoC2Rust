@@ -6,13 +6,6 @@ from tqdm import tqdm
 from misc.exceptions import CallLLMTimeoutError
 
 from rust_metadata.classes import RustCode
-# client = OpenAI(
-#     api_key="sk-76da526dbd8b48c3954df9336a8a6592",
-#     base_url="https://api.deepseek.com/beta",
-#     http_client=Client(
-#         verify=False  # 注意：禁用 SSL 验证可能有安全风险，请根据实际情况决定是否需要这样做
-#     ),
-# )
 
 class GenerationClient:
     def __init__(self, api_key, base_url="https://api.deepseek.com/beta", proxy=None):

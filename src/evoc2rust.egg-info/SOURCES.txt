@@ -1,0 +1,17 @@
+README.md
+pyproject.toml
+src/c_metadata/c_metadata.py
+src/c_metadata/preprocess.py
+src/c_metadata/remove_comment.py
+src/evoc2rust.egg-info/PKG-INFO
+src/evoc2rust.egg-info/SOURCES.txt
+src/evoc2rust.egg-info/dependency_links.txt
+src/evoc2rust.egg-info/requires.txt
+src/evoc2rust.egg-info/top_level.txt
+src/llm_gen/cache.py
+src/llm_gen/generation.py
+src/misc/exceptions.py
+src/optimization_agent/classes.py
+src/rust_metadata/classes.py
+src/rust_metadata/rust_metadata.py
+src/rust_metadata/rust_project_creation.py

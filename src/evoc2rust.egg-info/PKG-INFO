@@ -1,0 +1,11 @@
+Metadata-Version: 2.2
+Name: evoc2rust
+Version: 0.0.1
+License: MIT
+Requires-Python: >=3.9
+Requires-Dist: tree-sitter==0.22.3
+Requires-Dist: tree-sitter-c==0.21.4
+Requires-Dist: openai>=1.65.4
+Requires-Dist: pebble>=5.1.0
+Requires-Dist: httpx>=0.28.1
+Requires-Dist: tqdm>=4.67.1
