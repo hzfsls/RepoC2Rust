@@ -1,13 +1,7 @@
 {
     "All": 33,
-    "Compilation Pass": 32,
-    "Compilation Error": 1,
-    "Pass Rate": 0.9696969696969697,
-    "Error Information": [
-        {
-            "c_code": "void VosAvlSwapRightMost(AVLBASE_TREE_S *pstTree, AVLBASE_NODE_S *pstSubTree, AVLBASE_NODE_S *pstNode)\n{\n    AVLBASE_NODE_S *pstSwapNode = pstSubTree;\n    AVLBASE_NODE_S *pstSwapParent;\n    AVLBASE_NODE_S *pstSwapLeft;\n\n    FIND_RIGHTMOST_NODE(pstSwapNode);\n\n    if ((pstSwapNode->sRHeight != 0) || (pstSwapNode->sLHeight > 1))\n    {\n        return;\n    }\n\n    pstSwapParent = pstSwapNode->pstParent;\n    pstSwapLeft = pstSwapNode->pstLeft;\n\n    VosAvlUpdateSwapNode(pstTree, pstSwapNode, pstNode);\n    VosAvlMoveNodeToNewPos(pstNode, pstSwapParent, pstSwapLeft, AVL_NULL_PTR);\n\n    pstNode->pstParent->pstRight = pstNode;\n\n    return;\n}",
-            "rust_code": "pub fn VosAvlSwapRightMost(mut pstTree: Ptr<AVLBASE_TREE_S>, mut pstSubTree: Ptr<AVLBASE_NODE_S>, mut pstNode: Ptr<AVLBASE_NODE_S>) {\n    let mut pstSwapNode: Ptr<AVLBASE_NODE_S> = pstSubTree;\n    let mut pstSwapParent: Ptr<AVLBASE_NODE_S> = Default::default();\n    let mut pstSwapLeft: Ptr<AVLBASE_NODE_S> = Default::default();\n\n    FIND_RIGHTMOST_NODE!(pstSwapNode);\n\n    if ((pstSwapNode.sRHeight != 0) || (pstSwapNode.sLHeight > 1) {\n        return;\n    }\n\n    pstSwapParent = pstSwapNode.pstParent;\n    pstSwapLeft = pstSwapNode.pstLeft;\n\n    VosAvlUpdateSwapNode(pstTree, pstSwapNode, pstNode);\n    VosAvlMoveNodeToNewPos(pstNode, pstSwapParent, pstSwapLeft, AVL_NULL_PTR!());\n\n    pstNode.pstParent.pstRight = pstNode;\n\n    return;\n}\n",
-            "error_msg": "    Checking my_proj v0.1.0 (/home/ytr/RepoC2Rust/created_project/avl_1741898593880)\nerror: mismatched closing delimiter: `}`\n   --> src/src/v_avlbase_c.rs:101:8\n    |\n94  | pub fn VosAvlSwapRightMost(mut pstTree: Ptr<AVLBASE_TREE_S>, mut pstSubTree: Ptr<AVLBASE_NODE_S>, mut pstNode: Ptr<AVLBASE_NODE_S>) {\n    |                                                                                                                                     - closing delimiter possibly meant for this\n...\n101 |     if ((pstSwapNode.sRHeight != 0).as_bool() || (pstSwapNode.sLHeight > 1).as_bool() {\n    |        ^ unclosed delimiter\n...\n114 | }\n    | ^ mismatched closing delimiter\n\nerror: could not compile `my_proj` (lib) due to 1 previous error\n"
-        }
-    ]
+    "Compilation Pass": 33,
+    "Compilation Error": 0,
+    "Pass Rate": 1.0,
+    "Error Information": []
 }

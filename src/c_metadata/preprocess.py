@@ -99,35 +99,3 @@ def preprocess(src_folder: str, dirs: list[str], macros: dict[str, str] = {}, re
     files = clang_format_files(files)
     try_parse(files)
     return files
-
-project_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "data")
-c_metadata_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "c_metadata")
-
-if __name__ == "__main__":
-    for project_name in ["avl", "bzp", "cmptlz", "rapidlz", "md5", "sha256"]:
-        files = preprocess(os.path.join(project_dir, project_name), ["include", "src"],
-            macros = {"ALWAYS_INLINE": "inline", "ALWAYS_NO_INLINE": "", "STATIC": "static", "HIDDEN": "", "CMPTLZ_HIDDEN":"", "TARGET_ATTRIBUTE_AUTO":"",
-                "RAPIDLZ_ALWAYS_INLINE": "inline", "CSTL_STATIC": "static", "DT_EXPORT": ""},
-            replacements = {
-                "__asm": "asm",
-                "args...": "...",
-                "##args": "__VA_ARGS__",
-                "#if __cplusplus\nextern \"C\" {\n#endif": "extern \"C\" {\n",
-                "#if __cplusplus\n}\n#endif": "}\n",
-                "#if __cplusplus\n}\n\n#endif": "}\n",
-            })
-        metadata = get_metadata(files)
-        declarations_location = {}
-        for f in metadata:
-            for func in metadata[f].functions:
-                declarations_location[func] = f
-            for global_var in metadata[f].global_variables:
-                declarations_location[global_var] = f
-        os.makedirs(os.path.join(c_metadata_dir, project_name), exist_ok=True)
-        print(f"Project `{project_name}` resolve succeeded!")
-        with open(os.path.join(c_metadata_dir, project_name, "files.json"), "w") as f:
-            f.write(json.dumps(metadata, default=lambda o: o.__dict__(), indent=4, ensure_ascii=False))
-        with open(os.path.join(c_metadata_dir, project_name, "declarations_location.json"), "w") as f:
-            f.write(json.dumps(declarations_location, indent=4, ensure_ascii=False))\
-
-            

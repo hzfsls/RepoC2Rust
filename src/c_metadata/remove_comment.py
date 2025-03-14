@@ -90,9 +90,3 @@ def preprocess(src_folder: str, dirs: list[str], tgt_folder: str) -> dict[str, s
     format_all_files(tgt_folder, dirs)
     result = get_all_files(tgt_folder, dirs)
     return result
-
-if __name__ == "__main__":
-    result = preprocess("data/crypto-algorithms", ["src"], "preprocessed_data/crypto-algorithms")
-    print(result)
-    with open("data.json", "w") as f:
-        json.dump(result, f, ensure_ascii=False, indent=4)

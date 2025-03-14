@@ -7,6 +7,7 @@ import subprocess
 
 from rust_metadata.classes import *
 from rust_metadata.rust_metadata import resolve_metadata
+from misc.exceptions import RustProjectCompilationFailedError
 
 
 template_project_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "project_template")
@@ -74,28 +75,31 @@ class RustProject:
             error_msg = result.stderr.decode("utf-8")
             return False, error_msg
 
-c_metadata_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "c_metadata")
-rust_metadata_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "rust_metadata")
+def c_metadata_to_rust_metadata(proj_name, c_metadata_dir="./c_metadata", rust_metadata_dir="./rust_metadata", created_project_dir="./created_project"):
+    with open(os.path.join(c_metadata_dir, proj_name, "files.json"), "r") as f:
+        files_data = json.load(f)
+    with open(
+        os.path.join(c_metadata_dir, proj_name, "declarations_location.json"),
+        "r",
+    ) as f:
+        declarations_data = json.load(f)
+    metadata = resolve_metadata(files_data, declarations_data)
+    os.makedirs(os.path.join(rust_metadata_dir, proj_name), exist_ok=True)
+    with open(os.path.join(rust_metadata_dir, proj_name, "metadata.json"), "w") as f:
+        json.dump(metadata.__dict__(), f, indent=4)
 
-if __name__ == "__main__":
-    for proj_name in ["avl", "bzp", "cmptlz", "rapidlz", "md5", "sha256"]:
-        with open(os.path.join(c_metadata_dir, proj_name, "files.json"), "r") as f:
-            files_data = json.load(f)
-        with open(os.path.join(c_metadata_dir, proj_name, "functions.json"), "r") as f:
-            functions_data = json.load(f)
-        metadata = resolve_metadata(files_data, functions_data)
-        os.makedirs(os.path.join(rust_metadata_dir, proj_name), exist_ok=True)
-        with open(os.path.join(rust_metadata_dir, proj_name, "metadata.json"), "w") as f:
-            json.dump(metadata.__dict__(), f, indent=4)
-        with open(os.path.join(rust_metadata_dir, proj_name, "metadata.json"), "r") as f:
-            files_data = json.load(f)
-        metadata = RustProjectMetadata.from_dict(files_data)
-        proj = RustProject(proj_name, metadata)
-        print(f"Create rust project `{proj_name}` at {proj.dir_path}")
-        success, error_msg = proj.build_project()
-        if success:
-            print(f"{proj_name} build succeed!")
-        else:
-            print(f"{proj_name} build fail!")
-            print(error_msg)
-
+    with open(os.path.join(rust_metadata_dir, proj_name, "metadata.json"), "r") as f:
+        files_data = json.load(f)
+    metadata = RustProjectMetadata.from_dict(files_data)
+    print(
+        f"Rust project `{proj_name}` metadata stored at {os.path.join(c_metadata_dir, proj_name)}"
+    )
+    proj = RustProject(proj_name, metadata, created_project_dir)
+    print(f"Create rust project `{proj_name}` at {proj.dir_path}")
+    success, error_msg = proj.build_project()
+    if success:
+        print(
+            f"Rust skeleton project {proj_name}(at {proj.dir_path}) build succeeded!")
+    else:
+        raise RustProjectCompilationFailedError(error_msg)
+    return metadata

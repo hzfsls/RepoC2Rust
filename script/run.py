@@ -2,19 +2,14 @@ import os
 import json
 
 from tqdm import tqdm
-from pebble import ProcessPool
 
-from c_metadata.c_metadata import get_metadata
-from c_metadata.preprocess import preprocess
-from rust_metadata.rust_metadata import resolve_metadata
-from rust_metadata.rust_project_creation import RustProject, RustProjectMetadata
-from rust_metadata.classes import RustCode
+from c_metadata.c_metadata import extract_c_metadata_from_project
+from rust_metadata.rust_project_creation import RustProject, c_metadata_to_rust_metadata
 
-from llm_gen.definition_translation import get_our_result_definition
-from llm_gen.function_translation import get_our_result_function
-from llm_gen.macro_translation import get_our_result_macro
-from llm_gen.macro_function_translation import get_our_result_macro_function
-from llm_gen.dummy_function_translation import get_our_result_dummy_function
+from llm_gen.generation import GenerationClient, update_codes
+from llm_gen.cache import LLMGenerationCache
+
+from misc.exceptions import RustProjectCompilationFailedError
 
 from optimization_agent.classes import OptimizationAgent
 
@@ -22,13 +17,7 @@ import argparse
 
 PARENT_DIR = os.path.dirname(os.path.dirname(__file__))
 
-project_dir = ""
-c_metadata_dir = ""
-rust_metadata_dir = ""
-project_template_dir = ""
-created_project_dir = ""
-global_cache_dir = ""
-
+client = GenerationClient(api_key="sk-76da526dbd8b48c3954df9336a8a6592", base_url="https://api.deepseek.com/beta")
 
 def implicit_casting_removal(code):
     ret = []
@@ -101,160 +90,16 @@ def definition_replace(code):
         return []
 
 
-##
-
-
-class Cache:
-    def __init__(self, cache_dir, name):
-        self.path = os.path.join(cache_dir, name)
-        self.cache_index = {}
-        self.cache = {}
-        if not os.path.exists(self.path):
-            os.makedirs(self.path)
-            with open(os.path.join(self.path, f"index.json"), "w") as f:
-                json.dump({}, f)
-        else:
-            with open(os.path.join(self.path, f"index.json"), "r") as f:
-                self.cache_index = json.load(f)
-            for k, path in self.cache_index.items():
-                with open(os.path.join(self.path, path, "result.rs"), "r") as f:
-                    self.cache[k] = f.read()
-
-    def update(self, key, value):
-        if key in self.cache_index:
-            new_idx = self.cache_index[key]
-        else:
-            new_idx = str(len(self.cache))
-            os.makedirs(os.path.join(self.path, str(new_idx)))
-        self.cache_index[key] = new_idx
-        self.cache[key] = value
-        with open(os.path.join(self.path, str(new_idx), "result.rs"), "w") as f:
-            f.write(value)
-        with open(os.path.join(self.path, f"index.json"), "w") as f:
-            json.dump(self.cache_index, f)
-
-
-class RustProjectCompilationFailedError(Exception):
-    pass
-
-
-class CallLLMTimeoutError(Exception):
-    pass
-
-
-global_cache_dict = {
-    "macro": None,
-    "macro_function": None,
-    "definition": None,
-    "dummy_function": None,
-    "function": None
-}
-
-
-def update_codes(type, codes: list[RustCode]):
-    llm_functions = {
-        "macro": get_our_result_macro,
-        "macro_function": get_our_result_macro_function,
-        "definition": get_our_result_definition,
-        "dummy_function": get_our_result_dummy_function,
-        "function": get_our_result_function,
-    }
-    get_our_result = llm_functions[type]
-    cache = global_cache_dict[type]
-    if len(codes) == 1:
-        c = codes[0]
-        c.rust_code = get_our_result(c.c_code, cache.cache)
-        cache.update(c.c_code, c.rust_code)
-    else:
-        with ProcessPool(max_workers=20) as pool:
-            futures = []
-            for c in codes:
-                future = pool.schedule(
-                    get_our_result, args=[c.c_code, cache.cache], timeout=300
-                )
-                futures.append((c, future))
-            for c, future in tqdm(futures):
-                try:
-                    rust_code = future.result()
-                    c.rust_code = rust_code
-                    cache.update(c.c_code, c.rust_code)
-                except Exception as e:
-                    raise CallLLMTimeoutError(e)
-
-
-def extract_c_metadata_from_project(proj_name, src_folders, macros, replacements):
-    files = preprocess(
-        os.path.join(project_dir, proj_name), src_folders, macros, replacements
-    )
-    metadata = get_metadata(files)
-    declarations_location = {}
-    for f in metadata:
-        for func in metadata[f].functions:
-            declarations_location[func] = f
-        for global_var in metadata[f].global_variables:
-            declarations_location[global_var] = f
-        for type in metadata[f].types:
-            if type != "":
-                declarations_location[type] = f
-    os.makedirs(os.path.join(c_metadata_dir, proj_name), exist_ok=True)
-    print(f"C project `{proj_name}` resolve succeeded!")
-    with open(os.path.join(c_metadata_dir, proj_name, "files.json"), "w") as f:
-        f.write(
-            json.dumps(
-                metadata,
-                default=lambda o: o.__dict__(),
-                indent=4,
-                ensure_ascii=False,
-            )
-        )
-    with open(
-        os.path.join(c_metadata_dir, proj_name, "declarations_location.json"),
-        "w",
-    ) as f:
-        f.write(json.dumps(declarations_location, indent=4, ensure_ascii=False))
-    print(
-        f"C project `{proj_name}` metadata stored at {os.path.join(c_metadata_dir, proj_name)}"
-    )
-
-
-def c_metadata_to_rust_metadata(proj_name):
-    with open(os.path.join(c_metadata_dir, proj_name, "files.json"), "r") as f:
-        files_data = json.load(f)
-    with open(
-        os.path.join(c_metadata_dir, proj_name, "declarations_location.json"),
-        "r",
-    ) as f:
-        declarations_data = json.load(f)
-    metadata = resolve_metadata(files_data, declarations_data)
-    os.makedirs(os.path.join(rust_metadata_dir, proj_name), exist_ok=True)
-    with open(os.path.join(rust_metadata_dir, proj_name, "metadata.json"), "w") as f:
-        json.dump(metadata.__dict__(), f, indent=4)
-
-    with open(os.path.join(rust_metadata_dir, proj_name, "metadata.json"), "r") as f:
-        files_data = json.load(f)
-    metadata = RustProjectMetadata.from_dict(files_data)
-    print(
-        f"Rust project `{proj_name}` metadata stored at {os.path.join(c_metadata_dir, proj_name)}"
-    )
-    proj = RustProject(proj_name, metadata, created_project_dir)
-    print(f"Create rust project `{proj_name}` at {proj.dir_path}")
-    success, error_msg = proj.build_project()
-    if success:
-        print(
-            f"Rust skeleton project {proj_name}(at {proj.dir_path}) build succeeded!")
-    else:
-        raise RustProjectCompilationFailedError(error_msg)
-    return metadata
-
-
 def code_filling(
     type,
     proj_name,
     metadata,
+    prompts,
     fast=False,
     fast_end_idx=-1,
     optimizations=[],
-    allow_error=False
+    allow_error=False,
+    caches={}
 ):
     get_name = {
         "macro": "macro",
@@ -265,13 +110,13 @@ def code_filling(
     }
     print(f"Start {type} filling and compilation verification.")
     codes = metadata.get_all(get_name[type])
-    cache = global_cache_dict[type]
+    cache = caches[type]
     output = []
     if not fast:
         for c in tqdm(codes):
             if allow_error:
                 original_code = c.rust_code
-            update_codes(type, [c])
+            update_codes(type, client, prompts, [c], caches)
             curr_cache_path = os.path.join(
                 cache.path, cache.cache_index[c.c_code], "result.rs"
             )
@@ -301,7 +146,7 @@ def code_filling(
                     cache.update(c.c_code, c.rust_code)
     else:
         if fast_end_idx == -1 or fast_end_idx >= len(codes):
-            update_codes(type, codes)
+            update_codes(type, client, prompts, codes, caches)
             proj = RustProject(proj_name, metadata, created_project_dir)
             success, error_msg = proj.build_project()
             if not success:
@@ -312,7 +157,7 @@ def code_filling(
                     # print(error_msg)
         else:
             fast_filling_codes = codes[:fast_end_idx]
-            update_codes(type, fast_filling_codes)
+            update_codes(type, client, prompts, fast_filling_codes, caches)
             proj = RustProject(proj_name, metadata, created_project_dir)
             success, error_msg = proj.build_project()
             if not success:
@@ -323,7 +168,7 @@ def code_filling(
                     # print(error_msg)
             remaining_codes = codes[fast_end_idx:]
             for c in tqdm(remaining_codes):
-                update_codes(type, [c])
+                update_codes(type, client, prompts, [c], caches)                
                 curr_cache_path = os.path.join(
                     cache.path, cache.cache_index[c.c_code], "result.rs"
                 )
@@ -356,10 +201,7 @@ if __name__ == "__main__":
                         default="include, src",        help="Source file folder of your project.")
     parser.add_argument("--c_metadata_dir",        type=str,
                         default="./c_metadata",        help="Folder that stores c project metadata.")
-    parser.add_argument("--macro_dict_path",        type=str,        default="./config/macro.json",
-                        help="Json config file that declare the special macros in C projects to be replaced")
-    parser.add_argument("--replacement_dict_path",        type=str,        default="./config/replacement.json",
-                        help="Json config file that declare the special strings in C projects to be replaced")
+    parser.add_argument("--config_dir",        type=str,        default="./config", help="Folder that stores tool configurations.")  
     parser.add_argument("--rust_metadata_dir",        type=str,
                         default="./rust_metadata",        help="Folder that stores rust project metadata.")
     parser.add_argument("--project_template_dir",        type=str,        default="./project_template",
@@ -381,6 +223,7 @@ if __name__ == "__main__":
                         default="./final_project",        help="Output rust project path")
 
     args = parser.parse_args()
+
     project_dir = os.path.join(PARENT_DIR, args.project_dir)
     c_metadata_dir = os.path.join(PARENT_DIR, args.c_metadata_dir)
     rust_metadata_dir = os.path.join(PARENT_DIR, args.rust_metadata_dir)
@@ -388,85 +231,88 @@ if __name__ == "__main__":
     created_project_dir = os.path.join(PARENT_DIR, args.created_project_dir)
     global_cache_dir = os.path.join(PARENT_DIR, args.cache_dir)
 
-    global_cache_dict = {
-        "macro": Cache(global_cache_dir, "macro"),
-        "macro_function": Cache(global_cache_dir, "macro_function"),
-        "definition": Cache(global_cache_dir, "definition"),
-        "dummy_function": Cache(global_cache_dir, "dummy_function"),
-        "function": Cache(global_cache_dir, "function"),
+    cache_dict = {
+        "macro": LLMGenerationCache(global_cache_dir, "macro"),
+        "macro_function": LLMGenerationCache(global_cache_dir, "macro_function"),
+        "definition": LLMGenerationCache(global_cache_dir, "definition"),
+        "dummy_function": LLMGenerationCache(global_cache_dir, "dummy_function"),
+        "function": LLMGenerationCache(global_cache_dir, "function"),
     }
 
-    with open(os.path.join(PARENT_DIR, args.macro_dict_path), "r", encoding="utf-8",) as f:
+    with open(os.path.join(PARENT_DIR, args.config_dir, "macro.json"), "r", encoding="utf-8") as f:
         macro_dict = json.load(f)
 
-    with open(os.path.join(PARENT_DIR, args.replacement_dict_path), "r", encoding="utf-8",) as f:
+    with open(os.path.join(PARENT_DIR, args.config_dir, "replacement.json"), "r", encoding="utf-8") as f:
         replacement_dict = json.load(f)
-
+    
+    prompts = {}
+    for type in ["macro", "macro_function", "definition", "dummy_function", "function"]:
+        with open(os.path.join(PARENT_DIR, args.config_dir, "prompts", f"{type}.txt"), "r", encoding="utf-8") as f:
+            prompts[type] = f.read().strip()
+    
     proj_name = args.project_name
-    project_src_folders = [k.strip()
-                           for k in args.project_src_folders.split(",")]
+    project_src_folders = [k.strip() for k in args.project_src_folders.split(",")]
 
-    extract_c_metadata_from_project(
-        proj_name, project_src_folders, macro_dict, replacement_dict)
+    extract_c_metadata_from_project(proj_name, project_dir=project_dir, c_metadata_dir=c_metadata_dir, src_folders=project_src_folders, macros=macro_dict, replacements=replacement_dict)
 
-    metadata = c_metadata_to_rust_metadata(proj_name)
+    metadata = c_metadata_to_rust_metadata(proj_name, c_metadata_dir=c_metadata_dir, rust_metadata_dir=rust_metadata_dir, created_project_dir=created_project_dir)
 
     if args.generation_only:
         print("Generating Macros:")
-        code_filling("macro", proj_name, metadata, fast=True, allow_error=True)
+        code_filling("macro", proj_name, metadata, prompts, fast=True, allow_error=True, caches=cache_dict)
         print("Generating Macro Functions:")
         code_filling("macro_function", proj_name,
-                     metadata, fast=True, allow_error=True)
+                     metadata, prompts, fast=True, allow_error=True, caches=cache_dict)
         print("Generating Definitions:")
-        code_filling("definition", proj_name, metadata,
-                     fast=True, allow_error=True)
+        code_filling("definition", proj_name, metadata, prompts,
+                     fast=True, allow_error=True, caches=cache_dict)
         print("Generating Dummy Functions:")
         code_filling("dummy_function", proj_name,
-                     metadata, fast=True, allow_error=True)
+                     metadata, prompts, fast=True, allow_error=True, caches=cache_dict)
         print("Generating Functions:")
-        code_filling("function", proj_name, metadata,
-                     fast=True, allow_error=True)
+        code_filling("function", proj_name, metadata, prompts,
+                     fast=True, allow_error=True, caches=cache_dict)
     else:
         if not args.post_fixing:
             print("Generating Macros:")
-            code_filling("macro", proj_name, metadata,
-                         fast=False, allow_error=False)
+            code_filling("macro", proj_name, metadata, prompts,
+                         fast=False, allow_error=False, caches=cache_dict)
             print("Generating Macro Functions:")
-            code_filling("macro_function", proj_name, metadata,
-                         fast=False, allow_error=False)
+            code_filling("macro_function", proj_name, metadata, prompts,
+                         fast=False, allow_error=False, caches=cache_dict)
             print("Generating Definitions:")
-            code_filling("definition", proj_name, metadata,
-                         fast=False, allow_error=False)
+            code_filling("definition", proj_name, metadata, prompts,
+                         fast=False, allow_error=False, caches=cache_dict)
             print("Generating Dummy Functions:")
-            code_filling("dummy_function", proj_name, metadata,
-                         fast=False, allow_error=False)
+            code_filling("dummy_function", proj_name, metadata, prompts,
+                         fast=False, allow_error=False, caches=cache_dict)
             print("Generating Functions:")
             output = code_filling("function", proj_name,
-                                  metadata, fast=False, allow_error=True)
+                                  metadata, prompts, fast=False, allow_error=True, caches=cache_dict)
         else:
             print("Generating Macros:")
-            code_filling("macro", proj_name, metadata,
-                         fast=True, allow_error=False)
+            code_filling("macro", proj_name, metadata, prompts,
+                         fast=False, allow_error=False, caches=cache_dict)
             print("Generating Macro Functions:")
-            code_filling("macro_function", proj_name, metadata,
-                         fast=True, allow_error=False)
+            code_filling("macro_function", proj_name, metadata, prompts,
+                         fast=False, allow_error=False, caches=cache_dict)
             print("Generating Definitions:")
-            code_filling("definition", proj_name, metadata, fast=True, optimizations=[
+            code_filling("definition", proj_name, metadata, prompts, fast=False, optimizations=[
                 OptimizationAgent(proj_name, metadata,
                                   definition_replace, override=False)
-            ], allow_error=False)
+            ], allow_error=False, caches=cache_dict)
             print("Generating Dummy Functions:")
-            code_filling("dummy_function", proj_name, metadata,
-                         fast=True, allow_error=False)
+            code_filling("dummy_function", proj_name, metadata, prompts,
+                         fast=False, allow_error=False, caches=cache_dict)
             print("Generating Functions:")
-            output = code_filling("function", proj_name, metadata, fast=False, optimizations=[
+            output = code_filling("function", proj_name, metadata, prompts, fast=False, optimizations=[
                 OptimizationAgent(proj_name, metadata,
                                   struct_index_advancement, override=False),
                 OptimizationAgent(proj_name, metadata,
                                   implicit_casting_removal, override=True),
                 OptimizationAgent(proj_name, metadata,
                                   as_bool_removal, override=True),
-            ], allow_error=True)
+            ], allow_error=True, caches=cache_dict)
 
         error_cnt = len(output)
         all_cnt = len(metadata.get_all("function"))

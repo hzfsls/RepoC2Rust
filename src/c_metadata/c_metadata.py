@@ -5,7 +5,7 @@ from tree_sitter import Language, Parser, Tree, Node
 import os
 import json
 
-from c_metadata.remove_comment import preprocess
+from c_metadata.preprocess import preprocess
 
 c_language = Language(ts_c.language())
 c_parser = Parser(c_language)
@@ -233,10 +233,37 @@ class CFileMetadata:
                 for i in range(chind_cnt):
                     self.parse_node(node.child(i))
     
-if __name__ == "__main__":
-    proj_name = "bzp"
-    data = preprocess(f"data/{proj_name}", ["include", "src"], f"preprocessed_data/{proj_name}")
-    metadata = get_metadata(data)
-    recreate_files_from_metadata(metadata, f"recreated_data/{proj_name}")
-    with open("metadata.json", "w") as f:
-        json.dump(metadata, f, default=lambda o: o.__dict__(), indent=4, ensure_ascii=False)
+
+def extract_c_metadata_from_project(proj_name, project_dir="./data", c_metadata_dir="./c_metadata", src_folders = ["include", "src"], macros = {}, replacements = {}):
+    files = preprocess(
+        os.path.join(project_dir, proj_name), src_folders, macros, replacements
+    )
+    metadata = get_metadata(files)
+    declarations_location = {}
+    for f in metadata:
+        for func in metadata[f].functions:
+            declarations_location[func] = f
+        for global_var in metadata[f].global_variables:
+            declarations_location[global_var] = f
+        for type in metadata[f].types:
+            if type != "":
+                declarations_location[type] = f
+    os.makedirs(os.path.join(c_metadata_dir, proj_name), exist_ok=True)
+    print(f"C project `{proj_name}` resolve succeeded!")
+    with open(os.path.join(c_metadata_dir, proj_name, "files.json"), "w") as f:
+        f.write(
+            json.dumps(
+                metadata,
+                default=lambda o: o.__dict__(),
+                indent=4,
+                ensure_ascii=False,
+            )
+        )
+    with open(
+        os.path.join(c_metadata_dir, proj_name, "declarations_location.json"),
+        "w",
+    ) as f:
+        f.write(json.dumps(declarations_location, indent=4, ensure_ascii=False))
+    print(
+        f"C project `{proj_name}` metadata stored at {os.path.join(c_metadata_dir, proj_name)}"
+    )
