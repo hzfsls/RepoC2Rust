@@ -6,18 +6,18 @@ from tqdm import tqdm
 from c_metadata.c_metadata import extract_c_metadata_from_project
 from rust_metadata.rust_project_creation import RustProject, c_metadata_to_rust_metadata
 
-from llm_gen.generation import GenerationClient, update_codes
+from llm_gen.generation import GenerationClient, update_codes, get_repair_candidates, get_delim_repair_candidates
 from llm_gen.cache import LLMGenerationCache
 
 from misc.exceptions import RustProjectCompilationFailedError
 
-from optimization_agent.classes import OptimizationAgent
+from optimization_agent.classes import OptimizationAgent, OptimizationAgentWithCompilerFeedback
 
 import argparse
 
 PARENT_DIR = os.path.dirname(os.path.dirname(__file__))
 
-client = GenerationClient(api_key="", base_url="")
+client = GenerationClient(api_key="sk-76da526dbd8b48c3954df9336a8a6592", base_url="https://api.deepseek.com/beta")
 
 def implicit_casting_removal(code):
     ret = []
@@ -77,6 +77,43 @@ def struct_index_advancement(code):
             )
     return ret
 
+def fix_mismatched_delim(code, compiler_msg):
+    if "unclosed delimiter" not in compiler_msg:
+        return []
+    else:
+        return get_delim_repair_candidates(client, code, compiler_msg)
+
+def llm_try_repair(code, compiler_msg):
+    print(compiler_msg)
+    if compiler_msg == "":
+        return []
+    return get_repair_candidates(client, code, compiler_msg)
+
+# def field_function_paren(code):
+#     import re
+
+#     code_lines = code.split("\n")
+#     ret = []
+#     for i1, line in enumerate(code_lines):
+#         match = list(re.finditer(r"[a-zA-Z0-9_\.]+\.[a-zA-Z0-9_]+\(", line))
+#         if len(match) > 0:
+#             new_code_lines = []
+#             new_line = ""
+#             curr_start = 0
+#             for idx, x in enumerate(match):
+#                 start, end = x.start(), x.end()
+#                 new_line += line[curr_start:start]
+#                 new_line += "("
+#                 new_line += line[start:end-1]
+#                 new_line += ")("
+#                 curr_start = end
+#             new_line += line[curr_start:]
+#             new_code_lines.append(new_line)
+#             ret.append(
+#                 "\n".join(code_lines[:i1] +
+#                           new_code_lines + code_lines[i1 + 1:])
+#             )
+#     return ret
 
 def definition_replace(code):
     if "#[derive(Default, Clone, Copy)]" in code:
@@ -138,7 +175,9 @@ def code_filling(
                         tuple = {
                             "c_code": c.c_code,
                             "rust_code": c.rust_code,
-                            "error_msg": original_error_msg,
+                            "original_error_msg": original_error_msg,
+                            "optimized_code": curr_code,
+                            "error_msg": error_msg
                         }
                         output.append(tuple)
                         print(error_msg + "\n" + "Error at:" + curr_cache_path)
@@ -283,8 +322,10 @@ if __name__ == "__main__":
             code_filling("macro_function", proj_name, metadata, prompts,
                          fast=False, allow_error=False, caches=cache_dict, created_project_dir=created_project_dir, template_project_dir=template_project_dir)
             print("Generating Definitions:")
-            code_filling("definition", proj_name, metadata, prompts,
-                         fast=False, allow_error=False, caches=cache_dict, created_project_dir=created_project_dir, template_project_dir=template_project_dir)
+            code_filling("definition", proj_name, metadata, prompts, fast=False, optimizations=[
+                OptimizationAgent(proj_name, metadata,
+                                  definition_replace, override=False, created_project_dir=created_project_dir, template_project_dir=template_project_dir)
+            ], allow_error=False, caches=cache_dict, created_project_dir=created_project_dir, template_project_dir=template_project_dir)
             print("Generating Dummy Functions:")
             code_filling("dummy_function", proj_name, metadata, prompts,
                          fast=True, allow_error=False, caches=cache_dict, created_project_dir=created_project_dir, template_project_dir=template_project_dir)
@@ -308,12 +349,16 @@ if __name__ == "__main__":
                          fast=True, allow_error=False, caches=cache_dict, created_project_dir=created_project_dir, template_project_dir=template_project_dir)
             print("Generating Functions:")
             output = code_filling("function", proj_name, metadata, prompts, fast=False, optimizations=[
+                OptimizationAgentWithCompilerFeedback(proj_name, metadata,
+                                  fix_mismatched_delim, override=False, created_project_dir=created_project_dir, template_project_dir=template_project_dir),
                 OptimizationAgent(proj_name, metadata,
                                   struct_index_advancement, override=False, created_project_dir=created_project_dir, template_project_dir=template_project_dir),
                 OptimizationAgent(proj_name, metadata,
                                   implicit_casting_removal, override=True, created_project_dir=created_project_dir, template_project_dir=template_project_dir),
                 OptimizationAgent(proj_name, metadata,
                                   as_bool_removal, override=True, created_project_dir=created_project_dir, template_project_dir=template_project_dir),
+                OptimizationAgentWithCompilerFeedback(proj_name, metadata,
+                                  llm_try_repair, override=False, created_project_dir=created_project_dir, template_project_dir=template_project_dir),                                
             ], allow_error=True, caches=cache_dict, created_project_dir=created_project_dir, template_project_dir=template_project_dir)
 
         error_cnt = len(output)

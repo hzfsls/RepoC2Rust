@@ -1,0 +1,123 @@
+Fix the compiler bugs in the following Rust code with provided compiler error messagesm, possibly because of mismatched parens.
+
+Source:
+```rust
+pub fn rb_tree_insert_case4(mut tree: Ptr<RBTree>, mut node: Ptr<RBTreeNode>) {
+    let mut next_node: Ptr<RBTreeNode> = Default::default();
+    let mut side: RBTreeNodeSide = Default::default();
+    
+    side = rb_tree_node_side(node);
+    if (side != rb_tree_node_side(node.parent) {
+        next_node = node.parent;
+        rb_tree_rotate(tree, node.parent, (1 - side));
+    } else {
+        next_node = node;
+    }
+    rb_tree_insert_case5(tree, next_node);
+}
+```
+
+Error Message:
+"error: mismatched closing delimiter: `}`   --> src/src/rb_tree_c.rs:154:8\n    |\n148 | pub fn rb_tree_insert_case4(mut tree: Ptr<RBTree>, mut node: Ptr<RBTreeNode>) {\n    |                                                                               - closing delimiter possibly meant for this\n...\n154 |     if (side != rb_tree_node_side(node.parent).cast().as_bool() {\n    |        ^ unclosed delimiter\n...\n163 | }\n    | ^ mismatched closing delimiter\n\nerror: could not compile `my_proj` (lib) due to 1 previous error\n"
+
+Fixed Code:
+```rust
+pub fn rb_tree_insert_case4(mut tree: Ptr<RBTree>, mut node: Ptr<RBTreeNode>) {
+    let mut next_node: Ptr<RBTreeNode> = Default::default();
+    let mut side: RBTreeNodeSide = Default::default();
+    
+    side = rb_tree_node_side(node);
+    if (side != rb_tree_node_side(node.parent)) {
+        next_node = node.parent;
+        rb_tree_rotate(tree, node.parent, (1 - side));
+    } else {
+        next_node = node;
+    }
+    rb_tree_insert_case5(tree, next_node);
+}
+```
+
+Source:
+```rust
+pub fn rb_tree_insert(mut tree: Ptr<RBTree>, mut key: RBTreeKey, mut value: RBTreeValue) -> Ptr<RBTreeNode> {
+    let mut node: Ptr<RBTreeNode>;
+    let mut rover: Ptr<Ptr<RBTreeNode>>;
+    let mut parent: Ptr<RBTreeNode>;
+    let mut side: RBTreeNodeSide;
+    
+    node = c_malloc!(c_sizeof!(RBTreeNode));
+    
+    if (node == NULL!()) {
+        return NULL!();
+    }
+    node.key = key;
+    node.value = value;
+    node.color = RB_TREE_NODE_RED!();
+    node.children[RB_TREE_NODE_LEFT!()] = NULL!();
+    node.children[RB_TREE_NODE_RIGHT!()] = NULL!();
+    
+    parent = NULL!();
+    rover = c_ref!(tree.root_node);
+    
+    while (*rover != NULL!()) {
+        parent = *rover;
+        if (tree.compare_func(value, (*rover).value) < 0 {
+            side = RB_TREE_NODE_LEFT!();
+        } else {
+            side = RB_TREE_NODE_RIGHT!();
+        }
+        
+        rover = c_ref!((*rover).children[side]);
+    }
+    
+    *rover = node;
+    node.parent = parent;
+    rb_tree_insert_case1(tree, node);
+    tree.num_nodes.prefix_plus_plus();
+    return node;
+}
+```
+
+Error Message:
+"error: mismatched closing delimiter: `}`\n   --> src/src/rb_tree_c.rs:194:12\n    |\n191 |     while (*rover != NULL!()).as_bool() {\n    |                                         - closing delimiter possibly meant for this\n...\n194 |         if (tree.compare_func(value.cast(), (*rover).value.cast()) < 0 {\n    |            ^ unclosed delimiter\n...\n201 |     }\n    |     ^ mismatched closing delimiter\n\nerror: could not compile `my_proj` (lib) due to 1 previous error\n"
+
+Fixed Code:
+```rust
+pub fn rb_tree_insert(mut tree: Ptr<RBTree>, mut key: RBTreeKey, mut value: RBTreeValue) -> Ptr<RBTreeNode> {
+    let mut node: Ptr<RBTreeNode>;
+    let mut rover: Ptr<Ptr<RBTreeNode>>;
+    let mut parent: Ptr<RBTreeNode>;
+    let mut side: RBTreeNodeSide;
+    
+    node = c_malloc!(c_sizeof!(RBTreeNode));
+    
+    if (node == NULL!()) {
+        return NULL!();
+    }
+    node.key = key;
+    node.value = value;
+    node.color = RB_TREE_NODE_RED!();
+    node.children[RB_TREE_NODE_LEFT!()] = NULL!();
+    node.children[RB_TREE_NODE_RIGHT!()] = NULL!();
+    
+    parent = NULL!();
+    rover = c_ref!(tree.root_node);
+    
+    while (*rover != NULL!()) {
+        parent = *rover;
+        if (tree.compare_func(value, (*rover).value) < 0) {
+            side = RB_TREE_NODE_LEFT!();
+        } else {
+            side = RB_TREE_NODE_RIGHT!();
+        }
+        
+        rover = c_ref!((*rover).children[side]);
+    }
+    
+    *rover = node;
+    node.parent = parent;
+    rb_tree_insert_case1(tree, node);
+    tree.num_nodes.prefix_plus_plus();
+    return node;
+}
+```

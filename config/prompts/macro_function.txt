@@ -121,7 +121,7 @@ Translation:
 macro_rules! MY_STRUCT_MACRO { ($s:expr) =>
     {
         let mut i: i32;
-        c_for!(i = 0; i < (c_sizeofval!($s.arr) / c_sizeofval!($s.arr[0])).cast(); i.plus_plus(); {
+        c_for!(i = 0; i < (c_sizeofval!($s.arr) / c_sizeofval!($s.arr[0])).cast(); i.suffix_plus_plus(); {
             let idx = $s.curr; // bypass the borrow checker
             $s.cmp[idx] = $s.arr[i] as u8;
             $s.curr += 1;
